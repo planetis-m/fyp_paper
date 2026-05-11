@@ -243,7 +243,7 @@ The selected OCR model, `allenai/olmOCR-2-7B-1025`, is appropriate for the study
 == Model Design-Space Validation
 
 
-The OCR model and broader multimodal design space were checked against provider documentation. DeepInfra lists `allenai/olmOCR-2-7B-1025` as a public FP8 multimodal model with JSON support, a 16,384-token context window, and per-token pricing. #link(<ref-19>)[\[19\]] DeepInfra lists `google/gemma-4-31B-it` as a public FP8 multimodal model with JSON and function support, a 262,144-token context window, and multimodal capabilities. #link(<ref-26>)[\[26\]]
+The OCR model and broader multimodal design space were checked against provider documentation. DeepInfra lists `allenai/olmOCR-2-7B-1025` as a public FP8 multimodal model with JSON support, a 16,384-token context window, and per-token pricing. @ref-19 DeepInfra lists `google/gemma-4-31B-it` as a public FP8 multimodal model with JSON and function support, a 262,144-token context window, and multimodal capabilities. @ref-26
 
 The system uses olmOCR 2 for OCR because the OCR subsystem is specialised for PDF page transcription and the benchmark data is OCR-specific. Gemma is included as a design-space model for multimodal instruction following and long-context agentic workflows, not as the primary OCR engine.
 

@@ -70,7 +70,7 @@ These observations are run-specific because OCR requests depend on live network 
 == Scientific OCR Benchmark
 
 
-The model-comparison benchmark uses a fixed 68-page academic dataset with locked human gold labels. The benchmark input is a consolidated PDF assembled from 34 source PDFs, two pages per source. The selected pages include equations, multi-column layouts, diagrams, and tables. #link(<ref-25>)[\[25\]]
+The model-comparison benchmark uses a fixed 68-page academic dataset with locked human gold labels. The benchmark input is a consolidated PDF assembled from 34 source PDFs, two pages per source. The selected pages include equations, multi-column layouts, diagrams, and tables. @ref-25
 
 All measured models completed 68/68 pages.
 
@@ -131,9 +131,9 @@ Recorded conclusions:
 == DeepInfra Model Context
 
 
-DeepInfra lists `allenai/olmOCR-2-7B-1025` as a public FP8 multimodal model with JSON support, a 16,384-token context window, and per-token pricing. #link(<ref-19>)[\[19\]]
+DeepInfra lists `allenai/olmOCR-2-7B-1025` as a public FP8 multimodal model with JSON support, a 16,384-token context window, and per-token pricing. @ref-19
 
-DeepInfra lists `google/gemma-4-31B-it` as a public FP8 multimodal model with JSON and function support, a 262,144-token context window, and per-token pricing. #link(<ref-26>)[\[26\]]
+DeepInfra lists `google/gemma-4-31B-it` as a public FP8 multimodal model with JSON and function support, a 262,144-token context window, and per-token pricing. @ref-26
 
 These model pages provide provider-side context for the OCR model and the broader multimodal design space.
 

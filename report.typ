@@ -132,7 +132,6 @@
 #include "sections/ch09-conclusion-future-work.typ"
 
 #pagebreak()
-#include "bibliography/reference-anchors.typ"
 #bibliography(
   "bibliography/references.yml",
   full: true,
