@@ -1,0 +1,1 @@
+I acknowledge the academic staff of the Department of Computer Science at the University of Nicosia for the guidance and assessment framework supporting this final-year project. I also acknowledge the open-source projects and model providers referenced in this report, whose documentation and interfaces made the implementation and evaluation of the study-assistant system possible.

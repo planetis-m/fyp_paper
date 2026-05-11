@@ -1,0 +1,468 @@
+# yaml-language-server: $schema=https://www.schemastore.org/hayagriva.json
+ref-1:
+  type: report
+  title: "Document management: Portable document format: Part 2: PDF 2.0"
+  author: "International Organization for Standardization"
+  date: 2020
+  issue: "ISO 32000-2:2020"
+ref-2:
+  type: report
+  title: "Hypertext transfer protocol version 2 (HTTP/2)"
+  author:
+    - "Belshe, M."
+    - "Peon, R."
+    - "Thomson, M."
+  date: 2015-05
+  issue: "RFC 7540"
+  organization: "Internet Engineering Task Force"
+ref-3:
+  type: report
+  title: "HPACK: Header compression for HTTP/2"
+  author:
+    - "Peon, R."
+    - "Ruellan, H."
+  date: 2015-05
+  issue: "RFC 7541"
+  organization: "Internet Engineering Task Force"
+ref-4:
+  type: article
+  title: "A survey of deep learning approaches for OCR and document understanding"
+  author:
+    - "Subramani, N."
+    - "Matton, A."
+    - "Greaves, M."
+    - "Lam, A."
+  date: 2020
+  serial-number:
+    doi: "10.48550/arXiv.2011.13534"
+  parent:
+    type: periodical
+    title: "arXiv"
+ref-5:
+  type: article
+  title: "Text recognition in the wild"
+  author:
+    - "Chen, X."
+    - "Jin, L."
+    - "Zhu, Y."
+    - "Luo, C."
+    - "Wang, T."
+  date: 2021
+  page-range: "1-35"
+  serial-number:
+    doi: "10.1145/3440756"
+  parent:
+    type: periodical
+    title: "ACM Computing Surveys"
+    volume: 54
+    issue: 2
+ref-6:
+  type: article
+  title: "Scene text detection and recognition with advances in deep learning: A survey"
+  author:
+    - "Liu, X."
+    - "Meng, G."
+    - "Pan, C."
+  date: 2019
+  page-range: "143-162"
+  serial-number:
+    doi: "10.1007/s10032-019-00320-5"
+  parent:
+    type: periodical
+    title: "International Journal on Document Analysis and Recognition"
+    volume: 22
+    issue: 2
+ref-7:
+  type: article
+  title: "An overview of the Tesseract OCR engine"
+  author: "Smith, R."
+  date: 2007
+  page-range: "629-633"
+  parent:
+    type: proceedings
+    title: "Proceedings of the 9th International Conference on Document Analysis and Recognition"
+    publisher: "IEEE Computer Society"
+ref-8:
+  type: article
+  title: "DiT: Self-supervised pre-training for document image transformer"
+  author:
+    - "Li, J."
+    - "Xu, Y."
+    - "Lv, T."
+    - "Cui, L."
+    - "Zhang, C."
+    - "Wei, F."
+  date: 2022
+  page-range: "3530-3539"
+  serial-number:
+    doi: "10.1145/3503161.3547911"
+  parent:
+    type: proceedings
+    title: "Proceedings of the 30th ACM International Conference on Multimedia"
+ref-9:
+  type: web
+  title: "JSON Lines"
+  author: "JSON Lines"
+  url:
+    value: "https://jsonlines.org/"
+    date: 2026-02-28
+ref-10:
+  type: web
+  title: "libcurl: Multi interface overview"
+  author: "curl"
+  url:
+    value: "https://curl.se/libcurl/c/libcurl-multi.html"
+    date: 2026-02-28
+ref-12:
+  type: web
+  title: "olmOCR: Efficient PDF text extraction with vision language models"
+  author: "Allen Institute for AI"
+  url:
+    value: "https://allenai.org/blog/olmocr"
+    date: 2026-02-28
+ref-13:
+  type: web
+  title: "olmOCR 2: Unit test rewards for document OCR"
+  author: "Allen Institute for AI"
+  date: 2025-10-22
+  url:
+    value: "https://allenai.org/blog/olmocr-2"
+    date: 2026-02-28
+ref-14:
+  type: web
+  title: "allenai/olmOCR"
+  author: "Allen Institute for AI"
+  url:
+    value: "https://github.com/allenai/olmocr"
+    date: 2026-02-28
+ref-15:
+  type: article
+  title: "olmOCR: Unlocking trillions of tokens in PDFs with vision language models"
+  author: "Poznanski, J., et al."
+  date: 2025
+  serial-number:
+    doi: "10.48550/arXiv.2502.18443"
+  parent:
+    type: periodical
+    title: "arXiv"
+ref-16:
+  type: article
+  title: "olmOCR 2: Unit test rewards for document OCR"
+  author:
+    - "Poznanski, J."
+    - "Soldaini, L."
+    - "Lo, K."
+  date: 2025
+  serial-number:
+    doi: "10.48550/arXiv.2510.19817"
+  parent:
+    type: periodical
+    title: "arXiv"
+ref-18:
+  type: web
+  title: "allenai/olmOCR-2-7B-1025"
+  author: "Portkey"
+  url:
+    value: "https://portkey.ai/models/deepinfra/allenai%2FolmOCR-2-7B-1025"
+    date: 2026-02-28
+ref-19:
+  type: web
+  title: "allenai/olmOCR-2-7B-1025"
+  author: "DeepInfra"
+  url:
+    value: "https://deepinfra.com/allenai/olmOCR-2-7B-1025"
+    date: 2026-05-03
+ref-20:
+  type: web
+  title: "deepseek-ai/DeepSeek-OCR"
+  author: "DeepInfra"
+  url:
+    value: "https://deepinfra.com/deepseek-ai/DeepSeek-OCR"
+    date: 2026-02-28
+ref-21:
+  type: web
+  title: "PaddlePaddle/PaddleOCR-VL-0.9B"
+  author: "DeepInfra"
+  url:
+    value: "https://deepinfra.com/PaddlePaddle/PaddleOCR-VL-0.9B"
+    date: 2026-02-28
+ref-22:
+  type: web
+  title: "Pricing"
+  author: "LandingAI Datalab"
+  url:
+    value: "https://landing.datalab.to/pricing"
+    date: 2026-02-28
+ref-23:
+  type: web
+  title: "API overview"
+  author: "Datalab Documentation"
+  url:
+    value: "https://documentation.datalab.to/reference/api-overview-1"
+    date: 2026-02-28
+ref-24:
+  type: web
+  title: "OpenAI API"
+  author: "DeepInfra Documentation"
+  url:
+    value: "https://deepinfra.com/docs/openai_api"
+    date: 2026-02-28
+ref-25:
+  type: web
+  title: "OCR_benchmarks_academic"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/OCR_benchmarks_academic"
+    date: 2026-03-01
+ref-26:
+  type: web
+  title: "google/gemma-4-31B-it"
+  author: "DeepInfra"
+  url:
+    value: "https://deepinfra.com/google/gemma-4-31B-it"
+    date: 2026-05-03
+ref-27:
+  type: web
+  title: "study-assistant"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/study-assistant"
+    date: 2026-05-03
+ref-28:
+  type: web
+  title: "ocr-tool"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/ocr-tool"
+    date: 2026-05-03
+ref-29:
+  type: web
+  title: "tts-tool"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/tts-tool"
+    date: 2026-05-03
+ref-30:
+  type: web
+  title: "rag-tool"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/rag-tool"
+    date: 2026-05-03
+ref-31:
+  type: web
+  title: "pdfocr"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/pdfocr"
+    date: 2026-05-03
+ref-32:
+  type: web
+  title: "chunkvec"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/chunkvec"
+    date: 2026-05-03
+ref-33:
+  type: web
+  title: "chunktts"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/chunktts"
+    date: 2026-05-03
+ref-34:
+  type: web
+  title: "relay"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/relay"
+    date: 2026-05-03
+ref-35:
+  type: web
+  title: "jsonx"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/jsonx"
+    date: 2026-05-03
+ref-36:
+  type: web
+  title: "openai"
+  author: "planetis-m"
+  url:
+    value: "https://github.com/planetis-m/openai"
+    date: 2026-05-03
+ref-37:
+  type: article
+  title: "Retrieval-augmented generation for knowledge-intensive NLP tasks"
+  author:
+    - "Lewis, P."
+    - "Perez, E."
+    - "Piktus, A."
+    - "Petroni, F."
+    - "Karpukhin, V."
+    - "Goyal, N."
+    - "Küttler, H."
+    - "Lewis, M."
+    - "Yih, W.-t."
+    - "Rocktäschel, T."
+    - "Riedel, S."
+    - "Kiela, D."
+  date: 2020
+  parent:
+    type: proceedings
+    title: "Advances in Neural Information Processing Systems 33"
+ref-38:
+  type: article
+  title: "Dense passage retrieval for open-domain question answering"
+  author:
+    - "Karpukhin, V."
+    - "Oguz, B."
+    - "Min, S."
+    - "Lewis, P."
+    - "Wu, L."
+    - "Edunov, S."
+    - "Chen, D."
+    - "Yih, W.-t."
+  date: 2020
+  page-range: "6769-6781"
+  serial-number:
+    doi: "10.18653/v1/2020.emnlp-main.550"
+  parent:
+    type: proceedings
+    title: "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing"
+    publisher: "Association for Computational Linguistics"
+ref-39:
+  type: web
+  title: "SQLite vector extension: API reference"
+  author: "sqliteai"
+  url:
+    value: "https://github.com/sqliteai/sqlite-vector/blob/main/API.md"
+    date: 2026-05-03
+ref-40:
+  type: article
+  title: "WaveNet: A generative model for raw audio"
+  author: "van den Oord, A., et al."
+  date: 2016
+  serial-number:
+    doi: "10.48550/arXiv.1609.03499"
+  parent:
+    type: periodical
+    title: "arXiv"
+ref-41:
+  type: article
+  title: "Natural TTS synthesis by conditioning WaveNet on mel spectrogram predictions"
+  author:
+    - "Shen, J."
+    - "Pang, R."
+    - "Weiss, R. J."
+    - "Schuster, M."
+    - "Jaitly, N."
+    - "Yang, Z."
+    - "Chen, Z."
+    - "Zhang, Y."
+    - "Wang, Y."
+    - "Skerry-Ryan, R."
+    - "Saurous, R. A."
+    - "Agiomyrgiannakis, Y."
+    - "Wu, Y."
+  date: 2018
+  page-range: "4779-4783"
+  serial-number:
+    doi: "10.1109/ICASSP.2018.8461368"
+  parent:
+    type: proceedings
+    title: "Proceedings of the IEEE International Conference on Acoustics, Speech and Signal Processing"
+ref-42:
+  type: article
+  title: "Improving students' learning with effective learning techniques: Promising directions from cognitive and educational psychology"
+  author:
+    - "Dunlosky, J."
+    - "Rawson, K. A."
+    - "Marsh, E. J."
+    - "Nathan, M. J."
+    - "Willingham, D. T."
+  date: 2013
+  page-range: "4-58"
+  serial-number:
+    doi: "10.1177/1529100612453266"
+  parent:
+    type: periodical
+    title: "Psychological Science in the Public Interest"
+    volume: 14
+    issue: 1
+ref-43:
+  type: article
+  title: "Test-enhanced learning: Taking memory tests improves long-term retention"
+  author:
+    - "Roediger, H. L., III"
+    - "Karpicke, J. D."
+  date: 2006
+  page-range: "249-255"
+  serial-number:
+    doi: "10.1111/j.1467-9280.2006.01693.x"
+  parent:
+    type: periodical
+    title: "Psychological Science"
+    volume: 17
+    issue: 3
+ref-44:
+  type: article
+  title: "A meta-analysis of the effectiveness of intelligent tutoring systems on college students' academic learning"
+  author:
+    - "Steenbergen-Hu, S."
+    - "Cooper, H."
+  date: 2014
+  page-range: "331-347"
+  serial-number:
+    doi: "10.1037/a0034752"
+  parent:
+    type: periodical
+    title: "Journal of Educational Psychology"
+    volume: 106
+    issue: 2
+ref-45:
+  type: article
+  title: "ChatGPT for good? On opportunities and challenges of large language models for education"
+  author: "Kasneci, E., et al."
+  date: 2023
+  page-range: "Article 102274"
+  serial-number:
+    doi: "10.1016/j.lindif.2023.102274"
+  parent:
+    type: periodical
+    title: "Learning and Individual Differences"
+    volume: 103
+ref-46:
+  type: book
+  title: "Multimedia learning"
+  author: "Mayer, R. E."
+  date: 2009
+  edition: "2nd"
+  publisher: "Cambridge University Press"
+ref-47:
+  type: web
+  title: "Study with Thea"
+  author: "Thea Study"
+  url:
+    value: "https://www.theastudy.com/home"
+    date: 2026-05-03
+ref-48:
+  type: web
+  title: "Learn about NotebookLM"
+  author: "Google"
+  parent:
+    type: web
+    title: "NotebookLM Help"
+  url:
+    value: "https://support.google.com/notebooklm/answer/16164461"
+    date: 2026-05-03
+ref-49:
+  type: web
+  title: "Generate Audio Overview in NotebookLM"
+  author: "Google"
+  parent:
+    type: web
+    title: "NotebookLM Help"
+  url:
+    value: "https://support.google.com/notebooklm/answer/16212820"
+    date: 2026-05-03
