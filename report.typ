@@ -1,4 +1,4 @@
-#import "versatile-apa/lib.typ": abstract-page, appendix, appendix-outline, title-page, versatile-apa as apa-style
+#import "versatile-apa/lib.typ": abstract-page, appendix, appendix-outline, versatile-apa as apa-style
 
 #set document(
   title: [An Agent-Based Study Assistant System with OCR, Retrieval-Augmented Generation, and Text-to-Speech Tools],
@@ -13,22 +13,78 @@
 
 #let thesis-title = [An Agent-Based Study Assistant System with OCR, Retrieval-Augmented Generation, and Text-to-Speech Tools]
 #let author-name = [Antonis Geralis]
+#let degree = [Bachelor of Science in Computer Science]
+#let department = [Department of Computer Science]
+#let school = [School of Sciences and Engineering]
+#let university = [University of Nicosia]
+#let submission-date = [May 2026]
 
-#title-page(
-  title: thesis-title,
-  authors: (
-    (
-      name: author-name,
-      affiliations: "unic",
-    ),
-  ),
-  affiliations: (
-    "unic": [Department of Computer Science, School of Sciences and Engineering, University of Nicosia],
-  ),
-  course: [Final Year Project submitted in partial fulfilment of the requirements for the Degree of Bachelor of Science in Computer Science],
-  instructor: [Project Advisor: Ioannis Katakis],
-  due-date: [May 2026],
+#align(center)[
+  #set par(first-line-indent: 0in)
+  #v(1fr)
+  #text(weight: "bold")[#thesis-title]
+
+  #v(1.1in)
+  #text(weight: "bold")[Candidate] \
+  #author-name
+
+  #v(0.8in)
+  Final Year Project submitted in partial fulfilment of the requirements for the Degree of
+
+  #v(0.25in)
+  #degree \
+  #department \
+  #school \
+  #university
+
+  #v(0.8in)
+  #submission-date
+  #v(1fr)
+]
+
+#pagebreak()
+
+#align(center)[
+  #set par(first-line-indent: 0in)
+  #text(weight: "bold")[Acceptance Page]
+
+  #v(0.55in)
+  #text(weight: "bold")[#thesis-title]
+
+  #v(0.35in)
+  By
+  #parbreak()
+
+  #author-name
+
+  #v(0.55in)
+  This Final Year Project has been accepted in partial fulfilment of the requirements for the Degree of
+
+  #v(0.25in)
+  #degree
+]
+
+#v(0.5in)
+
+#table(
+  columns: (1.25in, 2in, 1.35in, 1.1in),
+  align: (x, y) => if y == 0 { center } else if x <= 1 { left } else { center },
+  table.header([Role], [Name], [Signature], [Date]),
+  [Project Advisor], [Ioannis Katakis], [#move(dy: 0.6em, line(length: 1in))], [#move(dy: 0.6em, line(length: 0.75in))],
+  [Examiner], [Athena Stassopoulou], [#move(dy: 0.6em, line(length: 1in))], [#move(dy: 0.6em, line(length: 0.75in))],
+  [Examiner], [Vaso Stylianou], [#move(dy: 0.6em, line(length: 1in))], [#move(dy: 0.6em, line(length: 0.75in))],
 )
+
+#v(1fr)
+
+#align(center)[
+  #set par(first-line-indent: 0in)
+  #department \
+  #school \
+  #university
+]
+
+#pagebreak()
 
 #abstract-page(
   {
@@ -52,7 +108,7 @@
 #pagebreak()
 #outline(target: figure.where(kind: raw), title: [List of Listings])
 #pagebreak()
-#appendix-outline(title: [Appendices])
+#outline(title: [Appendices], target: heading.where(supplement: [Appendix]))
 #pagebreak()
 
 #set heading(numbering: "1.1")
@@ -83,10 +139,13 @@
   title: [References],
 )
 
-#show: appendix.with(numbering-for-all: true)
+#[
+  #show: appendix.with(numbering-for-all: true)
 
-#include "appendices/appendix-a-user-manual.typ"
-#include "appendices/appendix-b-installation-build.typ"
-#include "appendices/appendix-c-benchmarks-testcases.typ"
-#include "appendices/appendix-d-code-listings.typ"
+  #include "appendices/appendix-a-user-manual.typ"
+  #include "appendices/appendix-b-installation-build.typ"
+  #include "appendices/appendix-c-benchmarks-testcases.typ"
+  #include "appendices/appendix-d-code-listings.typ"
+]
+
 #include "appendices/administrative-data.typ"

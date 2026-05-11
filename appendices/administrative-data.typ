@@ -1,4 +1,9 @@
-= Administrative Data
+#pagebreak()
+
+#align(center)[
+  #set par(first-line-indent: 0in)
+  #text(weight: "bold")[Administrative Data]
+]
 
 
 University of Nicosia, Department of Computer Science, School of Sciences and Engineering.
