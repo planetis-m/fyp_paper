@@ -1,3 +1,5 @@
+#import "../lib.typ": apa-figure
+
 = Requirements and Specification <chap:requirements>
 
 
@@ -98,13 +100,10 @@ Together, these instruction contracts form the agent's orchestration layer. They
 
 The core implementation repositories provide concrete execution guarantees:
 
-#figure(
+#apa-figure(
   table(
     columns: 4,
-    align: horizon,
-    inset: 5pt,
     table.header([Repository], [Command surface], [System role], [Core contract]),
-    table.hline(),
     [`pdfocr`],
     [`pdfocr INPUT.pdf --pages:"..."` or `--all-pages`],
     [OCR processing],
@@ -139,13 +138,10 @@ The RAG subsystem uses an OpenAI-compatible embeddings endpoint. The documented 
 #ref(<tbl:req-traceability>) maps the main requirements to implementation mechanisms.
 
 
-#figure(
+#apa-figure(
   table(
     columns: 3,
-    align: horizon,
-    inset: 5pt,
     table.header([Requirement], [Agent/tool layer], [Core implementation mechanism]),
-    table.hline(),
     [Select a study output mode],
     [`study-assistant` mode selection],
     [prepared source text consumed by the agent],

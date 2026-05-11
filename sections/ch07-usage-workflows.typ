@@ -1,4 +1,4 @@
-#import "../versatile-apa/lib.typ": apa-figure
+#import "../lib.typ": apa-figure
 
 = Usage Scenarios and Workflow Evaluation <chap:workflows>
 

@@ -1,4 +1,5 @@
 #import "../assets/diagrams.typ": *
+#import "../lib.typ": apa-figure
 
 = System Architecture and Design <chap:architecture>
 
@@ -59,13 +60,10 @@ The figure expresses the central separation of concerns. The agent and tool defi
 #ref(<tbl:repo-responsibilities>) summarises the repository-level responsibilities.
 
 
-#figure(
+#apa-figure(
   table(
     columns: 4,
-    align: horizon,
-    inset: 5pt,
     table.header([Repository], [Layer], [Primary responsibility], [Principal artefacts]),
-    table.hline(),
     [`study-assistant`],
     [Agent],
     [Select study mode and generate grounded study outputs],

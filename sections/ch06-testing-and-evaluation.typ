@@ -1,4 +1,4 @@
-#import "../versatile-apa/lib.typ": apa-figure
+#import "../lib.typ": apa-figure
 
 #let apa-table-align(x, y) = if y == 0 {
   center

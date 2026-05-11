@@ -1,3 +1,5 @@
+#import "../lib.typ": apa-figure
+
 = Benchmarks and Test Cases <app:benchmarks-testcases>
 
 
@@ -15,13 +17,10 @@ Recorded results:
 
 Derived metrics:
 
-#figure(
+#apa-figure(
   table(
     columns: 2,
-    align: horizon,
-    inset: 5pt,
     table.header([Metric], [Value]),
-    table.hline(),
     [Speedup],
     [15.89x],
     [Absolute time reduction],
@@ -38,13 +37,10 @@ Derived metrics:
 
 A side-by-side recorded comparison uses the same 72-page test PDF and `--all-pages` selection mode.
 
-#figure(
+#apa-figure(
   table(
     columns: 3,
-    align: horizon,
-    inset: 5pt,
     table.header([Metric], [External reported run], [This project recorded run]),
-    table.hline(),
     [Wall time],
     [17.04 s],
     [28.23 s],
@@ -74,13 +70,10 @@ The model-comparison benchmark uses a fixed 68-page academic dataset with locked
 
 All measured models completed 68/68 pages.
 
-#figure(
+#apa-figure(
   table(
     columns: 5,
-    align: horizon,
-    inset: 5pt,
     table.header([Model], [CER], [WER], [ReadingOrderF1], [MathF1]),
-    table.hline(),
     [`PaddlePaddle/PaddleOCR-VL-0.9B`],
     [0.4634],
     [0.4732],
@@ -101,13 +94,10 @@ All measured models completed 68/68 pages.
 )
 
 
-#figure(
+#apa-figure(
   table(
     columns: 3,
-    align: horizon,
-    inset: 5pt,
     table.header([Model], [Total cost (USD)], [Cost/page (USD)]),
-    table.hline(),
     [`PaddlePaddle/PaddleOCR-VL-0.9B`],
     [0.0420],
     [0.0006180],

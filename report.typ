@@ -1,4 +1,4 @@
-#import "versatile-apa/lib.typ": abstract-page, appendix, appendix-outline, versatile-apa as apa-style
+#import "lib.typ": abstract-page, appendix, appendix-outline, versatile-apa as apa-style
 
 #set document(
   title: [An Agent-Based Study Assistant System with OCR, Retrieval-Augmented Generation, and Text-to-Speech Tools],

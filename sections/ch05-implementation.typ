@@ -1,4 +1,5 @@
 #import "../assets/diagrams.typ": *
+#import "../lib.typ": apa-figure
 
 = Repository Analysis and Implementation <chap:implementation>
 
@@ -21,13 +22,10 @@ The `study-assistant` repository defines the top-level agent behaviour. Its prin
 
 The agent mode table is:
 
-#figure(
+#apa-figure(
   table(
     columns: 3,
-    align: horizon,
-    inset: 5pt,
     table.header([Mode], [Purpose], [Output discipline]),
-    table.hline(),
     [`transcribe`],
     [preserve source text],
     [structured markdown, no summarisation],
@@ -244,13 +242,10 @@ This loop implements both throughput and ordering. It may receive page 10 before
 
 The page result schema has success and error variants:
 
-#figure(
+#apa-figure(
   table(
     columns: 4,
-    align: horizon,
-    inset: 5pt,
     table.header([Field], [Success], [Error], [Meaning]),
-    table.hline(),
     [`page`],
     [yes],
     [yes],
@@ -564,13 +559,10 @@ The runtime does not inspect arbitrary shell profiles or filesystem locations to
 
 The repositories communicate through simple artefacts:
 
-#figure(
+#apa-figure(
   table(
     columns: 4,
-    align: horizon,
-    inset: 5pt,
     table.header([Producer], [Consumer], [Artefact], [Contract]),
-    table.hline(),
     [`pdfocr`],
     [`ocr-tool`, agent, shell],
     [JSONL],

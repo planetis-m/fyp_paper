@@ -1,3 +1,5 @@
+#import "../lib.typ": apa-figure
+
 = Scientific Foundations <chap:foundations>
 
 
@@ -116,13 +118,10 @@ Structured JSON handling is also central. The OpenAI-compatible APIs require req
 #ref(<tbl:foundation-mapping>) maps the scientific foundations to project components.
 
 
-#figure(
+#apa-figure(
   table(
     columns: 3,
-    align: horizon,
-    inset: 5pt,
     table.header([Foundation], [System component], [Implementation consequence]),
-    table.hline(),
     [PDF rendering and OCR],
     [`ocr-tool`, `pdfocr`],
     [render pages with PDFium, encode WebP, call olmOCR 2, emit ordered JSONL],
