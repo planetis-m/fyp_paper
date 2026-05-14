@@ -62,12 +62,28 @@
     }
   }
 
-  show heading: set text(size: font-size)
-  show heading: set block(spacing: double-spacing)
+  // Approximate LaTeX's 12pt report-class heading scale and spacing.
+  let latex-chapter-size = font-size * 2.07
+  let latex-section-size = font-size * 1.44
+  let latex-subsection-size = font-size * 1.2
+  let latex-chapter-before = font-size * 4.15
+  let latex-chapter-after = font-size * 3.3
 
-  show heading.where(level: 1): set align(center)
-  show heading.where(level: 3).or(heading.where(level: 5)): set text(style: "italic")
-  show heading.where(level: 4).or(heading.where(level: 5)): it => [#it.body.]
+  show heading: set text(size: font-size, weight: "bold")
+  show heading: set align(left)
+  show heading: set block(above: 1.75em, below: 1.15em, sticky: true)
+
+  show heading.where(level: 1): set text(size: latex-chapter-size)
+  show heading.where(level: 1): it => {
+    pagebreak(weak: true)
+    block(above: latex-chapter-before, below: latex-chapter-after, sticky: true)[#it]
+  }
+  show heading.where(level: 2): set text(size: latex-section-size)
+  show heading.where(level: 2): set block(above: 1.75em, below: 1.15em, sticky: true)
+  show heading.where(level: 3): set text(size: latex-subsection-size)
+  show heading.where(level: 3): set block(above: 1.6em, below: 0.75em, sticky: true)
+  show heading.where(level: 4): set block(above: 1.5em, below: 0.65em, sticky: true)
+  show heading.where(level: 5): set block(above: 1.5em, below: 0.65em, sticky: true)
 
   set par(
     first-line-indent: (
@@ -77,41 +93,54 @@
     leading: double-spacing,
   )
 
-  show table.cell: set par(leading: 1em)
+  show table.cell: set par(leading: 1.15em)
 
-  show figure.where(kind: image): set block(breakable: true, sticky: true)
-  show figure.where(kind: table): set block(breakable: true, sticky: false)
+  show figure.where(kind: image): set block(above: 1.2em, below: 1.2em, breakable: true, sticky: true)
+  show figure.where(kind: table): set block(above: 1.2em, below: 1.2em, breakable: true, sticky: false)
 
   set figure(
-    gap: double-spacing,
+    gap: 0.65em,
     placement: auto,
   )
 
   show figure: set figure.caption(separator: [], position: bottom)
-  show figure.caption: set align(left)
+  show figure.where(kind: table): set figure.caption(position: top)
+  show figure.caption: set align(center)
   show figure.caption: set par(first-line-indent: 0em)
   show figure.caption: it => {
-    strong[#it.supplement #context it.counter.display(it.numbering)]
-    h(0.5em)
-    emph(it.body)
+    block(above: 0pt, below: 0pt, width: 100%)[
+      #set text(size: font-size * 0.9)
+      #strong[#it.supplement #context it.counter.display(it.numbering):]
+      #h(0.35em)
+      #it.body
+    ]
   }
 
-  set table(stroke: (x, y) => if y == 0 {
-    (
-      top: (thickness: 1pt, dash: "solid"),
-      bottom: (thickness: 0.5pt, dash: "solid"),
-    )
-  })
+  set table(
+    inset: (x: 0.55em, y: 0.38em),
+    stroke: (x, y) => if y == 0 {
+      (
+        top: (thickness: 0.9pt, dash: "solid"),
+        bottom: (thickness: 0.45pt, dash: "solid"),
+      )
+    } else {
+      none
+    },
+  )
 
   set list(
-    marker: ([•], [◦]),
-    indent: 0.5in - 1.75em,
-    body-indent: 1.3em,
+    marker: ([•], [–]),
+    indent: 2.1em,
+    body-indent: 1em,
+    spacing: double-spacing,
+    tight: false,
   )
 
   set enum(
-    indent: 0.5in - 1.5em,
-    body-indent: 0.75em,
+    indent: 2.15em,
+    body-indent: 1em,
+    spacing: double-spacing,
+    tight: false,
   )
 
   set raw(
@@ -120,20 +149,21 @@
   )
 
   show raw.where(block: true): block.with(
+    above: 1em,
+    below: 1em,
     fill: luma(250),
-    stroke: (left: 3pt + rgb("#6272a4")),
-    inset: (x: 10pt, y: 8pt),
-    width: auto,
+    stroke: 0.45pt + luma(170),
+    inset: (x: 0.9em, y: 0.65em),
+    width: 100%,
     breakable: true,
-    outset: (y: 7pt),
-    radius: (left: 0pt, right: 6pt),
   )
 
   show raw: set text(
-    size: 10pt,
+    size: font-size,
   )
 
-  show raw.where(block: true): set par(leading: 1em)
+  show raw.where(block: true): set text(size: font-size * 0.85)
+  show raw.where(block: true): set par(leading: 1.1em)
   show figure.where(kind: raw): set block(breakable: true, sticky: false, width: 100%)
 
   set math.equation(numbering: "(1)")
@@ -168,7 +198,7 @@
   }
 
   show outline.entry: it => context {
-    if (
+    let entry = if (
       (
         it.element.supplement == [#context get-terms(text.lang, text.script).Appendix]
       )
@@ -179,31 +209,21 @@
     } else {
       it
     }
+
+    if it.element.has("level") and it.element.level == 1 {
+      strong(entry)
+    } else {
+      entry
+    }
   }
 
-  set outline(depth: 3, indent: 2em)
+  set outline(depth: 3, indent: 1.8em)
 
   set bibliography(style: "assets/styles/apa.csl")
   show bibliography: set par(
     first-line-indent: 0in,
     hanging-indent: 0.5in,
   )
-
-  show bibliography: bib-it => {
-    show block: block-it => context {
-      // if it body is auto or styled()
-      if block-it.body == auto or block-it.body.func() == text(fill: red)[].func() {
-        block-it
-        // if its body isn't sequence(), for example: pdf-marker-tag
-      } else if block-it.body.func() != [].func() {
-        par(block-it.body)
-      } else {
-        par(block-it.body)
-      }
-    }
-
-    bib-it
-  }
 
   body
 }

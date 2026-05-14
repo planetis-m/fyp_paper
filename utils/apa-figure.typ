@@ -27,13 +27,18 @@
       #body
       #set align(left)
       #if note != none [
+        #v(0.35em)
         #context emph[#get-terms(text.lang, text.script).Note.]
         #note
       ]
-      #parbreak()
-      #specific-note
-      #parbreak()
-      #probability-note
+      #if specific-note != none [
+        #parbreak()
+        #specific-note
+      ]
+      #if probability-note != none [
+        #parbreak()
+        #probability-note
+      ]
     ],
     ..args,
   )
