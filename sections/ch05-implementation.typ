@@ -79,8 +79,8 @@ The major invariant is source grounding: the agent must not introduce unsupporte
     cbox((5.4, .1), [rag-tool], body: [cvstore/cvquery], name: "rag")
     cdecision((8.1, 1.5), [Audio], body: [requested?], name: "audio")
     cbox((8.1, .1), [tts-tool], body: [chunktts], name: "tts")
-    cbox((10.8, .4), [study-assistant], body: [select one mode], name: "mode")
-    cstore((13.0, .8), [Study output], body: [or artefact], name: "output")
+    cbox((10.8, 1.1), [study-assistant], body: [select one mode], name: "mode")
+    cstore((13.0, .1), [Study output], body: [or artefact], name: "output")
 
     carrow("request", "pdf")
     carrow("pdf", "ocr")

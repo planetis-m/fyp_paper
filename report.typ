@@ -104,8 +104,6 @@
 #pagebreak()
 #outline(target: figure.where(kind: image), title: [List of Figures])
 #pagebreak()
-#outline(target: figure.where(kind: raw), title: [List of Listings])
-#pagebreak()
 #outline(title: [Appendices], target: heading.where(supplement: [Appendix]))
 #pagebreak()
 
