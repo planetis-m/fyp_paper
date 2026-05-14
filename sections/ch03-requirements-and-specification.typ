@@ -36,49 +36,49 @@ The main use cases are:
 
 The agent-level functional requirements are:
 
-- The system shall expose `study-assistant` as the coordinating agent for study workflows.
-- The agent shall map user intent to a single study mode when producing a direct study artefact.
-- The agent shall operate only on available source material or material explicitly extracted by the tools.
-- The agent shall preserve source meaning and avoid inventing content during cleaning, chunking, retrieval preparation, and TTS preparation.
-- The agent shall invoke specialised tools for OCR, RAG, and TTS rather than embedding these concerns into one monolithic prompt.
+- *FR-A1:* The system shall expose `study-assistant` as the coordinating agent for study workflows.
+- *FR-A2:* The agent shall map user intent to a single study mode when producing a direct study artefact.
+- *FR-A3:* The agent shall operate only on available source material or material explicitly extracted by the tools.
+- *FR-A4:* The agent shall preserve source meaning and avoid inventing content during cleaning, chunking, retrieval preparation, and TTS preparation.
+- *FR-A5:* The agent shall invoke specialised tools for OCR, RAG, and TTS rather than embedding these concerns into one monolithic prompt.
 
 The OCR functional requirements are:
 
-- `ocr-tool` shall own PDF-to-text extraction workflows at the instruction layer.
-- `pdfocr` shall accept a local PDF and exactly one page-selection mode: selected pages or all pages.
-- `pdfocr` shall render pages, submit OCR requests to an OpenAI-compatible multimodal model endpoint, and emit one JSON object per selected page.
-- Successful page results shall include page number, status, attempt count, and extracted text.
-- Failed page results shall include page number, status, attempt count, error kind, error message, and HTTP status where applicable.
+- *FR-O1:* `ocr-tool` shall own PDF-to-text extraction workflows at the instruction layer.
+- *FR-O2:* `pdfocr` shall accept a local PDF and exactly one page-selection mode: selected pages or all pages.
+- *FR-O3:* `pdfocr` shall render pages, submit OCR requests to an OpenAI-compatible multimodal model endpoint, and emit one JSON object per selected page.
+- *FR-O4:* Successful page results shall include page number, status, attempt count, and extracted text.
+- *FR-O5:* Failed page results shall include page number, status, attempt count, error kind, error message, and HTTP status where applicable.
 
 The RAG functional requirements are:
 
-- `rag-tool` shall own storage and retrieval workflows at the instruction layer.
-- `cvstore` shall ingest one marked-up text file whose chunks begin with `<chunk ...>` markers.
-- `cvstore` shall apply command-line document identity and content kind metadata to the ingest run.
-- `cvquery` shall embed one query string and retrieve nearest-neighbour matches from the local vector database.
-- Search shall support metadata filters for document, kind, page, and label where valid.
+- *FR-R1:* `rag-tool` shall own storage and retrieval workflows at the instruction layer.
+- *FR-R2:* `cvstore` shall ingest one marked-up text file whose chunks begin with `<chunk ...>` markers.
+- *FR-R3:* `cvstore` shall apply command-line document identity and content kind metadata to the ingest run.
+- *FR-R4:* `cvquery` shall embed one query string and retrieve nearest-neighbour matches from the local vector database.
+- *FR-R5:* Search shall support metadata filters for document, kind, page, and label where valid.
 
 The TTS functional requirements are:
 
-- `tts-tool` shall own text-to-speech workflows at the instruction layer.
-- The tool shall rewrite visual or technical text into a natural spoken form without changing the underlying meaning.
-- `chunktts` shall accept one marked-up text file and one output path.
-- `chunktts` shall split input on `<bk>` markers, synthesise each chunk, validate audio, and write a single final `.opus` file.
-- The final audio order shall match the normalised chunk order.
+- *FR-T1:* `tts-tool` shall own text-to-speech workflows at the instruction layer.
+- *FR-T2:* The tool shall rewrite visual or technical text into a natural spoken form without changing the underlying meaning.
+- *FR-T3:* `chunktts` shall accept one marked-up text file and one output path.
+- *FR-T4:* `chunktts` shall split input on `<bk>` markers, synthesise each chunk, validate audio, and write a single final `.opus` file.
+- *FR-T5:* The final audio order shall match the normalised chunk order.
 
 == Non-Functional Requirements
 
 
 The system non-functional requirements are:
 
-- *Modularity:* agent definitions, tool definitions, and core implementations shall remain separately understandable and usable.
-- *Composability:* command-line tools shall use stable inputs and outputs suitable for shell workflows.
-- *Determinism:* page and chunk ordering shall be deterministic regardless of network completion order.
-- *Bounded concurrency:* remote model calls shall be limited by a configured in-flight bound.
-- *Retry robustness:* transient network and selected API failures shall be retried according to explicit policy.
-- *Observability:* logs and diagnostics shall not pollute machine-readable outputs.
-- *Configuration clarity:* API URLs, models, keys, and concurrency settings shall be resolved through documented defaults, optional `config.json`, and environment overrides where supported.
-- *Standalone utility:* OCR, RAG, and TTS tools shall remain useful without the agent.
+- *NFR-1 Modularity:* Agent definitions, tool definitions, and core implementations shall remain separately understandable and usable.
+- *NFR-2 Composability:* Command-line tools shall use stable inputs and outputs suitable for shell workflows.
+- *NFR-3 Determinism:* Page and chunk ordering shall be deterministic regardless of network completion order.
+- *NFR-4 Bounded concurrency:* Remote model calls shall be limited by a configured in-flight bound.
+- *NFR-5 Retry robustness:* Transient network and selected API failures shall be retried according to explicit policy.
+- *NFR-6 Observability:* Logs and diagnostics shall not pollute machine-readable outputs.
+- *NFR-7 Configuration clarity:* API URLs, models, keys, and concurrency settings shall be resolved through documented defaults, optional `config.json`, and environment overrides where supported.
+- *NFR-8 Standalone utility:* OCR, RAG, and TTS tools shall remain useful without the agent.
 
 == Requirements Traceability Matrix
 
@@ -90,31 +90,31 @@ The system non-functional requirements are:
   table(
     columns: 3,
     table.header([Requirement], [Agent/tool layer], [Core implementation mechanism]),
-    [Select a study output mode],
+    [FR-A2],
     [`study-assistant` mode selection],
     [prepared source text consumed by the agent],
-    [Extract PDF text],
+    [FR-O1--FR-O3],
     [`ocr-tool` workflow],
     [`pdfocr` rendering, WebP encoding, OCR request pipeline],
-    [Preserve page order],
+    [NFR-3],
     [`ocr-tool` expects raw ordered text],
     [`pdfocr` sequence ids and staged JSONL emission],
-    [Store material for retrieval],
+    [FR-R1--FR-R3],
     [`rag-tool` store mode],
     [`cvstore` chunk parser, embeddings pipeline, SQLite insert],
-    [Search stored material],
+    [FR-R4--FR-R5],
     [`rag-tool` search mode],
     [`cvquery` query embedding and `sqlite-vector` nearest-neighbour search],
-    [Produce speech audio],
+    [FR-T1--FR-T5],
     [`tts-tool` workflow],
     [`chunktts` chunk splitting, speech requests, audio validation],
-    [Bound remote work],
+    [NFR-4, NFR-5],
     [tool execution guidance],
     [`relay` `maxInFlight`, retry queues, request-id codecs],
-    [Parse and emit JSON safely],
+    [FR-O4--FR-O5, NFR-6],
     [tool configuration and outputs],
     [`jsonx` typed parsing and streaming JSON serialisation],
-    [Use OpenAI-compatible APIs],
+    [FR-O3, FR-R4, FR-T4],
     [model endpoint configuration],
     [custom `openai` chat, embedding, and speech helpers],
   ),

@@ -59,12 +59,6 @@ This layered design avoids coupling study-output generation to implementation de
 
 The figure expresses the central separation of concerns. The agent and tool definitions are declarative/operational layers. The Nim components implement execution. The shared libraries provide common infrastructure.
 
-== Component Responsibilities
-
-
-#ref(<tbl:repo-responsibilities>) summarises the component responsibilities.
-
-
 #apa-figure(
   table(
     columns: 4,
@@ -113,11 +107,6 @@ The figure expresses the central separation of concerns. The agent and tool defi
   caption: [Component responsibilities],
 )<tbl:repo-responsibilities>
 
-
-== Concept-to-Component Mapping
-
-
-#ref(<tbl:foundation-mapping>) maps the background concepts from Chapter #ref(<chap:background>) to the implemented system components. This mapping belongs in the architecture chapter because it explains how the theoretical and technical background is realised in the system design.
 
 #apa-figure(
   table(

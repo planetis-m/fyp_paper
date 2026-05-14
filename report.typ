@@ -135,7 +135,7 @@
 )
 
 #[
-  #show: appendix.with(numbering-for-all: true)
+  #show: appendix.with(numbering-for-all: false)
 
   #include "appendices/appendix-a-user-manual.typ"
   #include "appendices/appendix-b-installation-build.typ"

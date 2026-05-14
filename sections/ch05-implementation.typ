@@ -7,7 +7,7 @@
 == Implementation Overview
 
 
-The associated repositories form a coherent implementation. The discussion covers structure, public interfaces, internal modules, algorithms, data flow, and verification surfaces rather than line-by-line code.
+The associated repositories form a coherent implementation with explicit structure, public interfaces, internal modules, algorithms, data flows, and verification surfaces.
 
 The implementation can be grouped into three categories:
 
