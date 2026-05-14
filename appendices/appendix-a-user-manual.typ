@@ -1,7 +1,7 @@
 = User Manual <app:user-manual>
 
 
-This appendix summarises operator-facing use of the study-assistant tool suite. The agent coordinates workflows, while the command-line tools remain available for direct use.
+This appendix provides practical usage instructions for the study-assistant tool suite. It covers the agent workflow and the standalone command-line tools used for OCR, retrieval, and text-to-speech generation.
 
 == Agent Workflow
 

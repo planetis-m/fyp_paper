@@ -79,20 +79,26 @@ The major invariant is source grounding: the agent must not introduce unsupporte
     cbox((5.4, .1), [rag-tool], body: [cvstore/cvquery], name: "rag")
     cdecision((8.1, 1.5), [Audio], body: [requested?], name: "audio")
     cbox((8.1, .1), [tts-tool], body: [chunktts], name: "tts")
-    cbox((10.8, 1.1), [study-assistant], body: [select one mode], name: "mode")
-    cstore((13.0, .1), [Study output], body: [or artefact], name: "output")
+    cbox((10.8, 1.5), [study-assistant], body: [select one mode], name: "mode")
+    cstore((10.8, .1), [Study output], body: [or artefact], name: "output")
 
-    carrow("request", "pdf")
-    carrow("pdf", "ocr")
-    carrow("pdf", "stored")
-    carrow("ocr", "stored")
-    carrow("stored", "rag")
-    carrow("stored", "audio")
-    carrow("rag", "audio")
-    carrow("audio", "tts")
-    carrow("audio", "mode")
-    carrow("tts", "output")
-    carrow("mode", "output")
+    carrow("request.east", "pdf.west")
+    carrow("pdf.south", "ocr.north")
+    carrow("pdf.east", "stored.west")
+    carrow("ocr.east", "stored.south-west")
+    carrow("stored.south", "rag.north")
+    carrow("stored.east", "audio.west")
+    carrow("rag.east", "audio.south-west")
+    carrow("audio.south", "tts.north")
+    carrow("audio.east", "mode.west")
+    carrow("tts.east", "output.west")
+    carrow("mode.south", "output.north")
+    ctext((2.45, .82), [yes], size: 6.7pt)
+    ctext((4.05, 1.72), [no], size: 6.7pt)
+    ctext((5.15, .82), [yes], size: 6.7pt)
+    ctext((6.75, 1.72), [no], size: 6.7pt)
+    ctext((7.85, .82), [yes], size: 6.7pt)
+    ctext((9.45, 1.72), [no], size: 6.7pt)
   }),
   kind: image,
   caption: [Agent decision flow across study modes and tool handoffs.],
@@ -210,23 +216,33 @@ This loop implements both throughput and ordering. It may receive page 10 before
 
 #figure(
   canvas({
-    cbox((0, 1.2), [Pending], body: [seqId], name: "pending")
-    cbox((2.5, 1.2), [Render page], body: [PDFium], name: "render")
-    cbox((5.0, 1.2), [Encode], body: [WebP], name: "encode")
-    cbox((7.5, 1.2), [Queued /], body: [In flight], name: "request")
-    cbox((7.5, -.2), [RetryWait], body: [dueAt], name: "retry")
-    cstore((10.0, 1.2), [Terminal], body: [page result], name: "terminal")
-    cstore((12.5, 1.2), [Staged], body: [by seqId], name: "staged")
-    cstore((15.0, 1.2), [Emitted], body: [JSONL], name: "emitted")
+    cbox((0, 1.55), [Pending], body: [seqId], name: "pending")
+    cbox((2.4, 1.55), [Render page], body: [PDFium], name: "render")
+    cbox((4.8, 1.55), [Encode], body: [WebP payload], name: "encode")
+    cbox((7.2, 1.55), [Queued /], body: [in flight], name: "request")
+    cbox((7.2, 3.0), [RetryWait], body: [dueAt + jitter], name: "retry")
+    cstore((9.8, 1.55), [Terminal], body: [ok or error], name: "terminal")
+    cstore((12.25, 1.55), [Staged], body: [by seqId], name: "staged")
+    cstore((14.7, 1.55), [Emitted], body: [ordered JSONL], name: "emitted")
+    cstore((4.8, .15), [Local error], body: [render / encode], name: "localerr", width: 2.1, height: .8)
 
-    carrow("pending", "render")
-    carrow("render", "encode")
-    carrow("encode", "request")
-    carrow("request", "retry")
-    carrow("retry", "request")
-    carrow("request", "terminal")
-    carrow("terminal", "staged")
-    carrow("staged", "emitted")
+    carrow("pending.east", "render.west")
+    carrow("render.east", "encode.west")
+    carrow("encode.east", "request.west")
+    carrow("request.east", "terminal.west")
+    carrow("terminal.east", "staged.west")
+    carrow("staged.east", "emitted.west")
+
+    cpatharrow("request.north-west", "retry.south-west")
+    cpatharrow("retry.south-east", "request.north-east")
+    carrow("render.south", "localerr.north-west")
+    carrow("encode.south", "localerr.north")
+    carrow("localerr.north-east", "terminal.south-west")
+
+    ctext((5.95, 1.5), [submit], size: 6.5pt)
+    ctext((8.05, 2.35), [retryable], size: 6.5pt)
+    ctext((11.0, 1.85), [stage], size: 6.5pt)
+    ctext((13.45, 1.85), [nextEmitSeqId], size: 6.2pt, width: 1.05)
   }),
   kind: image,
   caption: [Per-page state machine in the `pdfocr` OCR pipeline.],
@@ -237,9 +253,12 @@ This loop implements both throughput and ordering. It may receive page 10 before
 
 #figure(
   canvas({
-    cstore((0, 0), [Sequence id bits], body: [logical page / chunk], name: "seq")
-    cbox((3.0, 0), [16 attempt], body: [bits], name: "attempt")
+    cstore((0, .45), [Sequence id bits], body: [logical page / chunk], name: "seq", width: 3.9, height: .9)
+    cbox((3.95, .45), [16 attempt], body: [bits], name: "attempt", width: 1.55, height: .9)
+    cstore((2.0, -1.0), [single signed request id], body: [returned by `relay` completions], name: "rid", width: 3.8, height: .9)
     carrow("seq", "attempt")
+    carrow("attempt", "rid")
+    carrow("seq", "rid")
   }),
   kind: image,
   caption: [Request-id layout used for deterministic completion matching.],
@@ -353,15 +372,17 @@ The label filter is normalised by lowercasing and removing underscores, matching
 
 #figure(
   canvas({
-    cstore((0, 1), [`chunks` table], name: "table")
-    cbox((2.8, 1.8), [B-tree index], body: [doc kind page], name: "index")
-    cbox((2.8, .2), [sqlite-vector], body: [quantized scan], name: "vector")
-    cbox((5.6, .6), [ranked search], body: [results], name: "results")
+    cstore((-0.75, 1.0), [`chunks` table], body: [source, text, embedding, doc_id, kind, page, label], name: "table", width: 3.45, height: 1.35)
+    cbox((3.8, 1.8), [B-tree index], body: [doc_id, kind, page], name: "index", width: 2.4)
+    cbox((3.8, .25), [sqlite-vector], body: [embedding scan], name: "vector", width: 2.4)
+    cstore((7.0, 1.0), [ranked search], body: [filtered nearest chunks], name: "results", width: 2.55)
 
-    carrow("table", "index")
-    carrow("table", "vector")
+    carrow("table.east", "index.west")
+    carrow("table.east", "vector.west")
     carrow("index", "results")
-    carrow("vector", "results")
+    carrow("vector.east", "results.west")
+    ctext((1.65, 1.55), [metadata path], size: 6.5pt)
+    ctext((1.65, .55), [vector path], size: 6.5pt)
   }),
   kind: image,
   caption: [`chunkvec` storage schema and retrieval indexes.],
@@ -384,16 +405,22 @@ Failures mark the chunk as unsuccessful. Successful rows are committed when the 
 
 #figure(
   canvas({
-    cbox((0, 1.1), [Load chunks], name: "load")
-    cstore((2.6, 1.1), [Open DB], name: "db")
-    cbox((5.2, 1.1), [Select missing], name: "missing")
-    cbox((5.2, -.2), [Embeddings], name: "embed")
-    cstore((7.8, -.2), [Commit], name: "commit")
+    cbox((0, 1.3), [cvstore], body: [command], name: "cli")
+    cbox((2.5, 1.3), [chunk parser], body: [loadInputChunks], name: "parser")
+    cstore((5.1, 1.3), [SQLite], body: [open + transaction], name: "db")
+    cbox((7.8, 1.3), [embedding pipeline], body: [missing chunks], name: "pipe", width: 2.35)
+    cbox((10.6, 1.3), [embedding API], body: [vectors], name: "api")
+    cstore((5.1, -.15), [insert rows], body: [quantize + commit], name: "commit", width: 2.35)
 
-    carrow("load", "db")
-    carrow("db", "missing")
-    carrow("missing", "embed")
-    carrow("embed", "commit")
+    carrow("cli", "parser")
+    carrow("cli", "db")
+    carrow("db", "pipe")
+    carrow("pipe", "api")
+    carrow("api", "pipe")
+    carrow("pipe.south-west", "commit.north-east")
+    ctext((3.7, .95), [selectMissingChunks], size: 6.4pt)
+    ctext((9.2, 1.65), [requests], size: 6.4pt)
+    ctext((9.2, .95), [responses], size: 6.4pt)
   }),
   kind: image,
   caption: [`chunkvec` ingest sequence from marked chunks to committed vectors.],
@@ -465,6 +492,8 @@ The integration test uses a local asynchronous HTTP server to verify:
     carrow("decode", "array")
     carrow("array", "check")
     carrow("check", "opus")
+    ctext((9.1, .34), [ordered by seqId], size: 6.5pt)
+    ctext((11.7, .34), [validated], size: 6.5pt)
   }),
   kind: image,
   caption: [`chunktts` audio validation and final `.opus` assembly.],
@@ -505,22 +534,28 @@ The transport error classifier maps curl errors into timeout, DNS, TLS, cancella
 
 #figure(
   canvas({
-    cbox((0, 1), [dispatchQueued], body: [Requests], name: "dispatch")
-    cdecision((2.8, 1), [abort], body: [requested?], name: "abort")
-    cbox((5.6, 1), [flush canceled], body: [results], name: "cancel")
-    cbox((8.4, 1), [worker stops], name: "stop")
-    cdecision((2.8, -.5), [has], body: [in-flight?], name: "inflight")
-    cbox((0, -.5), [multi.perform], body: [multi.poll], name: "curl")
-    cstore((0, -1.8), [processDone], body: [messages], name: "done")
-    cstore((5.6, -1.5), [wait for work], body: [or close], name: "wait")
+    cbox((0, 1.2), [dispatchQueued], body: [requests], name: "dispatch", width: 2.45)
+    cdecision((3.0, 1.2), [abort], body: [requested?], name: "abort", width: 2.1)
+    cbox((5.9, 2.45), [flush canceled], body: [results], name: "cancel", width: 2.45)
+    cbox((8.75, 2.45), [worker stops], name: "stop", width: 2.25)
+    cdecision((5.9, -.25), [has], body: [in-flight?], name: "inflight", width: 2.1)
+    cbox((3.0, -1.55), [multi.perform], body: [multi.poll], name: "curl", width: 2.45)
+    cstore((3.0, -2.85), [processDone], body: [messages], name: "done", width: 2.45)
+    cstore((8.75, -1.55), [wait for work], body: [or close], name: "wait", width: 2.45)
 
-    carrow("dispatch", "abort")
-    carrow("abort", "cancel")
-    carrow("cancel", "stop")
-    carrow("abort", "inflight")
-    carrow("inflight", "curl")
-    carrow("curl", "done")
-    carrow("inflight", "wait")
+    carrow("dispatch.east", "abort.west")
+    carrow("abort.north-east", "cancel.west")
+    carrow("cancel.east", "stop.west")
+    carrow("abort.south-east", "inflight.north-west")
+    carrow("inflight.south-west", "curl.east")
+    carrow("curl.south", "done.north")
+    carrow("inflight.south-east", "wait.west")
+    cpatharrow("done.south", (3.0, -3.55), (-1.2, -3.55), "dispatch.south-west")
+    cpatharrow("wait.south", (8.75, -3.55), (-1.2, -3.55), "dispatch.south-west")
+    ctext((4.45, 2.0), [yes], size: 6.7pt)
+    ctext((4.35, .45), [no], size: 6.7pt)
+    ctext((4.45, -.85), [yes], size: 6.7pt)
+    ctext((7.25, -.85), [no], size: 6.7pt)
   }),
   kind: image,
   caption: [Worker control flow in the `relay` HTTP transport library.],
@@ -628,21 +663,21 @@ This artefact-based design allows the system to be inspected at each stage. It a
 
 #figure(
   canvas({
-    cstore((0, 1.1), [PDF], name: "pdf")
-    cbox((2.0, 1.1), [pdfocr], name: "pdfocr")
-    cstore((4.0, 1.1), [OCR JSONL], name: "jsonl")
-    cbox((6.0, 1.1), [rag-tool], body: [chunking], name: "ragtool")
-    cstore((8.0, 1.1), [chunk file], name: "chunkfile")
-    cbox((8.0, -.3), [cvstore], name: "cvstore")
-    cstore((6.0, -.3), [SQLite], body: [vector DB], name: "sqlite")
-    cbox((4.0, -.3), [cvquery], name: "cvquery")
-    cstore((2.0, -.3), [retrieved], body: [passages], name: "passages")
-    cbox((0, -.3), [study-assistant], name: "study")
-    cstore((0, -1.6), [study], body: [output], name: "notes")
-    cbox((2.0, -1.6), [tts-tool], name: "ttstool")
-    cstore((4.0, -1.6), [\<bk\> text], name: "bk")
-    cbox((6.0, -1.6), [chunktts], name: "chunktts2")
-    cstore((8.0, -1.6), [.opus audio], name: "opus")
+    cstore((0, 1.2), [PDF], name: "pdf", width: 1.75)
+    cbox((2.35, 1.2), [pdfocr], name: "pdfocr", width: 1.8)
+    cstore((4.7, 1.2), [OCR JSONL], name: "jsonl", width: 1.95)
+    cbox((7.05, 1.2), [rag-tool], body: [chunking], name: "ragtool", width: 1.95)
+    cstore((9.4, 1.2), [chunk file], name: "chunkfile", width: 1.95)
+    cbox((9.4, -.35), [cvstore], name: "cvstore", width: 1.85)
+    cstore((7.05, -.35), [SQLite], body: [vector DB], name: "sqlite", width: 1.95)
+    cbox((4.7, -.35), [cvquery], name: "cvquery", width: 1.85)
+    cstore((2.35, -.35), [retrieved], body: [passages], name: "passages", width: 1.95)
+    cbox((0, -.35), [study-assistant], name: "study", width: 2.05)
+    cstore((0, -1.85), [study], body: [output], name: "notes", width: 1.85)
+    cbox((2.35, -1.85), [tts-tool], name: "ttstool", width: 1.85)
+    cstore((4.7, -1.85), [\<bk\> text], name: "bk", width: 1.85)
+    cbox((7.05, -1.85), [chunktts], name: "chunktts2", width: 1.85)
+    cstore((9.4, -1.85), [.opus audio], name: "opus", width: 1.85)
 
     carrow("pdf", "pdfocr")
     carrow("pdfocr", "jsonl")

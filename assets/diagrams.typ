@@ -18,20 +18,24 @@
     align(center + horizon)[
       #set par(justify: false, leading: 0.46em, spacing: 0em)
       #set text(hyphenate: false)
-      #text(size: 8.1pt)[
+      #text(size: 8.4pt)[
         *#title*
         #if body != none [
           #linebreak()
-          #text(size: 7.1pt)[#body]
+          #text(size: 7.3pt)[#body]
         ]
       ]
     ],
     frame: "rect",
     fill: fill,
-    stroke: 0.38pt + stroke,
-    padding: .04,
+    stroke: 0.45pt + stroke,
+    padding: .06,
     name: name,
   )
+}
+
+#let cwide(pos, title, body: none, name: none, width: 2.55, height: .98) = {
+  cbox(pos, title, body: body, name: name, width: width, height: height)
 }
 
 #let cstore(pos, title, body: none, name: none, width: 2.05, height: .95) = {
@@ -44,4 +48,18 @@
 
 #let carrow(from, to) = {
   draw.line(from, to, mark: (end: ">"), stroke: 0.5pt + rgb("#52606b"))
+}
+
+#let cpatharrow(..pts) = {
+  draw.line(..pts, mark: (end: ">"), stroke: 0.5pt + rgb("#52606b"))
+}
+
+#let ctext(pos, body, size: 7pt, width: .72, height: .24) = {
+  let x = pos.at(0)
+  let y = pos.at(1)
+  draw.content(
+    (x - width / 2, y - height / 2),
+    (x + width / 2, y + height / 2),
+    align(center + horizon)[#text(size: size)[#body]],
+  )
 }

@@ -25,7 +25,7 @@ This layered design avoids coupling study-output generation to implementation de
 
 #figure(
   canvas({
-    cbox((0, 3), [Student], body: [study request], name: "student")
+    cbox((3.2, 4.3), [Student], body: [study request], name: "student")
     cbox((3.2, 3), [study-assistant], body: [mode selection], name: "agent")
 
     cbox((0, 1.6), [`ocr-tool`], body: [PDF extraction], name: "ocrtool")
@@ -36,8 +36,8 @@ This layered design avoids coupling study-output generation to implementation de
     cbox((3.2, .2), [`chunkvec`], body: [cvstore / cvquery], name: "chunkvec")
     cbox((6.4, .2), [`chunktts`], body: [TTS pipeline], name: "chunktts")
 
-    cstore((0, -1.1), [SQLite], body: [vector store], name: "storage")
-    cstore((6.4, -1.1), [OpenAI-compatible], body: [model endpoints], name: "models")
+    cstore((3.2, -1.1), [SQLite], body: [vector store], name: "storage")
+    cstore((0, -1.1), [OpenAI-compatible], body: [model endpoints], name: "models")
 
     carrow("student", "agent")
     carrow("agent", "ocrtool")
@@ -46,11 +46,11 @@ This layered design avoids coupling study-output generation to implementation de
     carrow("ocrtool", "pdfocr")
     carrow("ragtool", "chunkvec")
     carrow("ttstool", "chunktts")
-    carrow("chunkvec", "storage")
-    carrow("storage", "chunkvec")
-    carrow("pdfocr", "models")
-    carrow("chunkvec", "models")
-    carrow("chunktts", "models")
+    carrow("chunkvec.south-west", "storage.north-west")
+    carrow("storage.north-east", "chunkvec.south-east")
+    carrow("pdfocr.south", "models.north")
+    carrow("chunkvec.south-west", "models.north-east")
+    carrow("chunktts.south-west", "models.north-east")
   }),
   kind: image,
   caption: [Global architecture of the study-assistant system.],
@@ -252,8 +252,8 @@ The shared pattern is not accidental. It is the mechanism by which the system ke
     carrow("model", "stage")
     carrow("stage", "jsonl")
     carrow("webp", "cache")
-    carrow("cache", "request")
-    carrow("model", "retry")
+    carrow("cache.north-east", "request.south-west")
+    carrow("model.south-west", "retry.north-east")
     carrow("retry", "request")
   }),
   kind: image,
@@ -286,8 +286,8 @@ The OCR pipeline uses `N` for selected page count and `K` for maximum active/in-
     carrow("sqlite", "vector")
     carrow("query", "qemb")
     carrow("qemb", "filters")
-    carrow("filters", "vector")
-    carrow("vector", "results")
+    carrow("filters.north-east", "vector.south-west")
+    carrow("vector.south-west", "results.north-east")
   }),
   kind: image,
   caption: [RAG storage and retrieval data flow.],
@@ -318,7 +318,7 @@ The storage path (`cvstore`) and query path (`cvquery`) are deliberately separat
     carrow("endpoint", "decode")
     carrow("decode", "staged")
     carrow("staged", "opus")
-    carrow("endpoint", "retry")
+    carrow("endpoint.south-west", "retry.north-east")
     carrow("retry", "speech")
   }),
   kind: image,

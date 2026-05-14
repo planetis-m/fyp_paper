@@ -168,7 +168,7 @@ FROM """ & TableName & """ AS c
 JOIN vector_quantize_scan('""" & TableName & "', '" &
     EmbeddingColumn & """', ?) AS v
   ON c.id = v.rowid
-"""
+""" # """
 
   var haveWhereClause = false
   if filters.docId.len > 0:
