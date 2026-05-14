@@ -87,12 +87,12 @@
     placement: auto,
   )
 
-  set figure.caption(separator: parbreak(), position: top)
+  show figure: set figure.caption(separator: [], position: bottom)
   show figure.caption: set align(left)
   show figure.caption: set par(first-line-indent: 0em)
   show figure.caption: it => {
     strong[#it.supplement #context it.counter.display(it.numbering)]
-    it.separator
+    h(0.5em)
     emph(it.body)
   }
 

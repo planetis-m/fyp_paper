@@ -67,6 +67,7 @@ ref-9:
   type: web
   title: "JSON Lines"
   author: "JSON Lines"
+  date: 2026-02-28
   url:
     value: "https://jsonlines.org/"
     date: 2026-02-28
@@ -74,6 +75,7 @@ ref-10:
   type: web
   title: "libcurl: Multi interface overview"
   author: "curl"
+  date: 2026-02-28
   url:
     value: "https://curl.se/libcurl/c/libcurl-multi.html"
     date: 2026-02-28
@@ -104,20 +106,23 @@ ref-19:
   type: web
   title: "allenai/olmOCR-2-7B-1025"
   author: "DeepInfra"
+  date: 2026-05-03
   url:
     value: "https://deepinfra.com/allenai/olmOCR-2-7B-1025"
     date: 2026-05-03
 ref-23:
   type: web
   title: "OCR_benchmarks_academic"
-  author: "planetis-m"
+  author: "Geralis, A."
+  date: 2026-03-01
   url:
     value: "https://github.com/planetis-m/OCR_benchmarks_academic"
     date: 2026-03-01
 ref-25:
   type: web
   title: "OCR_benchmarks_academic"
-  author: "planetis-m"
+  author: "Geralis, A."
+  date: 2026-03-01
   url:
     value: "https://github.com/planetis-m/OCR_benchmarks_academic"
     date: 2026-03-01
@@ -125,6 +130,7 @@ ref-26:
   type: web
   title: "google/gemma-4-31B-it"
   author: "DeepInfra"
+  date: 2026-05-03
   url:
     value: "https://deepinfra.com/google/gemma-4-31B-it"
     date: 2026-05-03
@@ -172,6 +178,7 @@ ref-39:
   type: web
   title: "SQLite vector extension: API reference"
   author: "sqliteai"
+  date: 2026-05-03
   url:
     value: "https://github.com/sqliteai/sqlite-vector/blob/main/API.md"
     date: 2026-05-03
@@ -280,6 +287,7 @@ ref-47:
   type: web
   title: "Study with Thea"
   author: "Thea Study"
+  date: 2026-05-03
   url:
     value: "https://www.theastudy.com/home"
     date: 2026-05-03
@@ -287,6 +295,7 @@ ref-48:
   type: web
   title: "Learn about NotebookLM"
   author: "Google"
+  date: 2026-05-03
   parent:
     type: web
     title: "NotebookLM Help"
@@ -297,6 +306,7 @@ ref-49:
   type: web
   title: "Generate Audio Overview in NotebookLM"
   author: "Google"
+  date: 2026-05-03
   parent:
     type: web
     title: "NotebookLM Help"
