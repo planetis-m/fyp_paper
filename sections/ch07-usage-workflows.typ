@@ -1,4 +1,4 @@
-#import "../lib.typ": apa-figure
+#import "../lib.typ": apa-figure, excerpt
 
 = End-to-End Workflow Evaluation <chap:workflows>
 
@@ -9,10 +9,9 @@ The workflows are evaluated against the objectives defined by the `study-assista
 
 *Prompt.*
 
-```text
-Use the study-assistant in essay mode on the lecture
-slides at `08_Association_Analysis.pdf` for exam preparation
-```
+#excerpt[
+  Use the study-assistant in essay mode on the lecture slides at `08_Association_Analysis.pdf` for exam preparation
+]
 
 
 The recorded output is an essay-mode workflow rather than a strict transcription workflow. Under the `study-assistant` contract, essay mode should produce three to four exam-style prompts, include conceptual and applied questions, provide sample answers of roughly 200 words, and remain grounded in the prepared source text. Judged against that objective, the workflow is largely successful.
@@ -25,15 +24,11 @@ $ c = frac(sigma("Milk, Diaper, Beer"), sigma("Milk, Diaper")) = frac(2, 3) = 0.
 
 The generated essay set covered the main examinable ideas in the lecture: Apriori pruning, support and confidence, lift, association-rule generation, and interestingness measures. A representative prompt and answer excerpt were:
 
-```text
-Discuss the Apriori principle and explain how it reduces the computational
-cost of frequent itemset mining.
+#excerpt[
+  Discuss the Apriori principle and explain how it reduces the computational cost of frequent itemset mining.
 
-The Apriori principle states that if an itemset is frequent, then all of its
-subsets must also be frequent. Equivalently, if an itemset is infrequent, all
-of its supersets must be infrequent. This follows from the anti-monotone
-property of support...
-```
+  The Apriori principle states that if an itemset is frequent, then all of its subsets must also be frequent. Equivalently, if an itemset is infrequent, all of its supersets must be infrequent. This follows from the anti-monotone property of support...
+]
 
 
 This is a strong match to the essay-mode objective. The answer asks for explanation rather than recall alone, uses formal academic verbs, and connects the principle to computational pruning. The Tea-Coffee answer is also well-grounded: it uses the source example where confidence is `150/200 = 0.75` but the base coffee probability is `800/1000 = 0.80`, leading to lift `0.9375` and a slight negative association.
@@ -45,53 +40,47 @@ The limitations are modest relative to the task. OCR introduced small local erro
 
 *Storage prompt.*
 
-```text
-Use the OCR tool to extract pages 358-402 from
-Introduction to Data Mining, then use the RAG tool to
-store the extracted text so I can search it later
-for exam revision
-```
+#excerpt[
+  Use the OCR tool to extract pages 358-402 from Introduction to Data Mining, then use the RAG tool to store the extracted text so I can search it later for exam revision
+]
 
 
 *Search prompt.*
 
-```text
-Use the RAG tool to search my stored notes for
-how does the Naive Bayes classifier handle zero probability conditions
-```
+#excerpt[
+  Use the RAG tool to search my stored notes for how does the Naive Bayes classifier handle zero probability conditions
+]
 
 
 The intended RAG workflow is to convert source material into coherent chunks and retrieve relevant source content later. The store output reports successful OCR extraction, cleaning, and storage of the textbook section as 26 semantic chunks. The chunking is broadly appropriate for exam revision: chunks are organised around topics such as nearest-neighbour classification, Bayes' theorem, the Naive Bayes assumption, zero conditional probability, Bayesian networks, and inference.
 
 The relevant stored chunk is directly aligned with the later query:
 
-```text
-<chunk page=379 label="Zero Conditional Probability">
-Handling Zero Conditional Probabilities: If the conditional probability for
-any attribute is zero, the entire class-conditional probability becomes zero.
-This happens when the number of training instances is small and the number of
-possible attribute values is large.
+#excerpt[
+  `<chunk page=379 label="Zero Conditional Probability">`
 
-Two alternate estimates to avoid vanishing probabilities:
-Laplace estimate: P(Xi=c|y) = (nc + 1) / (n + v) ...
-m-estimate: P(Xi=c|y) = (nc + m*p) / (n + m) ...
-```
+  Handling Zero Conditional Probabilities: If the conditional probability for any attribute is zero, the entire class-conditional probability becomes zero. This happens when the number of training instances is small and the number of possible attribute values is large.
+
+  Two alternate estimates to avoid vanishing probabilities:
+
+  Laplace estimate: `P(Xi=c|y) = (nc + 1) / (n + v) ...`
+
+  m-estimate: `P(Xi=c|y) = (nc + m*p) / (n + m) ...`
+]
 
 
 The search result answered the query accurately:
 
-```text
-If the conditional probability for any attribute is zero,
-the entire class-conditional probability becomes zero.
+#excerpt[
+  If the conditional probability for any attribute is zero, the entire class-conditional probability becomes zero.
 
-Example (Loan Default Prediction): For class Yes, no
-training instance has Marital Status=Married, so
-P(Status=Married|Yes) = 0, which zeroes out the entire product P(x|Yes).
+  Example (Loan Default Prediction): For class Yes, no training instance has Marital Status=Married, so `P(Status=Married|Yes) = 0`, which zeroes out the entire product `P(x|Yes)`.
 
-Two alternate estimates to avoid vanishing probabilities:
-- Laplace estimate: P(Xi=c|y) = (nc + 1) / (n + v)
-- m-estimate: P(Xi=c|y) = (nc + m.p) / (n + m)
-```
+  Two alternate estimates to avoid vanishing probabilities:
+
+  - Laplace estimate: `P(Xi=c|y) = (nc + 1) / (n + v)`
+  - m-estimate: `P(Xi=c|y) = (nc + m.p) / (n + m)`
+]
 
 
 This demonstrates the value of RAG for the study-assistant objective. The answer is not only generally correct; it is grounded in the course-specific loan-default example and retrieves both smoothing methods discussed in the source. Compared with a naive prompt about Naive Bayes, the RAG workflow materially improves alignment with the assigned material.
@@ -105,11 +94,9 @@ Preprocessing quality is adequate for the demonstrated query. Some OCR formula f
 
 *Prompt.*
 
-```text
-Use the study-assistant in flashcard mode on the
-lecture slides at `07_Anomaly_Detection.pdf` for
-exam revision
-```
+#excerpt[
+  Use the study-assistant in flashcard mode on the lecture slides at `07_Anomaly_Detection.pdf` for exam revision
+]
 
 
 The flashcard mode requires a two-column Markdown table of high-value terms, definitions, formulas, distinctions, and core concepts. The generated deck contains 25 cards and satisfies this objective well. It covers anomaly definitions, causes, point/contextual/collective anomalies, supervised, semi-supervised and unsupervised detection, label versus score outputs, statistical tests, proximity-based methods, density-based methods, LOF, cluster-based detection, real-world issues, and applications.
@@ -142,9 +129,9 @@ The output is less suitable for calculation practice or deep derivations, but th
 
 A second flashcard artefact for Association Analysis shows similar strengths. It covers support count, support, confidence, Apriori, FP-growth, rule generation, lift, contingency tables, and interestingness measures. One formula preserves the source notation for lift:
 
-```text
-Lift(X -> Y) = c(X -> Y) / sigma(Y)
-```
+#excerpt[
+  `Lift(X -> Y) = c(X -> Y) / sigma(Y)`
+]
 
 
 Because the slides elsewhere use `sigma` for support count, this notation is potentially ambiguous. The issue is inherited from the source representation rather than invented by the model. For the study objective, the surrounding cards and examples make the concept understandable, but a validation pass could improve clarity by rewriting the denominator as `support(Y)`.
@@ -158,43 +145,35 @@ Overall, WF3 is sufficient for the study-assistant objective of exam-ready activ
 
 *Prompt.*
 
-```text
-Use the study-assistant in study-notes mode on the
-lecture slides at `06_Clustering_Density_Validation.pdf`,
-then use the TTS tool to convert the notes to audio
-so I can listen while revising
-```
+#excerpt[
+  Use the study-assistant in study-notes mode on the lecture slides at `06_Clustering_Density_Validation.pdf`, then use the TTS tool to convert the notes to audio so I can listen while revising
+]
 
 
 This workflow combines two objectives: study-note generation and speech preparation. The notes should prioritise understanding, relationships, and exam relevance; the TTS input should remove Markdown and mathematical syntax that would sound unnatural when spoken.
 
 The generated notes cover the central lecture content: DBSCAN, core/border/noise points, algorithm steps, DBSCAN strengths and limitations, cluster validation, validity indices, similarity-matrix inspection, SSE, cohesion, separation, entropy, and purity. Representative study-note output:
 
-```text
-DBSCAN groups points by local density rather than by distance to centroids
-or by merging clusters hierarchically. Two parameters control the algorithm:
+#excerpt[
+  DBSCAN groups points by local density rather than by distance to centroids or by merging clusters hierarchically. Two parameters control the algorithm:
 
-- Eps: the radius that defines the neighbourhood around a point.
-- MinPts: the minimum number of points that must fall within the Eps-radius
-  for a point to qualify as dense.
-```
+  - Eps: the radius that defines the neighbourhood around a point.
+  - MinPts: the minimum number of points that must fall within the Eps-radius for a point to qualify as dense.
+]
 
 
 The TTS rewrite is a meaningful modality transformation rather than a direct file conversion. It rewrites headings, bullets, formulas, and table-like content into spoken prose:
 
-```text
-DBSCAN, Density-Based Spatial Clustering. DBSCAN groups points by local
-density rather than by distance to centroids or by merging clusters
-hierarchically. Two parameters control the algorithm. Eps, written epsilon,
-is the radius that defines the neighbourhood around a point.
-```
+#excerpt[
+  DBSCAN, Density-Based Spatial Clustering. DBSCAN groups points by local density rather than by distance to centroids or by merging clusters hierarchically. Two parameters control the algorithm. Eps, written epsilon, is the radius that defines the neighbourhood around a point.
+]
 
 
 For mathematical content, the rewrite is appropriate for listening:
 
-```text
-p sub i j equals m sub i j divided by m sub j
-```
+#excerpt[
+  p sub i j equals m sub i j divided by m sub j
+]
 
 
 This satisfies the TTS objective. The speech input is coherent, listenable, and avoids raw Markdown or LaTeX. It is also chunked into spoken units with `<bk>` markers, which supports the downstream audio tool.

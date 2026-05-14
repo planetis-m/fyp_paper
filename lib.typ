@@ -93,7 +93,8 @@
     leading: double-spacing,
   )
 
-  show table.cell: set par(leading: 1.15em)
+  show table.cell: set par(leading: 1.18em)
+  show table.cell.where(y: 0): set text(weight: "bold")
 
   show figure.where(kind: image): set block(above: 1.2em, below: 1.2em, breakable: true, sticky: true)
   show figure.where(kind: table): set block(above: 1.2em, below: 1.2em, breakable: true, sticky: false)
@@ -104,7 +105,6 @@
   )
 
   show figure: set figure.caption(separator: [], position: bottom)
-  show figure.where(kind: table): set figure.caption(position: top)
   show figure.caption: set align(center)
   show figure.caption: set par(first-line-indent: 0em)
   show figure.caption: it => {
@@ -117,14 +117,14 @@
   }
 
   set table(
-    inset: (x: 0.55em, y: 0.38em),
+    inset: (x: 0.55em, y: 0.45em),
     stroke: (x, y) => if y == 0 {
       (
         top: (thickness: 0.9pt, dash: "solid"),
         bottom: (thickness: 0.45pt, dash: "solid"),
       )
     } else {
-      none
+      (bottom: (thickness: 0.25pt, dash: "solid", paint: luma(210)))
     },
   )
 
@@ -159,7 +159,7 @@
   )
 
   show raw: set text(
-    size: font-size,
+    size: font-size * 0.86,
   )
 
   show raw.where(block: true): set text(size: font-size * 0.85)
@@ -227,3 +227,16 @@
 
   body
 }
+
+#let excerpt(body) = block(
+  above: 1em,
+  below: 1em,
+  fill: luma(250),
+  stroke: 0.45pt + luma(170),
+  inset: (x: 0.9em, y: 0.65em),
+  width: 100%,
+  breakable: true,
+)[
+  #set par(first-line-indent: 0pt)
+  #body
+]
