@@ -11,10 +11,10 @@ The system is designed as a modular agent-driven study platform rather than as a
 
 The system is therefore organised into four layers:
 
-1. *User interaction layer:* the student request and final study output.
-2. *Agent orchestration layer:* the `study-assistant` workflow and mode selection.
-3. *Tool definition layer:* `ocr-tool`, `rag-tool`, and `tts-tool` operational instructions.
-4. *Core processing layer:* Nim executables and libraries implementing OCR, retrieval, speech synthesis, HTTP, JSON, and model API handling.
++ *User interaction layer:* the student request and final study output.
++ *Agent orchestration layer:* the `study-assistant` workflow and mode selection.
++ *Tool definition layer:* `ocr-tool`, `rag-tool`, and `tts-tool` operational instructions.
++ *Core processing layer:* Nim executables and libraries implementing OCR, retrieval, speech synthesis, HTTP, JSON, and model API handling.
 
 This layered design avoids coupling study-output generation to implementation details such as PDFium handles, SQLite vector storage, or libcurl polling. It also keeps tool execution verifiable independently of the agent.
 
@@ -25,39 +25,44 @@ This layered design avoids coupling study-output generation to implementation de
 
 #figure(
   canvas({
-    cbox((0, 3), [Student], name: "student")
-    cbox((3.2, 3), [Agent], name: "agent")
-    cstore((6.4, 3), [Study output], name: "output")
+    cbox((0, 3), [Student], body: [study request], name: "student")
+    cbox((3.2, 3), [study-assistant], body: [mode selection], name: "agent")
 
-    cbox((0, 1.6), [`ocr-tool`], name: "ocrtool")
-    cbox((3.2, 1.6), [`rag-tool`], name: "ragtool")
-    cbox((6.4, 1.6), [`tts-tool`], name: "ttstool")
+    cbox((0, 1.6), [`ocr-tool`], body: [PDF extraction], name: "ocrtool")
+    cbox((3.2, 1.6), [`rag-tool`], body: [store / search], name: "ragtool")
+    cbox((6.4, 1.6), [`tts-tool`], body: [speech workflow], name: "ttstool")
 
-    cstore((0, .2), [`pdfocr`], name: "pdfocr")
-    cstore((3.2, .2), [`chunkvec`], name: "chunkvec")
-    cstore((6.4, .2), [`chunktts`], name: "chunktts")
-    cstore((3.2, -1.1), [Shared libraries], name: "shared")
+    cbox((0, .2), [`pdfocr`], body: [OCR pipeline], name: "pdfocr")
+    cbox((3.2, .2), [`chunkvec`], body: [cvstore / cvquery], name: "chunkvec")
+    cbox((6.4, .2), [`chunktts`], body: [TTS pipeline], name: "chunktts")
+
+    cstore((0, -1.1), [SQLite], body: [vector store], name: "storage")
+    cstore((6.4, -1.1), [OpenAI-compatible], body: [model endpoints], name: "models")
 
     carrow("student", "agent")
-    carrow("agent", "output")
     carrow("agent", "ocrtool")
     carrow("agent", "ragtool")
     carrow("agent", "ttstool")
     carrow("ocrtool", "pdfocr")
     carrow("ragtool", "chunkvec")
     carrow("ttstool", "chunktts")
+    carrow("chunkvec", "storage")
+    carrow("storage", "chunkvec")
+    carrow("pdfocr", "models")
+    carrow("chunkvec", "models")
+    carrow("chunktts", "models")
   }),
   kind: image,
   caption: [Global architecture of the study-assistant system.],
 )<fig:global-architecture>
 
 
-The figure expresses the central separation of concerns. The agent and tool definitions are declarative/operational layers. The Nim repositories implement execution. The shared libraries provide common infrastructure.
+The figure expresses the central separation of concerns. The agent and tool definitions are declarative/operational layers. The Nim components implement execution. The shared libraries provide common infrastructure.
 
-== Repository Responsibilities
+== Component Responsibilities
 
 
-#ref(<tbl:repo-responsibilities>) summarises the repository-level responsibilities.
+#ref(<tbl:repo-responsibilities>) summarises the component responsibilities.
 
 
 #apa-figure(
@@ -105,8 +110,43 @@ The figure expresses the central separation of concerns. The agent and tool defi
     [Build and parse OpenAI-compatible API calls],
     [chat, embeddings, audio speech request helpers],
   ),
-  caption: [Repository responsibilities],
+  caption: [Component responsibilities],
 )<tbl:repo-responsibilities>
+
+
+== Concept-to-Component Mapping
+
+
+#ref(<tbl:foundation-mapping>) maps the background concepts from Chapter #ref(<chap:background>) to the implemented system components. This mapping belongs in the architecture chapter because it explains how the theoretical and technical background is realised in the system design.
+
+#apa-figure(
+  table(
+    columns: 3,
+    table.header([Background concept], [System component], [Design consequence]),
+    [PDF rendering and OCR],
+    [`ocr-tool`, `pdfocr`],
+    [render pages with PDFium, encode WebP, call olmOCR 2, emit ordered JSONL],
+    [Document OCR evaluation],
+    [`pdfocr` benchmarks],
+    [report CER, WER, reading-order F1, math F1, recall-oriented outcomes],
+    [Dense retrieval],
+    [`rag-tool`, `chunkvec`],
+    [embed chunks and queries, store vectors, perform nearest-neighbour search],
+    [RAG],
+    [`study-assistant`, `rag-tool`],
+    [retrieve source passages before grounded study-output generation],
+    [Neural TTS],
+    [`tts-tool`, `chunktts`],
+    [rewrite text for speech, synthesise chunks, validate audio, write `.opus`],
+    [Concurrent model APIs],
+    [`relay`, `openai`],
+    [bounded in-flight requests, retry handling, completion polling],
+    [Structured interchange],
+    [`jsonx`, JSONL],
+    [typed request/response parsing and stable output records],
+  ),
+  caption: [Mapping of background concepts to implementation components],
+)<tbl:foundation-mapping>
 
 
 == Agent-Level Interaction Model
@@ -136,21 +176,53 @@ The three tool-definition repositories encode operational policy.
 
 `tts-tool` owns speech preparation. It rewrites markdown, links, mathematical notation, URLs, file paths, and punctuation-heavy text into a speakable form. It also decides where `<bk>` markers should be placed. This is intentionally done before `chunktts` because natural speech preparation is a linguistic transformation, while `chunktts` is an artefact-generation pipeline.
 
+== Operational Contracts
+
+
+`study-assistant` requires prepared source material, maps each request to a single output form, and removes only clear metadata noise while preserving educational content.
+
+`ocr-tool` delegates PDF extraction to `pdfocr`, supports full-document and page-range extraction, and treats extracted text as raw material for downstream processing.
+
+`rag-tool` requires plain text or markdown input, stable document identifiers, explicit chunk boundaries, and retrieval from a reusable vector store.
+
+`tts-tool` requires manual rewriting for natural speech, conservative chunking with `<bk>` markers, and generation through `chunktts`.
+
+#apa-figure(
+  table(
+    columns: 4,
+    table.header([Repository], [Command surface], [System role], [Core contract]),
+    [`pdfocr`],
+    [`pdfocr INPUT.pdf --pages:"..."` or `--all-pages`],
+    [OCR processing],
+    [ordered JSONL page results, bounded concurrency, retry handling],
+    [`chunkvec`],
+    [`cvstore`, `cvquery`],
+    [RAG storage/search],
+    [marked chunk ingest, SQLite vector store, local nearest-neighbour search],
+    [`chunktts`],
+    [`chunktts INPUT.txt OUTPUT.opus`],
+    [speech generation],
+    [ordered chunk synthesis, audio validation, one final `.opus` artefact],
+  ),
+  caption: [Core tool command contracts],
+)
+
+
 == Core Processing Pattern
 
 
 The three core tools share a common processing pattern:
 
-1. Parse CLI arguments and validate required inputs.
-2. Load optional configuration from the executable directory.
-3. Resolve API credentials with environment-variable precedence.
-4. Normalise input into ordered work items.
-5. Assign deterministic request identifiers.
-6. Submit bounded batches through `relay`.
-7. Classify completions into success, retryable failure, or terminal failure.
-8. Retry retryable failures according to a time-ordered retry queue.
-9. Finalise output in deterministic order or in a transactional database state.
-10. Map the outcome to a stable exit code.
++ Parse CLI arguments and validate required inputs.
++ Load optional configuration from the executable directory.
++ Resolve API credentials with environment-variable precedence.
++ Normalise input into ordered work items.
++ Assign deterministic request identifiers.
++ Submit bounded batches through `relay`.
++ Classify completions into success, retryable failure, or terminal failure.
++ Retry retryable failures according to a time-ordered retry queue.
++ Finalise output in deterministic order or in a transactional database state.
++ Map the outcome to a stable exit code.
 
 The shared pattern is not accidental. It is the mechanism by which the system keeps remote model calls reliable enough for academic study workflows.
 
@@ -162,20 +234,27 @@ The shared pattern is not accidental. It is the mechanism by which the system ke
 #figure(
   canvas({
     cbox((0, 1.2), [Input PDF], name: "pdf")
-    cbox((2.6, 1.2), [Page select], name: "select")
-    cbox((5.2, 1.2), [Render], name: "render")
-    cbox((7.8, 1.2), [OCR request], name: "request")
-    cstore((5.2, -.1), [Cache], name: "cache")
-    cstore((7.8, -.1), [Staged], name: "stage")
-    cstore((10.4, -.1), [JSONL], name: "jsonl")
+    cbox((2.6, 1.2), [Page selection], body: [normalisation], name: "select")
+    cbox((5.2, 1.2), [PDFium], body: [render page], name: "render")
+    cbox((7.8, 1.2), [WebP], body: [encode], name: "webp")
+    cbox((10.4, 1.2), [OpenAI chat], body: [image request], name: "request")
+    cbox((13.0, 1.2), [olmOCR 2], body: [endpoint], name: "model")
+    cstore((7.8, -.1), [cached payloads], body: [O(K)], name: "cache")
+    cstore((10.4, -.1), [retry queue], name: "retry")
+    cstore((13.0, -.1), [staged results], body: [O(N)], name: "stage")
+    cbox((15.4, -.1), [ordered], body: [JSONL stdout], name: "jsonl")
 
     carrow("pdf", "select")
     carrow("select", "render")
-    carrow("render", "request")
-    carrow("render", "cache")
-    carrow("cache", "request")
-    carrow("request", "stage")
+    carrow("render", "webp")
+    carrow("webp", "request")
+    carrow("request", "model")
+    carrow("model", "stage")
     carrow("stage", "jsonl")
+    carrow("webp", "cache")
+    carrow("cache", "request")
+    carrow("model", "retry")
+    carrow("retry", "request")
   }),
   kind: image,
   caption: [OCR data flow from PDF pages to ordered JSONL records.],
@@ -192,17 +271,23 @@ The OCR pipeline uses `N` for selected page count and `K` for maximum active/in-
 #figure(
   canvas({
     cbox((0, 1.2), [Prepared text], name: "text")
-    cbox((3.0, 1.2), [Chunk parser], name: "chunks")
-    cstore((6.0, 1.2), [Vector DB], name: "store")
+    cbox((3.0, 1.2), [\<chunk ...\>], body: [parser], name: "chunks")
+    cbox((6.0, 1.2), [Embedding], body: [requests], name: "emb")
+    cstore((9.0, 1.2), [SQLite table], body: [text + metadata + vector], name: "sqlite")
+    cstore((12.0, 1.2), [sqlite-vector], body: [quantized scan], name: "vector")
     cbox((0, -.4), [User query], name: "query")
-    cbox((3.0, -.4), [Query embed], name: "qemb")
-    cstore((6.0, -.4), [Ranked chunks], name: "results")
+    cbox((3.0, -.4), [Query], body: [embedding], name: "qemb")
+    cbox((6.0, -.4), [Metadata], body: [filters], name: "filters")
+    cbox((9.0, -.4), [Ranked], body: [chunks], name: "results")
 
     carrow("text", "chunks")
-    carrow("chunks", "store")
+    carrow("chunks", "emb")
+    carrow("emb", "sqlite")
+    carrow("sqlite", "vector")
     carrow("query", "qemb")
-    carrow("qemb", "store")
-    carrow("store", "results")
+    carrow("qemb", "filters")
+    carrow("filters", "vector")
+    carrow("vector", "results")
   }),
   kind: image,
   caption: [RAG storage and retrieval data flow.],
@@ -218,18 +303,23 @@ The storage path (`cvstore`) and query path (`cvquery`) are deliberately separat
 
 #figure(
   canvas({
-    cbox((0, 1.1), [Speech text], name: "text")
-    cbox((2.6, 1.1), [Split on `<bk>`], name: "split")
-    cbox((5.2, 1.1), [Speech requests], name: "req")
-    cbox((7.8, 1.1), [Audio endpoint], name: "api")
-    cstore((7.8, -.2), [Validate audio], name: "decode")
-    cstore((10.4, -.2), [Final `.opus`], name: "opus")
+    cbox((0, 1.1), [Speech-ready], body: [text], name: "input")
+    cbox((2.6, 1.1), [Split on], body: [\<bk\>], name: "split")
+    cbox((5.2, 1.1), [Speech], body: [requests], name: "speech")
+    cbox((7.8, 1.1), [Audio speech], body: [endpoint], name: "endpoint")
+    cstore((10.4, 1.1), [libsndfile], body: [decode + validate], name: "decode")
+    cstore((13.0, 1.1), [ordered audio], body: [chunks], name: "staged")
+    cbox((15.4, 1.1), [final .opus], body: [file], name: "opus")
+    cstore((5.2, -.2), [retry queue], name: "retry")
 
-    carrow("text", "split")
-    carrow("split", "req")
-    carrow("req", "api")
-    carrow("api", "decode")
-    carrow("decode", "opus")
+    carrow("input", "split")
+    carrow("split", "speech")
+    carrow("speech", "endpoint")
+    carrow("endpoint", "decode")
+    carrow("decode", "staged")
+    carrow("staged", "opus")
+    carrow("endpoint", "retry")
+    carrow("retry", "speech")
   }),
   kind: image,
   caption: [TTS data flow from speech-prepared text to final `.opus` artefact.],
@@ -245,18 +335,20 @@ The core tools use `relay` to avoid embedding libcurl logic in each processing p
 
 #figure(
   canvas({
-    cbox((0, 1), [Tool thread], name: "main")
-    cbox((2.8, 1), [Batch], name: "batch")
-    cbox((5.6, 1), [`relay` worker], name: "relay")
-    cbox((8.4, 1), [Model API], name: "api")
-    cstore((5.6, -.4), [Ready results], name: "ready")
+    cstore((0, 1), [Tool main thread], body: [scheduler state machine], name: "main")
+    cbox((3.2, 1), [RequestBatch], body: [work items], name: "batch")
+    cstore((6.4, 1), [Relay worker thread], body: [libcurl multi], name: "relay")
+    cbox((9.6, 1), [Remote model], body: [API], name: "api")
+    cbox((0, -.4), [staging / DB /], body: [decoded chunks], name: "stage")
+    cbox((6.4, -.4), [ready results], body: [deque], name: "ready")
 
     carrow("main", "batch")
     carrow("batch", "relay")
     carrow("relay", "api")
     carrow("api", "relay")
     carrow("relay", "ready")
-    carrow("ready", "main")
+    carrow("ready", "stage")
+    carrow("stage", "main")
   }),
   kind: image,
   caption: [Component interaction between a core tool and the `relay` transport layer.],
@@ -277,7 +369,7 @@ The architecture depends on several invariants:
 - *I5: clean process channels.* Machine-readable outputs use stdout where relevant; logs use stderr.
 - *I6: configuration normalisation.* Invalid numeric values and empty strings are replaced by defaults so runtime state remains within expected bounds.
 
-These invariants are the bridge between the academic concepts in Chapter #ref(<chap:foundations>) and the implementation details in Chapter #ref(<chap:implementation>).
+These invariants are the bridge between the background concepts in Chapter #ref(<chap:background>) and the implementation details in Chapter #ref(<chap:implementation>).
 
 == Design Rationale
 

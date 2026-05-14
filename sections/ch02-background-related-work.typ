@@ -1,11 +1,11 @@
 #import "../lib.typ": apa-figure
 
-= Scientific Foundations <chap:foundations>
+= Background and Related Work <chap:background>
 
 
-This chapter establishes the scientific foundations of the study-assistant system. The implementation combines three established areas of computer science and machine learning: optical character recognition (OCR), retrieval-augmented generation (RAG), and text-to-speech (TTS). The system engineering decisions in the design and implementation chapters are grounded in these fields rather than in ad hoc automation.
+The study-assistant system combines three established areas of computer science and machine learning: optical character recognition (OCR), retrieval-augmented generation (RAG), and text-to-speech (TTS). The system engineering decisions in the design and implementation chapters are grounded in these fields rather than in ad hoc automation.
 
-The chapter also explains how these concepts map onto the implemented system. OCR motivates `pdfocr`; dense retrieval and RAG motivate `chunkvec`; neural speech synthesis motivates `chunktts`; and agent orchestration motivates the separation between the study assistant and its specialised tools.
+The relevant background also includes agentic tool use, structured data interchange, concurrent model calls, and comparable AI-assisted study systems.
 
 == Optical Character Recognition
 
@@ -16,7 +16,7 @@ Modern document OCR is broader than isolated character recognition. Real documen
 
 For PDF documents, OCR must also account for the distinction between the logical PDF object model and the rendered page. The PDF 2.0 specification defines a page-description format containing text objects, vector graphics, images, fonts, transformations, and rendering instructions. @ref-1 A page can therefore be visually readable while still lacking reliable extractable text. This is the reason the implemented OCR subsystem adopts a render-first design: `pdfocr` renders each selected page to pixels before model inference.
 
-The olmOCR line of work is especially relevant to this project because it treats PDF extraction as a vision-language problem. The olmOCR paper presents PDF processing as the conversion of visually complex pages into clean, linearised text in natural reading order while preserving structures such as sections, tables, lists, and equations. @ref-15 The olmOCR 2 work further frames OCR evaluation through targeted unit-test rewards for document OCR, reflecting the need to test not only raw character accuracy but also structure-sensitive behaviour. @ref-16
+The olmOCR line of work is especially relevant to this project because it treats PDF extraction as a vision-language problem. The olmOCR paper presents PDF processing as the conversion of visually complex pages into clean, linearised text in natural reading order while preserving structures such as sections, tables, lists, and equations. @ref-12 The olmOCR 2 work further frames OCR evaluation through targeted unit-test rewards for document OCR, reflecting the need to test not only raw character accuracy but also structure-sensitive behaviour. @ref-13
 
 In this project, OCR is not a final goal by itself. It is a grounding stage for study workflows. If extracted text omits definitions, equations, table content, or reading-order structure, downstream study notes and quizzes become unreliable. This makes recall, structure preservation, and stable page ordering central evaluation criteria.
 
@@ -101,7 +101,11 @@ Thea.study is an AI study platform that allows students to upload materials and 
 
 Google NotebookLM is an AI-powered research and note assistant that allows users to upload sources, chat with notebooks, receive source-grounded responses, and transform sources into formats such as study guides, briefings, audio overviews, and mind maps. Google's documentation emphasises grounding in uploaded sources and inline citations, while its Audio Overview feature generates source-based audio discussions in multiple formats. @ref-48 @ref-49
 
-The present project shares the general objective of helping students or researchers work with their own material. Its distinction is architectural. It is an open, modular toolchain with explicit standalone OCR, retrieval, and speech components, coordinated by an agent-level workflow layer. Thea.study and NotebookLM are hosted products with integrated user-facing environments; this system is a transparent academic implementation intended to expose the boundaries between orchestration, processing tools, and reusable infrastructure. The comparison does not imply superiority over those systems in product maturity, user experience, or model capability.
+The present project shares the general objective of helping students or researchers work with their own material. Its distinction is architectural. The Study and NotebookLM are hosted products with integrated user-facing environments; this project is an open, modular academic implementation with explicit standalone OCR, retrieval, and speech components coordinated by an agent-level workflow layer.
+
+This makes the project better suited to the aims of the thesis, although not necessarily better as a commercial product. The implementation exposes the boundaries between orchestration, processing tools, and reusable infrastructure. OCR, retrieval, and speech generation can be tested independently, invoked without the agent, and inspected through command-line inputs, outputs, schemas, logs, and benchmark artifacts. This transparency supports reproducibility and technical evaluation in a way that hosted products do not normally expose to users.
+
+The comparison therefore does not claim superiority in product maturity, user experience, or model capability. It positions the project as a more inspectable and extensible engineering contribution for academic study workflows.
 
 == Streaming, Concurrency, and Structured Data
 
@@ -111,38 +115,3 @@ The system relies on streaming and structured data for composability. JSON Lines
 The remote model calls are network-bound and therefore benefit from concurrency. The implementation uses libcurl's multi interface through `relay`; the libcurl documentation describes the multi interface as a way for applications to manage multiple simultaneous transfers and drive network progress explicitly. @ref-10 This supports the bounded-concurrency design used by `pdfocr`, `chunkvec`, and `chunktts`.
 
 Structured JSON handling is also central. The OpenAI-compatible APIs require request and response bodies with predictable schemas, and the tools need stable result objects. The custom `jsonx` library provides typed JSON mapping and streaming output, which reduces the risk of schema drift compared with ad hoc string construction.
-
-== Mapping Foundations to the System
-
-
-#ref(<tbl:foundation-mapping>) maps the scientific foundations to project components.
-
-
-#apa-figure(
-  table(
-    columns: 3,
-    table.header([Foundation], [System component], [Implementation consequence]),
-    [PDF rendering and OCR],
-    [`ocr-tool`, `pdfocr`],
-    [render pages with PDFium, encode WebP, call olmOCR 2, emit ordered JSONL],
-    [Document OCR evaluation],
-    [`pdfocr` benchmarks],
-    [report CER, WER, reading-order F1, math F1, recall-oriented outcomes],
-    [Dense retrieval],
-    [`rag-tool`, `chunkvec`],
-    [embed chunks and queries, store vectors, perform nearest-neighbour search],
-    [RAG],
-    [`study-assistant`, `rag-tool`],
-    [retrieve source passages before grounded study-output generation],
-    [Neural TTS],
-    [`tts-tool`, `chunktts`],
-    [rewrite text for speech, synthesize chunks, validate audio, write `.opus`],
-    [Concurrent model APIs],
-    [`relay`, `openai`],
-    [bounded in-flight requests, retry handling, completion polling],
-    [Structured interchange],
-    [`jsonx`, JSONL],
-    [typed request/response parsing and stable output records],
-  ),
-  caption: [Mapping of foundations to implementation components],
-)<tbl:foundation-mapping>

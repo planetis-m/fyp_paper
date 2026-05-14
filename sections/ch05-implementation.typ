@@ -1,13 +1,13 @@
 #import "../assets/diagrams.typ": *
 #import "../lib.typ": apa-figure
 
-= Repository Analysis and Implementation <chap:implementation>
+= Implementation <chap:implementation>
 
 
-== Analysis Method
+== Implementation Overview
 
 
-This chapter documents the associated repositories as a coherent implementation. Each repository was inspected by structure, public interface, internal modules, algorithms, data flow, and verification surface. The discussion is formal system documentation rather than a line-by-line code walkthrough.
+The associated repositories form a coherent implementation. The discussion covers structure, public interfaces, internal modules, algorithms, data flow, and verification surfaces rather than line-by-line code.
 
 The implementation can be grouped into three categories:
 
@@ -15,7 +15,9 @@ The implementation can be grouped into three categories:
 - *core processing repositories:* `pdfocr`, `chunkvec`, `chunktts`; and
 - *shared Nim libraries:* `relay`, `jsonx`, `openai`.
 
-== `study-assistant`: Agent Definition Repository
+== Agent and Tool Layer
+
+=== `study-assistant`: Agent Definition Repository
 
 
 The `study-assistant` repository defines the top-level agent behaviour. Its principal artefact is an instruction file that maps user requests onto study-output modes. The key design decision is that the agent operates on prepared source material. It does not prescribe OCR, vector search, or speech generation internally; instead it relies on supporting tools when the source material requires extraction, retrieval, or audio production.
@@ -57,12 +59,12 @@ The agent mode table is:
 
 The design algorithm is:
 
-1. Receive a user request and source material.
-2. Determine whether the source material is already prepared text.
-3. If not, delegate extraction or retrieval to a tool.
-4. Select exactly one study-output mode.
-5. Clean only obvious metadata noise.
-6. Generate the target artefact using only available source content.
++ Receive a user request and source material.
++ Determine whether the source material is already prepared text.
++ If not, delegate extraction or retrieval to a tool.
++ Select exactly one study-output mode.
++ Clean only obvious metadata noise.
++ Generate the target artefact using only available source content.
 
 The major invariant is source grounding: the agent must not introduce unsupported factual claims into study outputs. This is essential for academic reliability.
 
@@ -70,44 +72,49 @@ The major invariant is source grounding: the agent must not introduce unsupporte
 
 #figure(
   canvas({
-    cbox((0, 1.5), [Request], name: "request")
+    cbox((0, 1.5), [User request], body: [and material], name: "request")
     cdecision((2.7, 1.5), [PDF input?], name: "pdf")
-    cbox((2.7, .1), [OCR path], name: "ocr")
-    cdecision((5.4, 1.5), [Need RAG?], name: "rag")
-    cdecision((8.1, 1.5), [Need audio?], name: "audio")
-    cbox((8.1, .1), [TTS path], name: "tts")
-    cstore((10.8, .8), [Study output], name: "output")
+    cbox((2.7, .1), [ocr-tool], body: [pdfocr], name: "ocr")
+    cdecision((5.4, 1.5), [Needs store/], body: [search?], name: "stored")
+    cbox((5.4, .1), [rag-tool], body: [cvstore/cvquery], name: "rag")
+    cdecision((8.1, 1.5), [Audio], body: [requested?], name: "audio")
+    cbox((8.1, .1), [tts-tool], body: [chunktts], name: "tts")
+    cbox((10.8, .4), [study-assistant], body: [select one mode], name: "mode")
+    cstore((13.0, .8), [Study output], body: [or artefact], name: "output")
 
     carrow("request", "pdf")
     carrow("pdf", "ocr")
-    carrow("pdf", "rag")
-    carrow("ocr", "rag")
+    carrow("pdf", "stored")
+    carrow("ocr", "stored")
+    carrow("stored", "rag")
+    carrow("stored", "audio")
     carrow("rag", "audio")
     carrow("audio", "tts")
-    carrow("audio", "output")
+    carrow("audio", "mode")
     carrow("tts", "output")
+    carrow("mode", "output")
   }),
   kind: image,
   caption: [Agent decision flow across study modes and tool handoffs.],
 )<fig:agent-decision-flow>
 
 
-== `ocr-tool`: OCR Tool Definition Repository
+=== `ocr-tool`: OCR Tool Definition Repository
 
 
 `ocr-tool` defines when and how PDF extraction is performed. It owns the use of `pdfocr` at the instruction layer. Its workflow is:
 
-1. Determine that the input is a PDF requiring text extraction.
-2. Check whether OCR output for the same PDF/page selection is available in the session cache.
-3. If the cache misses, run `pdfocr` with `--all-pages` or `--pages:"..."`.
-4. Store extracted text in the cache.
-5. Pass raw extracted text to the downstream study workflow.
++ Determine that the input is a PDF requiring text extraction.
++ Check whether OCR output for the same PDF/page selection is available in the session cache.
++ If the cache misses, run `pdfocr` with `--all-pages` or `--pages:"..."`.
++ Store extracted text in the cache.
++ Pass raw extracted text to the downstream study workflow.
 
 This repository also defines a strict responsibility boundary: OCR extraction does not generate summaries, flashcards, or interpretations. It produces source text. The cleanup rule removes only clear metadata such as headers, footers, page numbers, timestamps, and extraneous identifiers.
 
 The cache design is intentionally outside `pdfocr`. The OCR executable stays stateless and composable, while the tool definition can optimise repeated agent sessions.
 
-== `rag-tool`: RAG Tool Definition Repository
+=== `rag-tool`: RAG Tool Definition Repository
 
 
 `rag-tool` defines two modes: store and search.
@@ -121,7 +128,7 @@ This maps directly to `chunkvec`'s storage schema. The design protects retrieval
 
 In search mode, the tool builds one semantic query string and applies filters only when the user clearly requests constrained retrieval. This avoids over-filtering, which can hide relevant material.
 
-== `tts-tool`: TTS Tool Definition Repository
+=== `tts-tool`: TTS Tool Definition Repository
 
 
 `tts-tool` defines the transformation from visual text to speech-ready text. The repository treats speech preparation as a separate task from audio synthesis. The agent must rewrite or remove:
@@ -139,7 +146,9 @@ The output passed to `chunktts` is a text file with `<bk>` markers. These marker
 
 The design separates linguistic preparation from synthesis. `tts-tool` decides what should be spoken; `chunktts` decides how to request, validate, and assemble audio.
 
-== `pdfocr`: Repository Structure
+== OCR Implementation
+
+=== `pdfocr`: Module Structure
 
 
 `pdfocr` is a Nim command-line OCR system. The inspected structure contains:
@@ -160,7 +169,7 @@ The design separates linguistic preparation from synthesis. `tts-tool` decides w
 
 The repository is structured around a clean separation between native-resource wrappers, configuration, request construction, scheduling, and output schema.
 
-== `pdfocr`: Core Algorithms
+=== `pdfocr`: Core Algorithms
 
 
 The page-selection algorithm parses a comma-separated grammar with singleton pages and inclusive ranges. Each page is inserted into the result sequence using a lower-bound search. This yields sorted unique page numbers regardless of input order or duplicates.
@@ -187,13 +196,13 @@ The pipeline state contains:
 
 The main loop performs:
 
-1. submit due retries;
-2. submit fresh attempts while capacity remains;
-3. start a relay batch;
-4. flush ordered staged results;
-5. drain ready relay results;
-6. flush again;
-7. wait for progress if no result was drained.
++ submit due retries;
++ submit fresh attempts while capacity remains;
++ start a relay batch;
++ flush ordered staged results;
++ drain ready relay results;
++ flush again;
++ wait for progress if no result was drained.
 
 This loop implements both throughput and ordering. It may receive page 10 before page 2, but it cannot emit page 10 until all earlier selected sequence ids are staged.
 
@@ -201,21 +210,23 @@ This loop implements both throughput and ordering. It may receive page 10 before
 
 #figure(
   canvas({
-    cbox((0, 1.2), [Pending], name: "pending")
-    cbox((2.5, 1.2), [Render], name: "render")
-    cbox((5.0, 1.2), [Encode], name: "encode")
-    cbox((7.5, 1.2), [In flight], name: "flight")
-    cdecision((7.5, -.2), [Retry wait], name: "retry")
-    cstore((10.0, 1.2), [Terminal], name: "terminal")
-    cstore((12.5, 1.2), [JSONL], name: "jsonl")
+    cbox((0, 1.2), [Pending], body: [seqId], name: "pending")
+    cbox((2.5, 1.2), [Render page], body: [PDFium], name: "render")
+    cbox((5.0, 1.2), [Encode], body: [WebP], name: "encode")
+    cbox((7.5, 1.2), [Queued /], body: [In flight], name: "request")
+    cbox((7.5, -.2), [RetryWait], body: [dueAt], name: "retry")
+    cstore((10.0, 1.2), [Terminal], body: [page result], name: "terminal")
+    cstore((12.5, 1.2), [Staged], body: [by seqId], name: "staged")
+    cstore((15.0, 1.2), [Emitted], body: [JSONL], name: "emitted")
 
     carrow("pending", "render")
     carrow("render", "encode")
-    carrow("encode", "flight")
-    carrow("flight", "retry")
-    carrow("retry", "flight")
-    carrow("flight", "terminal")
-    carrow("terminal", "jsonl")
+    carrow("encode", "request")
+    carrow("request", "retry")
+    carrow("retry", "request")
+    carrow("request", "terminal")
+    carrow("terminal", "staged")
+    carrow("staged", "emitted")
   }),
   kind: image,
   caption: [Per-page state machine in the `pdfocr` OCR pipeline.],
@@ -226,8 +237,8 @@ This loop implements both throughput and ordering. It may receive page 10 before
 
 #figure(
   canvas({
-    cstore((0, 0), [Seq bits], name: "seq")
-    cbox((3.0, 0), [Attempt bits], name: "attempt")
+    cstore((0, 0), [Sequence id bits], body: [logical page / chunk], name: "seq")
+    cbox((3.0, 0), [16 attempt], body: [bits], name: "attempt")
     carrow("seq", "attempt")
   }),
   kind: image,
@@ -235,7 +246,7 @@ This loop implements both throughput and ordering. It may receive page 10 before
 )<fig:request-id-codec>
 
 
-== `pdfocr`: Error and Output Model
+=== `pdfocr`: Error and Output Model
 
 
 `pdfocr` has item-level and fatal failures. Item-level failures become JSONL objects. Fatal failures become exit code `3` and may leave stdout incomplete.
@@ -281,7 +292,9 @@ The page result schema has success and error variants:
 
 The error kinds are `PdfError`, `EncodeError`, `NetworkError`, `Timeout`, `RateLimit`, `HttpError`, and `ParseError`.
 
-== `chunkvec`: Repository Structure
+== RAG Implementation
+
+=== `chunkvec`: Module Structure
 
 
 `chunkvec` implements retrieval storage and query. Its structure contains:
@@ -299,7 +312,7 @@ The error kinds are `PdfError`, `EncodeError`, `NetworkError`, `Timeout`, `RateL
 
 The repository exposes two separate commands because storage and search have different operational profiles.
 
-== `chunkvec`: Chunk Parser
+=== `chunkvec`: Chunk Parser
 
 
 The chunk parser expects every chunk to start at a line with a `<chunk ...>` marker. Supported attributes are:
@@ -311,7 +324,7 @@ Unknown attributes are rejected. Empty chunk bodies are rejected. Whitespace bef
 
 This strict input grammar matters because retrieval metadata becomes part of the persistent database. Permissive parsing would make stored retrieval state harder to reason about.
 
-== `chunkvec`: Database and Vector Search
+=== `chunkvec`: Database and Vector Search
 
 
 The SQLite schema stores:
@@ -341,15 +354,13 @@ The label filter is normalised by lowercasing and removing underscores, matching
 #figure(
   canvas({
     cstore((0, 1), [`chunks` table], name: "table")
-    cbox((2.8, 1.8), [B-tree index], name: "btree")
-    cbox((2.8, .2), [Vector scan], name: "vector")
-    cbox((5.6, 1.8), [metadata filters], name: "filters")
-    cstore((5.6, .2), [Results], name: "results")
+    cbox((2.8, 1.8), [B-tree index], body: [doc kind page], name: "index")
+    cbox((2.8, .2), [sqlite-vector], body: [quantized scan], name: "vector")
+    cbox((5.6, .6), [ranked search], body: [results], name: "results")
 
-    carrow("table", "btree")
+    carrow("table", "index")
     carrow("table", "vector")
-    carrow("btree", "filters")
-    carrow("filters", "results")
+    carrow("index", "results")
     carrow("vector", "results")
   }),
   kind: image,
@@ -357,15 +368,15 @@ The label filter is normalised by lowercasing and removing underscores, matching
 )<fig:chunkvec-schema>
 
 
-== `chunkvec`: Embedding Pipeline
+=== `chunkvec`: Embedding Pipeline
 
 
 The ingest pipeline uses the same state-machine pattern as OCR, but its terminal action is database insertion rather than JSONL emission. On each successful embedding response, the pipeline verifies:
 
-1. the response parses as an embedding result;
-2. the response contains an embedding;
-3. the embedding length equals the configured dimension; and
-4. the row can be inserted through the prepared statement.
++ the response parses as an embedding result;
++ the response contains an embedding;
++ the embedding length equals the configured dimension; and
++ the row can be inserted through the prepared statement.
 
 Failures mark the chunk as unsuccessful. Successful rows are committed when the transaction completes. If all chunks are already present, the command exits successfully without sending remote embedding requests.
 
@@ -389,7 +400,9 @@ Failures mark the chunk as unsuccessful. Successful rows are committed when the 
 )<fig:chunkvec-ingest-sequence>
 
 
-== `chunktts`: Repository Structure
+== TTS Implementation
+
+=== `chunktts`: Module Structure
 
 
 `chunktts` implements ordered text-to-speech. Its structure contains:
@@ -412,7 +425,7 @@ chunktts INPUT.txt OUTPUT.opus
 
 All chunking decisions are encoded in the input file through `<bk>` markers.
 
-== `chunktts`: Speech and Audio Algorithms
+=== `chunktts`: Speech and Audio Algorithms
 
 
 The chunk splitter is simple by design: split on the configured marker, trim whitespace, and discard empty chunks. More complex linguistic chunking belongs to `tts-tool`, not to the executable.
@@ -440,21 +453,27 @@ The integration test uses a local asynchronous HTTP server to verify:
 
 #figure(
   canvas({
-    cbox((0, 0), [WAV response], name: "wav")
-    cbox((2.6, 0), [Virtual I/O], name: "virt")
-    cstore((5.2, 0), [Decoded audio], name: "decoded")
-    cstore((8.0, 0), [Opus writer], name: "opus")
+    cbox((0, 0), [HTTP response], body: [WAV bytes], name: "body")
+    cbox((2.6, 0), [libsndfile], body: [virtual I/O], name: "virt")
+    cbox((5.2, 0), [DecodedAudio], body: [float samples], name: "decode")
+    cbox((7.8, 0), [decodedChunks], body: [seqId slots], name: "array")
+    cbox((10.4, 0), [sample rate /], body: [channel check], name: "check")
+    cbox((13.0, 0), [Ogg Opus], body: [writer], name: "opus")
 
-    carrow("wav", "virt")
-    carrow("virt", "decoded")
-    carrow("decoded", "opus")
+    carrow("body", "virt")
+    carrow("virt", "decode")
+    carrow("decode", "array")
+    carrow("array", "check")
+    carrow("check", "opus")
   }),
   kind: image,
   caption: [`chunktts` audio validation and final `.opus` assembly.],
 )<fig:chunktts-audio-assembly>
 
 
-== `relay`: HTTP Transport Library
+== Shared Infrastructure
+
+=== `relay`: HTTP Transport Library
 
 
 `relay` abstracts libcurl multi behind a Nim API. Its important public types are:
@@ -486,24 +505,29 @@ The transport error classifier maps curl errors into timeout, DNS, TLS, cancella
 
 #figure(
   canvas({
-    cbox((0, 1), [Dispatch], name: "dispatch")
-    cdecision((2.8, 1), [Abort?], name: "abort")
-    cbox((5.6, 1), [Cancel results], name: "cancel")
-    cbox((2.8, -.5), [Drive curl], name: "curl")
-    cstore((5.6, -.5), [Ready results], name: "ready")
+    cbox((0, 1), [dispatchQueued], body: [Requests], name: "dispatch")
+    cdecision((2.8, 1), [abort], body: [requested?], name: "abort")
+    cbox((5.6, 1), [flush canceled], body: [results], name: "cancel")
+    cbox((8.4, 1), [worker stops], name: "stop")
+    cdecision((2.8, -.5), [has], body: [in-flight?], name: "inflight")
+    cbox((0, -.5), [multi.perform], body: [multi.poll], name: "curl")
+    cstore((0, -1.8), [processDone], body: [messages], name: "done")
+    cstore((5.6, -1.5), [wait for work], body: [or close], name: "wait")
 
     carrow("dispatch", "abort")
     carrow("abort", "cancel")
-    carrow("abort", "curl")
-    carrow("curl", "ready")
-    carrow("ready", "dispatch")
+    carrow("cancel", "stop")
+    carrow("abort", "inflight")
+    carrow("inflight", "curl")
+    carrow("curl", "done")
+    carrow("inflight", "wait")
   }),
   kind: image,
   caption: [Worker control flow in the `relay` HTTP transport library.],
 )<fig:relay-worker-state>
 
 
-== `jsonx`: JSON Library
+=== `jsonx`: JSON Library
 
 
 `jsonx` provides a JSON lexer/parser, object mapping, streaming writers, and raw JSON support. The library is used in two ways:
@@ -515,7 +539,7 @@ The library supports `RawJson` and `CanonRawJson`. `RawJson` preserves arbitrary
 
 For this project, the most important design property is that JSON output is centralised in type-specific writers. `PageResult`, for example, emits common fields and then emits either `text` or error fields depending on status. This prevents scattered string concatenation and reduces schema drift.
 
-== `openai`: API Schema Library
+=== `openai`: API Schema Library
 
 
 The `openai` repository is a thin typed SDK that stays out of the transport layer. It depends on `relay` for HTTP and `jsonx` for JSON. The inspected modules cover:
@@ -540,21 +564,23 @@ The embeddings layer creates embedding requests and validates parsed embedding c
 
 The important design choice is transport transparency. `openai` builds `RequestSpec` values or appends them to `RequestBatch`; it does not execute them directly. This lets `pdfocr`, `chunkvec`, and `chunktts` control batching, timeouts, retry timing, and shutdown.
 
-== Configuration and Secrets
+=== Configuration and Secrets
 
 
 All core tools follow the same configuration pattern:
 
-1. Load built-in defaults.
-2. Read optional `config.json` from the executable directory.
-3. Resolve the API key from `DEEPINFRA_API_KEY` when present.
-4. Normalise values into safe ranges.
++ Load built-in defaults.
++ Read optional `config.json` from the executable directory.
++ Resolve the API key from `DEEPINFRA_API_KEY` when present.
++ Normalise values into safe ranges.
 
 Examples of normalisation include positive concurrency limits, positive timeouts, non-negative retry counts, WebP quality constrained to `[0, 100]`, and TTS speed constrained to `[0.25, 4.0]`.
 
+The OCR subsystem uses `allenai/olmOCR-2-7B-1025` through an OpenAI-compatible multimodal endpoint. The RAG subsystem uses an OpenAI-compatible embeddings endpoint, with `Qwen/Qwen3-Embedding-0.6B` documented as the default embedding model in `chunkvec`. The TTS subsystem uses an OpenAI-compatible audio speech endpoint, with `hexgrad/Kokoro-82M` documented as the default speech model in `chunktts`.
+
 The runtime does not inspect arbitrary shell profiles or filesystem locations to discover secrets. The credential boundary is explicit: environment variable or config file.
 
-== Cross-Repository Data Contracts
+=== Cross-Repository Data Contracts
 
 
 The repositories communicate through simple artefacts:
@@ -602,22 +628,36 @@ This artefact-based design allows the system to be inspected at each stage. It a
 
 #figure(
   canvas({
-    cbox((0, 1.1), [PDF], name: "pdf")
-    cstore((2.4, 1.1), [OCR JSONL], name: "jsonl")
-    cstore((4.8, 1.1), [Chunk file], name: "chunks")
-    cstore((7.2, 1.1), [Vector DB], name: "db")
-    cstore((7.2, -.3), [Passages], name: "passages")
-    cbox((4.8, -.3), [Study output], name: "study")
-    cstore((2.4, -.3), [`<bk>`], name: "bk")
-    cstore((0, -.3), [`.opus`], name: "opus")
+    cstore((0, 1.1), [PDF], name: "pdf")
+    cbox((2.0, 1.1), [pdfocr], name: "pdfocr")
+    cstore((4.0, 1.1), [OCR JSONL], name: "jsonl")
+    cbox((6.0, 1.1), [rag-tool], body: [chunking], name: "ragtool")
+    cstore((8.0, 1.1), [chunk file], name: "chunkfile")
+    cbox((8.0, -.3), [cvstore], name: "cvstore")
+    cstore((6.0, -.3), [SQLite], body: [vector DB], name: "sqlite")
+    cbox((4.0, -.3), [cvquery], name: "cvquery")
+    cstore((2.0, -.3), [retrieved], body: [passages], name: "passages")
+    cbox((0, -.3), [study-assistant], name: "study")
+    cstore((0, -1.6), [study], body: [output], name: "notes")
+    cbox((2.0, -1.6), [tts-tool], name: "ttstool")
+    cstore((4.0, -1.6), [\<bk\> text], name: "bk")
+    cbox((6.0, -1.6), [chunktts], name: "chunktts2")
+    cstore((8.0, -1.6), [.opus audio], name: "opus")
 
-    carrow("pdf", "jsonl")
-    carrow("jsonl", "chunks")
-    carrow("chunks", "db")
-    carrow("db", "passages")
+    carrow("pdf", "pdfocr")
+    carrow("pdfocr", "jsonl")
+    carrow("jsonl", "ragtool")
+    carrow("ragtool", "chunkfile")
+    carrow("chunkfile", "cvstore")
+    carrow("cvstore", "sqlite")
+    carrow("sqlite", "cvquery")
+    carrow("cvquery", "passages")
     carrow("passages", "study")
-    carrow("study", "bk")
-    carrow("bk", "opus")
+    carrow("study", "notes")
+    carrow("notes", "ttstool")
+    carrow("ttstool", "bk")
+    carrow("bk", "chunktts2")
+    carrow("chunktts2", "opus")
   }),
   kind: image,
   caption: [Concrete artefact chain across OCR, retrieval, study generation, and TTS.],
@@ -627,7 +667,7 @@ This artefact-based design allows the system to be inspected at each stage. It a
 == Implementation Outcomes
 
 
-The repository analysis shows a consistent system design:
+The implementation shows a consistent system design:
 
 - instruction repositories define safe agent behaviour;
 - core tools implement deterministic processing contracts;

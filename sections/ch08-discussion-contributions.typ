@@ -1,7 +1,7 @@
-= Discussion and Contributions <chap:contributions>
+= Discussion <chap:discussion>
 
 
-== Project Contributions
+== Contribution Summary
 
 
 The project contributes a complete agent-based study assistant architecture rather than a single isolated algorithm. Its contribution is the design and evaluation of a system that transforms educational source material into study-ready outputs through coordinated OCR, retrieval-augmented assistance, and text-to-speech.
@@ -14,21 +14,21 @@ The third contribution is technical. The project implements a modular tool ecosy
 
 The fourth contribution is infrastructural. The Nim-based implementation is supported by custom libraries for HTTP transport, JSON handling, and OpenAI-compatible API interaction. `relay`, `jsonx`, and `openai` provide shared foundations used across the processing tools. This reduces duplication, makes model-service interaction explicit, and provides reusable components for similar systems.
 
-== System-Level Significance
+== Interpretation of Findings
 
 
 The system-level contribution lies in the integration of multiple AI modalities into a unified study assistant while preserving separation of concerns. OCR, retrieval, language generation, and speech synthesis are often treated as separate capabilities. In this project they are organised around the lifecycle of study material:
 
-1. material becomes text through OCR when required;
-2. text becomes reusable knowledge through semantic storage;
-3. retrieved passages become explanations, notes, questions, or other study artefacts;
-4. selected text becomes audio for listening-based revision.
++ material becomes text through OCR when required;
++ text becomes reusable knowledge through semantic storage;
++ retrieved passages become explanations, notes, questions, or other study artefacts;
++ selected text becomes audio for listening-based revision.
 
 The value of the assistant emerges from this coordination. OCR alone does not produce revision practice. Retrieval alone does not prepare scanned material. Text-to-speech alone does not decide what should be spoken. The agent-based design connects these stages while keeping their responsibilities distinct.
 
 This separation between agent orchestration and standalone tool functionality is an important design decision. The agent defines the study workflow from the user's perspective. The tools define stable processing surfaces. This makes the system easier to test and reason about because many behaviours can be evaluated through tool contracts, schemas, stored artefacts, and pipeline invariants rather than through informal conversational behaviour alone.
 
-== Practical Relevance
+== Practical Implications
 
 
 The project is practically relevant because it supports common student learning workflows. It helps students work with material that is difficult to use directly, such as scanned pages or long notes. It supports retrieval over prepared sources, which is useful when a student needs to locate a concept or explanation without manually scanning a document. It supports active-recall artefacts such as flashcards and quizzes, which align with established study practices. It also supports audio revision, which can make study more flexible and accessible.
@@ -48,7 +48,7 @@ For researchers and students, the system provides an inspectable case study in a
 
 Open-source release does not by itself establish educational impact. Its value is that the claims made in the report can be related directly to inspectable source artefacts, and that the architecture can be reused or challenged by others.
 
-== Limitations of the Contribution
+== Limitations
 
 
 The project should be interpreted as a system-design and engineering contribution, not as a complete pedagogical intervention study. It does not establish that use of the system improves grades, retention, or long-term learning outcomes. The evaluation demonstrates tool reliability, throughput, ordering behaviour, and model suitability within the scope of the implemented system.

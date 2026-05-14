@@ -3,12 +3,12 @@
 = Requirements and Specification <chap:requirements>
 
 
-== Requirements Method
+== Requirements Elicitation and Organisation
 
 
-The system requirements are derived from the implemented agent definitions, tool definitions, command-line programs, tests, and documented benchmark artefacts. The purpose of this chapter is to state the system contract as a cohesive specification. The chapter therefore focuses on the responsibilities of each subsystem and the guarantees that connect them.
+The requirements were drafted by the author from the project study, exploratory workflow experiments, and analysis of common student revision tasks. The specification states the responsibilities of each subsystem and the guarantees that connect them.
 
-The specification is organised around four levels:
+The specification is organised around four levels, moving from user-visible behaviour to implementation constraints:
 
 - user-facing study workflows;
 - agent-level orchestration rules;
@@ -80,58 +80,6 @@ The system non-functional requirements are:
 - *Configuration clarity:* API URLs, models, keys, and concurrency settings shall be resolved through documented defaults, optional `config.json`, and environment overrides where supported.
 - *Standalone utility:* OCR, RAG, and TTS tools shall remain useful without the agent.
 
-== Agent-Level Instruction Contracts
-
-
-The agent-level repositories define how the system behaves as an assistant rather than only as a set of executables.
-
-`study-assistant` defines the study artefact modes. It requires prepared source material and maps each user request to a single output form. It also defines cleaning behavior: remove clear metadata such as page numbers or headers while preserving educational content.
-
-`ocr-tool` defines the PDF extraction workflow. It delegates extraction exclusively to `pdfocr`, supports full-document and page-range extraction, and treats extracted text as raw material for downstream processing.
-
-`rag-tool` defines storage and search behavior. It requires plain text or markdown input, stable document identifiers, explicit chunk boundaries, and retrieval from a reusable vector store.
-
-`tts-tool` defines the speech workflow. It requires manual rewriting for natural speech, conservative chunking with `<bk>` markers, and generation through `chunktts`.
-
-Together, these instruction contracts form the agent's orchestration layer. They express when a tool should be used, what input preparation is valid, what must not be inferred, and how tool outputs become inputs to study workflows.
-
-== Core Tool Contracts
-
-
-The core implementation repositories provide concrete execution guarantees:
-
-#apa-figure(
-  table(
-    columns: 4,
-    table.header([Repository], [Command surface], [System role], [Core contract]),
-    [`pdfocr`],
-    [`pdfocr INPUT.pdf --pages:"..."` or `--all-pages`],
-    [OCR processing],
-    [ordered JSONL page results, bounded concurrency, retry handling],
-    [`chunkvec`],
-    [`cvstore`, `cvquery`],
-    [RAG storage/search],
-    [marked chunk ingest, SQLite vector store, local nearest-neighbour search],
-    [`chunktts`],
-    [`chunktts INPUT.txt OUTPUT.opus`],
-    [speech generation],
-    [ordered chunk synthesis, audio validation, one final `.opus` artefact],
-  ),
-  caption: [Core tool command contracts],
-)
-
-
-Each core tool uses the same engineering style: explicit runtime configuration, stable exit codes, strict stdout/stderr separation where relevant, and deterministic handling of out-of-order network responses.
-
-== Model and Provider Requirements
-
-
-The OCR subsystem uses `allenai/olmOCR-2-7B-1025` as the primary model. The model is accessed through an OpenAI-compatible endpoint, which allows the same custom `openai` and `relay` foundation to support multimodal chat requests.
-
-The model design space includes `google/gemma-4-31B-it` because it is a multimodal instruction-tuned model with JSON and function support on the same provider. Its large context window and agentic capabilities make it relevant for broader document-understanding and reasoning evaluation, even though the implemented OCR path uses olmOCR 2.
-
-The RAG subsystem uses an OpenAI-compatible embeddings endpoint. The documented default in `chunkvec` is `Qwen/Qwen3-Embedding-0.6B` with 1024-dimensional embeddings. The TTS subsystem uses an OpenAI-compatible audio speech endpoint; the documented default in `chunktts` is `hexgrad/Kokoro-82M`.
-
 == Requirements Traceability Matrix
 
 
@@ -184,5 +132,4 @@ The project is considered complete when the following criteria are met:
 - OCR, RAG, and TTS are documented both as standalone tools and as agent components;
 - the Nim implementation foundation is clearly described;
 - olmOCR 2 results are reported and interpreted in the evaluation section;
-- model design-space discussion includes `allenai/olmOCR-2-7B-1025` and `google/gemma-4-31B-it`; and
 - no component is presented as separate from the unified system design.

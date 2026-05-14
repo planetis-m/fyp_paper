@@ -238,14 +238,7 @@ The recorded interpretation is:
 - `allenai/olmOCR-2-7B-1025` gives the strongest recall-oriented aggregate.
 - `deepseek-ai/DeepSeek-OCR` gives the lowest cost and strongest cost-efficiency-weighted score.
 
-The selected OCR model, `allenai/olmOCR-2-7B-1025`, is appropriate for the study-assistant setting because recall-oriented behaviour is valuable when downstream workflows depend on complete educational content. A missing theorem, definition, or equation can produce a defective study artefact even when the remaining transcription has acceptable CER or WER.
-
-== Model Design-Space Validation
-
-
-The OCR model and broader multimodal design space were checked against provider documentation. DeepInfra lists `allenai/olmOCR-2-7B-1025` as a public FP8 multimodal model with JSON support, a 16,384-token context window, and per-token pricing. @ref-19 DeepInfra lists `google/gemma-4-31B-it` as a public FP8 multimodal model with JSON and function support, a 262,144-token context window, and multimodal capabilities. @ref-26
-
-The system uses olmOCR 2 for OCR because the OCR subsystem is specialised for PDF page transcription and the benchmark data is OCR-specific. Gemma is included as a design-space model for multimodal instruction following and long-context agentic workflows, not as the primary OCR engine.
+The selected OCR model, `allenai/olmOCR-2-7B-1025`, is justified by this trade-off. PaddleOCR-VL gives slightly stronger strict accuracy, but at a higher recorded cost; DeepSeek-OCR is cheapest, but its accuracy and structure metrics are substantially weaker. olmOCR 2 is therefore the most suitable choice for this project because it provides the strongest recall-oriented result while keeping cost below the strict-accuracy winner. In a study-assistant workflow, recall is especially important: a missing theorem, definition, or equation can produce a defective study artefact even when the remaining transcription has acceptable CER or WER.
 
 == RAG Evaluation Criteria
 
@@ -350,7 +343,7 @@ The main threats to validity are:
 
 These limitations do not invalidate the implementation results, but they define the scope of claims that can be made rigorously.
 
-== Evaluation Findings
+== Technical Evaluation Findings
 
 
-The verification evidence supports the system architecture. Local deterministic tests cover the core invariants. The TTS integration test demonstrates concurrency, retry, and audio finalisation under controlled conditions. The OCR throughput benchmark demonstrates the practical benefit of bounded concurrency. The scientific OCR benchmark provides model-level evidence for olmOCR 2 and situates it among measured alternatives.
+The technical verification evidence supports the system architecture. Local deterministic tests cover the core invariants. The TTS integration test demonstrates concurrency, retry, and audio finalisation under controlled conditions. The OCR throughput benchmark demonstrates the practical benefit of bounded concurrency. The scientific OCR benchmark provides model-level evidence for olmOCR 2 and situates it among measured alternatives. The following end-to-end workflow evaluation examines how these technical properties appear in student-facing use.

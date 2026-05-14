@@ -24,4 +24,4 @@ Privacy is another practical limitation. Documents sent to remote inference prov
 == Further Work
 
 
-The main areas for further engineering are deterministic mocked transport tests, broader benchmark corpora, richer retrieval evaluation, and optional provider/model selection policies. These improvements should preserve the existing architectural boundary: the agent chooses workflows, tool definitions constrain safe use, and core tools enforce stable processing contracts.
+The main areas for further engineering are deterministic mocked transport tests, broader benchmark corpora, richer retrieval evaluation, optional provider/model selection policies, and stronger workflow auditability. The workflow evaluation specifically motivates run manifests, OCR validation for formulae and diagram-derived text, recorded retrieval evidence, metadata-aware chunking, and validation passes for generated study artefacts. These improvements should preserve the existing architectural boundary: the agent chooses workflows, tool definitions constrain safe use, and core tools enforce stable processing contracts.

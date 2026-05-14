@@ -5,25 +5,6 @@ ref-1:
   author: "International Organization for Standardization"
   date: 2020
   issue: "ISO 32000-2:2020"
-ref-2:
-  type: report
-  title: "Hypertext transfer protocol version 2 (HTTP/2)"
-  author:
-    - "Belshe, M."
-    - "Peon, R."
-    - "Thomson, M."
-  date: 2015-05
-  issue: "RFC 7540"
-  organization: "Internet Engineering Task Force"
-ref-3:
-  type: report
-  title: "HPACK: Header compression for HTTP/2"
-  author:
-    - "Peon, R."
-    - "Ruellan, H."
-  date: 2015-05
-  issue: "RFC 7541"
-  organization: "Internet Engineering Task Force"
 ref-4:
   type: article
   title: "A survey of deep learning approaches for OCR and document understanding"
@@ -82,23 +63,6 @@ ref-7:
     type: proceedings
     title: "Proceedings of the 9th International Conference on Document Analysis and Recognition"
     publisher: "IEEE Computer Society"
-ref-8:
-  type: article
-  title: "DiT: Self-supervised pre-training for document image transformer"
-  author:
-    - "Li, J."
-    - "Xu, Y."
-    - "Lv, T."
-    - "Cui, L."
-    - "Zhang, C."
-    - "Wei, F."
-  date: 2022
-  page-range: "3530-3539"
-  serial-number:
-    doi: "10.1145/3503161.3547911"
-  parent:
-    type: proceedings
-    title: "Proceedings of the 30th ACM International Conference on Multimedia"
 ref-9:
   type: web
   title: "JSON Lines"
@@ -114,28 +78,6 @@ ref-10:
     value: "https://curl.se/libcurl/c/libcurl-multi.html"
     date: 2026-02-28
 ref-12:
-  type: web
-  title: "olmOCR: Efficient PDF text extraction with vision language models"
-  author: "Allen Institute for AI"
-  url:
-    value: "https://allenai.org/blog/olmocr"
-    date: 2026-02-28
-ref-13:
-  type: web
-  title: "olmOCR 2: Unit test rewards for document OCR"
-  author: "Allen Institute for AI"
-  date: 2025-10-22
-  url:
-    value: "https://allenai.org/blog/olmocr-2"
-    date: 2026-02-28
-ref-14:
-  type: web
-  title: "allenai/olmOCR"
-  author: "Allen Institute for AI"
-  url:
-    value: "https://github.com/allenai/olmocr"
-    date: 2026-02-28
-ref-15:
   type: article
   title: "olmOCR: Unlocking trillions of tokens in PDFs with vision language models"
   author: "Poznanski, J., et al."
@@ -145,7 +87,7 @@ ref-15:
   parent:
     type: periodical
     title: "arXiv"
-ref-16:
+ref-13:
   type: article
   title: "olmOCR 2: Unit test rewards for document OCR"
   author:
@@ -158,13 +100,6 @@ ref-16:
   parent:
     type: periodical
     title: "arXiv"
-ref-18:
-  type: web
-  title: "allenai/olmOCR-2-7B-1025"
-  author: "Portkey"
-  url:
-    value: "https://portkey.ai/models/deepinfra/allenai%2FolmOCR-2-7B-1025"
-    date: 2026-02-28
 ref-19:
   type: web
   title: "allenai/olmOCR-2-7B-1025"
@@ -172,41 +107,13 @@ ref-19:
   url:
     value: "https://deepinfra.com/allenai/olmOCR-2-7B-1025"
     date: 2026-05-03
-ref-20:
-  type: web
-  title: "deepseek-ai/DeepSeek-OCR"
-  author: "DeepInfra"
-  url:
-    value: "https://deepinfra.com/deepseek-ai/DeepSeek-OCR"
-    date: 2026-02-28
-ref-21:
-  type: web
-  title: "PaddlePaddle/PaddleOCR-VL-0.9B"
-  author: "DeepInfra"
-  url:
-    value: "https://deepinfra.com/PaddlePaddle/PaddleOCR-VL-0.9B"
-    date: 2026-02-28
-ref-22:
-  type: web
-  title: "Pricing"
-  author: "LandingAI Datalab"
-  url:
-    value: "https://landing.datalab.to/pricing"
-    date: 2026-02-28
 ref-23:
   type: web
-  title: "API overview"
-  author: "Datalab Documentation"
+  title: "OCR_benchmarks_academic"
+  author: "planetis-m"
   url:
-    value: "https://documentation.datalab.to/reference/api-overview-1"
-    date: 2026-02-28
-ref-24:
-  type: web
-  title: "OpenAI API"
-  author: "DeepInfra Documentation"
-  url:
-    value: "https://deepinfra.com/docs/openai_api"
-    date: 2026-02-28
+    value: "https://github.com/planetis-m/OCR_benchmarks_academic"
+    date: 2026-03-01
 ref-25:
   type: web
   title: "OCR_benchmarks_academic"
@@ -220,76 +127,6 @@ ref-26:
   author: "DeepInfra"
   url:
     value: "https://deepinfra.com/google/gemma-4-31B-it"
-    date: 2026-05-03
-ref-27:
-  type: web
-  title: "study-assistant"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/study-assistant"
-    date: 2026-05-03
-ref-28:
-  type: web
-  title: "ocr-tool"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/ocr-tool"
-    date: 2026-05-03
-ref-29:
-  type: web
-  title: "tts-tool"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/tts-tool"
-    date: 2026-05-03
-ref-30:
-  type: web
-  title: "rag-tool"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/rag-tool"
-    date: 2026-05-03
-ref-31:
-  type: web
-  title: "pdfocr"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/pdfocr"
-    date: 2026-05-03
-ref-32:
-  type: web
-  title: "chunkvec"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/chunkvec"
-    date: 2026-05-03
-ref-33:
-  type: web
-  title: "chunktts"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/chunktts"
-    date: 2026-05-03
-ref-34:
-  type: web
-  title: "relay"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/relay"
-    date: 2026-05-03
-ref-35:
-  type: web
-  title: "jsonx"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/jsonx"
-    date: 2026-05-03
-ref-36:
-  type: web
-  title: "openai"
-  author: "planetis-m"
-  url:
-    value: "https://github.com/planetis-m/openai"
     date: 2026-05-03
 ref-37:
   type: article
