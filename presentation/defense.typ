@@ -40,11 +40,11 @@
   #v(0.54cm)
   #block(width: 12.4cm)[
     #text(size: 22.3pt, weight: "bold", fill: ink)[
-      An Agent-Based Study Assistant System
+      An Agent-Based Study Assistant
     ]
     #v(0.20cm)
     #text(size: 12.3pt, weight: "semibold", fill: accent-dark)[
-      with OCR, Retrieval-Augmented Generation, and Text-to-Speech Tools
+      with OCR, Retrieval, and Speech
     ]
   ]
   #v(0.64cm)
