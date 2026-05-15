@@ -270,20 +270,20 @@
   box-node((14.0, .75), [Model APIs], subtitle: [OCR, embed, speech], name: "api", kind: "external", width: 2.1, scale: compact-node-scale)
 
   path-arrow("student.south", "assistant.north")
-  path-arrow("assistant.north-east", "outputs.south-west")
+  path-arrow("assistant.north", "outputs.south")
   path-arrow("assistant.south-west", "ocrtool.north")
   path-arrow("assistant.south", "ragtool.north")
   path-arrow("assistant.south-east", "ttstool.north")
   path-arrow("ocrtool.south", "pdfocr.north")
   path-arrow("ragtool.south", "chunkvec.north")
   path-arrow("ttstool.south", "chunktts.north")
-  path-arrow("pdfocr.south-east", "relay.north")
+  path-arrow("pdfocr.south", "relay.north")
   path-arrow("chunkvec.south-west", "relay.north-east")
   path-arrow("chunktts.south-west", "relay.north-east")
   path-arrow("relay.east", "openai.west")
   path-arrow("openai.east", "api.west", stroke: colors.external-line)
-  path-arrow("chunkvec.south", "local.north-west")
-  path-arrow("chunktts.south", "local.north-east")
+  path-arrow("chunkvec.south-east", "local.north-west")
+  path-arrow("chunktts.south", "local.north")
 })
 
 #let capability-routing-diagram() = canvas({
@@ -373,7 +373,7 @@
     Async completions decode without lookup ambiguity.
   ], frame: "rect", fill: colors.core-fill, stroke: .45pt + colors.core-line)
   path-arrow("seq.south", (4.5, .55))
-  path-arrow("attempt.south", (8.2, .55))
+  path-arrow("attempt.south", (10.1, .55))
   small-label((.55, 1.78), [most significant bits], width: 1.55)
   small-label((11.35, 1.78), [least significant bits], width: 1.55)
 })
@@ -394,7 +394,7 @@
   path-arrow("chunks.east", "parser.west")
   path-arrow("parser.east", "missing.west")
   path-arrow("missing.east", "api.west", stroke: colors.external-line)
-  path-arrow("api.south-west", "table.north-east", stroke: colors.external-line)
+  path-arrow("api.west", "table.east", stroke: colors.external-line)
   path-arrow("query.east", "api.south-west", stroke: colors.external-line, dashed: true)
   path-arrow("query.south", "btree.north")
   path-arrow("table.south-west", "btree.north-east")
@@ -547,7 +547,7 @@
   path-arrow("integration.east", "det.west")
   path-arrow("bench.east", "emp.west")
   path-arrow("det.east", "claim.west")
-  path-arrow("emp.east", "claim.south-west")
+  path-arrow("emp.east", "claim.west")
 })
 
 #let throughput-speedup-diagram() = canvas({
@@ -576,7 +576,7 @@
   small-label((3.55, 1.75), [19.93 s], width: .9, fill: colors.ok-fill)
   small-label((3.35, 2.25), [0.23 pages/s], width: 1.15, fill: colors.warn-fill)
   small-label((12.2, 3.95), [3.61 pages/s], width: 1.15, fill: colors.ok-fill)
-  draw.content((5.2, 1.5), (10.0, 2.35), align(center + horizon)[
+  draw.content((5.2, 1.0), (10.0, 2.35), align(center + horizon)[
     #set text(size: 13pt, weight: "bold", fill: colors.ok-line)
     15.89x speedup
     #linebreak()
@@ -588,7 +588,7 @@
 #let ocr-model-tradeoff-diagram() = canvas({
   draw.line((1.0, .6), (13.8, .6), mark: (end: ">"), stroke: .55pt + colors.line)
   draw.line((1.0, .6), (1.0, 4.6), mark: (end: ">"), stroke: .55pt + colors.line)
-  small-label((13.0, .25), [cost/page USD ->], width: 1.6)
+  small-label((13.0, .25), [cost/page USD ->], width: 1.65)
   small-label((.75, 4.35), [quality ->], width: 1.0)
 
   for y in (1.35, 2.1, 2.85, 3.6) {
@@ -648,7 +648,7 @@
   path-arrow("queryfail.east", "noanswer.west")
   path-arrow("partial.east", "exit.north-west")
   path-arrow("db.east", "exit.west")
-  path-arrow("noaudio.east", "exit.south-west")
+  path-arrow("noaudio.east", "exit.west")
   path-arrow("noanswer.east", "exit.south-west")
   path-arrow("fatal.east", "exit.south-west", stroke: colors.retry-line)
   small-label((3.0, 3.5), [retry loop before permanent failure], width: 2.2, fill: colors.warn-fill)
