@@ -9,55 +9,29 @@
 
 The system is designed as a modular agent-driven study platform rather than as a single-purpose OCR program. The main architectural thesis is that study workflows require both flexible orchestration and deterministic processing. The agent layer provides flexibility: it interprets user intent, chooses a study mode, and composes tool workflows. The core tools provide determinism: they expose stable command-line contracts, bounded concurrency, explicit retry behaviour, and auditable artefacts.
 
-The system is therefore organised into four layers:
+The system is therefore organised into five layers:
 
 + *User interaction layer:* the student request and final study output.
 + *Agent orchestration layer:* the `study-assistant` workflow and mode selection.
 + *Tool definition layer:* `ocr-tool`, `rag-tool`, and `tts-tool` operational instructions.
-+ *Core processing layer:* Nim executables and libraries implementing OCR, retrieval, speech synthesis, HTTP, JSON, and model API handling.
++ *Core processing layer:* Nim executables implementing OCR, retrieval, and speech synthesis.
++ *Shared infrastructure layer:* local storage, artefact files, HTTP transport, JSON handling, and model API schema support.
 
 This layered design avoids coupling study-output generation to implementation details such as PDFium handles, SQLite vector storage, or libcurl polling. It also keeps tool execution verifiable independently of the agent.
 
 == Global Architecture
 
 
-#ref(<fig:global-architecture>) shows the principal components and data paths.
+#ref(<fig:global-architecture>) shows the architectural layers, local execution boundary, and external provider boundary.
 
 #figure(
-  canvas({
-    cbox((3.2, 4.3), [Student], body: [study request], name: "student")
-    cbox((3.2, 3), [study-assistant], body: [mode selection], name: "agent")
-
-    cbox((0, 1.6), [`ocr-tool`], body: [PDF extraction], name: "ocrtool")
-    cbox((3.2, 1.6), [`rag-tool`], body: [store / search], name: "ragtool")
-    cbox((6.4, 1.6), [`tts-tool`], body: [speech workflow], name: "ttstool")
-
-    cbox((0, .2), [`pdfocr`], body: [OCR pipeline], name: "pdfocr")
-    cbox((3.2, .2), [`chunkvec`], body: [cvstore / cvquery], name: "chunkvec")
-    cbox((6.4, .2), [`chunktts`], body: [TTS pipeline], name: "chunktts")
-
-    cstore((3.2, -1.1), [SQLite], body: [vector store], name: "storage")
-    cstore((0, -1.1), [OpenAI-compatible], body: [model endpoints], name: "models")
-
-    carrow("student", "agent")
-    carrow("agent", "ocrtool")
-    carrow("agent", "ragtool")
-    carrow("agent", "ttstool")
-    carrow("ocrtool", "pdfocr")
-    carrow("ragtool", "chunkvec")
-    carrow("ttstool", "chunktts")
-    carrow("chunkvec.south-west", "storage.north-west")
-    carrow("storage.north-east", "chunkvec.south-east")
-    carrow("pdfocr.south", "models.north")
-    carrow("chunkvec.south-west", "models.north-east")
-    carrow("chunktts.south-west", "models.north-east")
-  }),
+  layered-architecture-diagram(),
   kind: image,
-  caption: [Global architecture of the study-assistant system.],
+  caption: [Layered architecture of the study-assistant system with local execution and remote provider boundaries.],
 )<fig:global-architecture>
 
 
-The figure expresses the central separation of concerns. The agent and tool definitions are declarative/operational layers. The Nim components implement execution. The shared libraries provide common infrastructure.
+The figure expresses the central separation of concerns. The agent and tool definitions are declarative and operational layers. The Nim components implement local deterministic execution. The shared libraries provide common infrastructure, while model-hosted OCR, embedding, and speech endpoints remain outside the local process boundary.
 
 #apa-figure(
   table(
@@ -108,34 +82,7 @@ The figure expresses the central separation of concerns. The agent and tool defi
 )<tbl:repo-responsibilities>
 
 
-#apa-figure(
-  table(
-    columns: 3,
-    table.header([Background concept], [System component], [Design consequence]),
-    [PDF rendering and OCR],
-    [`ocr-tool`, `pdfocr`],
-    [render pages with PDFium, encode WebP, call olmOCR 2, emit ordered JSONL],
-    [Document OCR evaluation],
-    [`pdfocr` benchmarks],
-    [report CER, WER, reading-order F1, math F1, recall-oriented outcomes],
-    [Dense retrieval],
-    [`rag-tool`, `chunkvec`],
-    [embed chunks and queries, store vectors, perform nearest-neighbour search],
-    [RAG],
-    [`study-assistant`, `rag-tool`],
-    [retrieve source passages before grounded study-output generation],
-    [Neural TTS],
-    [`tts-tool`, `chunktts`],
-    [rewrite text for speech, synthesise chunks, validate audio, write `.opus`],
-    [Concurrent model APIs],
-    [`relay`, `openai`],
-    [bounded in-flight requests, retry handling, completion polling],
-    [Structured interchange],
-    [`jsonx`, JSONL],
-    [typed request/response parsing and stable output records],
-  ),
-  caption: [Mapping of background concepts to implementation components],
-)<tbl:foundation-mapping>
+The background concepts from Chapter #ref(<chap:background>) map to concrete component responsibilities: rendering-first OCR is implemented by `pdfocr`, retrieval by `chunkvec`, speech synthesis by `chunktts`, and concurrent model access by the combination of `relay`, `openai`, and typed JSON handling.
 
 
 == Agent-Level Interaction Model
@@ -215,104 +162,21 @@ The three core tools share a common processing pattern:
 
 The shared pattern is not accidental. It is the mechanism by which the system keeps remote model calls reliable enough for academic study workflows.
 
-== OCR Data Flow
-
-
-#ref(<fig:ocr-dataflow>) shows the OCR pipeline.
-
 #figure(
-  canvas({
-    cbox((0, 1.2), [Input PDF], name: "pdf")
-    cbox((2.6, 1.2), [Page selection], body: [normalisation], name: "select")
-    cbox((5.2, 1.2), [PDFium], body: [render page], name: "render")
-    cbox((7.8, 1.2), [WebP], body: [encode], name: "webp")
-    cbox((10.4, 1.2), [OpenAI chat], body: [image request], name: "request")
-    cbox((13.0, 1.2), [olmOCR 2], body: [endpoint], name: "model")
-    cstore((7.8, -.1), [cached payloads], body: [O(K)], name: "cache")
-    cstore((10.4, -.1), [retry queue], name: "retry")
-    cstore((13.0, -.1), [staged results], body: [O(N)], name: "stage")
-    cbox((15.4, -.1), [ordered], body: [JSONL stdout], name: "jsonl")
-
-    carrow("pdf", "select")
-    carrow("select", "render")
-    carrow("render", "webp")
-    carrow("webp", "request")
-    carrow("request", "model")
-    carrow("model", "stage")
-    carrow("stage", "jsonl")
-    carrow("webp", "cache")
-    carrow("cache.north-east", "request.south-west")
-    carrow("model.south-west", "retry.north-east")
-    carrow("retry", "request")
-  }),
+  core-execution-pattern-diagram(),
   kind: image,
-  caption: [OCR data flow from PDF pages to ordered JSONL records.],
-)<fig:ocr-dataflow>
+  caption: [Shared bounded-concurrency execution pattern across OCR, retrieval ingest, and speech generation.],
+)<fig:core-execution-pattern>
 
 
-The OCR pipeline uses `N` for selected page count and `K` for maximum active/in-flight work. The staged result array is O(`N`) metadata. WebP payload storage is O(`K`) because only active pages keep cached payload bytes for possible retry. This design supports large documents without keeping all rendered page images in memory.
+The OCR pipeline uses `N` for selected page count and `K` for maximum active/in-flight work. The staged result array is O(`N`) metadata. WebP payload storage is O(`K`) because only active pages keep cached payload bytes for possible retry. In RAG ingest, the same pattern terminates in transactional database insertion. In TTS, it terminates in all-or-nothing audio publication.
 
-== RAG Data Flow
-
-
-#ref(<fig:rag-dataflow>) shows how source material becomes searchable.
-
-#figure(
-  canvas({
-    cbox((0, 1.2), [Prepared text], name: "text")
-    cbox((3.0, 1.2), [\<chunk ...\>], body: [parser], name: "chunks")
-    cbox((6.0, 1.2), [Embedding], body: [requests], name: "emb")
-    cstore((9.0, 1.2), [SQLite table], body: [text + metadata + vector], name: "sqlite")
-    cstore((12.0, 1.2), [sqlite-vector], body: [quantized scan], name: "vector")
-    cbox((0, -.4), [User query], name: "query")
-    cbox((3.0, -.4), [Query], body: [embedding], name: "qemb")
-    cbox((6.0, -.4), [Metadata], body: [filters], name: "filters")
-    cbox((9.0, -.4), [Ranked], body: [chunks], name: "results")
-
-    carrow("text", "chunks")
-    carrow("chunks", "emb")
-    carrow("emb", "sqlite")
-    carrow("sqlite", "vector")
-    carrow("query", "qemb")
-    carrow("qemb", "filters")
-    carrow("filters.north-east", "vector.south-west")
-    carrow("vector.south-west", "results.north-east")
-  }),
-  kind: image,
-  caption: [RAG storage and retrieval data flow.],
-)<fig:rag-dataflow>
+== Retrieval Boundary
 
 
 The storage path (`cvstore`) and query path (`cvquery`) are deliberately separate. Storage performs remote embedding generation and database mutation. Query performs a single remote query-embedding request, then local vector search. This limits remote dependency during retrieval and keeps the search corpus under local user control.
 
-== TTS Data Flow
-
-
-#ref(<fig:tts-dataflow>) shows the TTS path.
-
-#figure(
-  canvas({
-    cbox((0, 1.1), [Speech-ready], body: [text], name: "input")
-    cbox((2.6, 1.1), [Split on], body: [\<bk\>], name: "split")
-    cbox((5.2, 1.1), [Speech], body: [requests], name: "speech")
-    cbox((7.8, 1.1), [Audio speech], body: [endpoint], name: "endpoint")
-    cstore((10.4, 1.1), [libsndfile], body: [decode + validate], name: "decode")
-    cstore((13.0, 1.1), [ordered audio], body: [chunks], name: "staged")
-    cbox((15.4, 1.1), [final .opus], body: [file], name: "opus")
-    cstore((5.2, -.2), [retry queue], name: "retry")
-
-    carrow("input", "split")
-    carrow("split", "speech")
-    carrow("speech", "endpoint")
-    carrow("endpoint", "decode")
-    carrow("decode", "staged")
-    carrow("staged", "opus")
-    carrow("endpoint.south-west", "retry.north-east")
-    carrow("retry", "speech")
-  }),
-  kind: image,
-  caption: [TTS data flow from speech-prepared text to final `.opus` artefact.],
-)<fig:tts-dataflow>
+== Speech Publication Boundary
 
 
 The TTS pipeline differs from OCR in its publication rule. OCR can emit per-page error records because downstream tools can choose how to handle partial page failures. TTS withholds the final audio file unless all chunks succeed, because a partial lecture audio file would be misleading.
@@ -320,27 +184,12 @@ The TTS pipeline differs from OCR in its publication rule. OCR can emit per-page
 == Relay-Based Interaction Model
 
 
-The core tools use `relay` to avoid embedding libcurl logic in each processing pipeline. #ref(<fig:relay-interaction>) shows the interaction.
+The core tools use `relay` to avoid embedding libcurl logic in each processing pipeline. #ref(<fig:relay-interaction>) shows the concurrency boundary.
 
 #figure(
-  canvas({
-    cstore((0, 1), [Tool main thread], body: [scheduler state machine], name: "main")
-    cbox((3.2, 1), [RequestBatch], body: [work items], name: "batch")
-    cstore((6.4, 1), [Relay worker thread], body: [libcurl multi], name: "relay")
-    cbox((9.6, 1), [Remote model], body: [API], name: "api")
-    cbox((0, -.4), [staging / DB /], body: [decoded chunks], name: "stage")
-    cbox((6.4, -.4), [ready results], body: [deque], name: "ready")
-
-    carrow("main", "batch")
-    carrow("batch", "relay")
-    carrow("relay", "api")
-    carrow("api", "relay")
-    carrow("relay", "ready")
-    carrow("ready", "stage")
-    carrow("stage", "main")
-  }),
+  relay-concurrency-diagram(),
   kind: image,
-  caption: [Component interaction between a core tool and the `relay` transport layer.],
+  caption: [Concurrency boundary between a core tool scheduler and the `relay` transport worker.],
 )<fig:relay-interaction>
 
 

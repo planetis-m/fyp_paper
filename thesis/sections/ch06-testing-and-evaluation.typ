@@ -1,4 +1,5 @@
 #import "../lib.typ": apa-figure
+#import "../assets/diagrams.typ": *
 
 #let apa-table-align(x, y) = if y == 0 {
   center
@@ -23,50 +24,17 @@ The evaluation strategy reflects the system's mixed nature. Some properties are 
 
 This separation prevents model variability from obscuring local implementation correctness.
 
-== Verification Matrix
+== Verification Evidence Topology
 
 
-#ref(<tbl:verification-matrix>) maps repositories to verification surfaces.
+#ref(<fig:verification-evidence>) maps repositories and evidence types to the evaluation claims they support.
 
 
-#apa-figure(
-  table(
-    columns: (1.25in, 3.25in, 1.5in),
-    align: apa-table-align,
-    table.header([Repository], [Verification surface], [Evidence type]),
-    [`study-assistant`],
-    [mode contracts and grounding rules],
-    [instruction inspection],
-    [`ocr-tool`],
-    [OCR routing, cache procedure, extraction-only responsibility],
-    [instruction and script inspection],
-    [`rag-tool`],
-    [store/search separation, chunking and metadata policy],
-    [instruction inspection],
-    [`tts-tool`],
-    [speech rewriting and `<bk>` preparation],
-    [instruction inspection],
-    [`pdfocr`],
-    [page selection, request ids, retry queue, error mapping, JSON schema],
-    [deterministic unit tests],
-    [`chunkvec`],
-    [chunk parser, runtime config, embeddings client, SQLite/vector integration],
-    [deterministic and integration tests],
-    [`chunktts`],
-    [chunk splitting, request ids, retry mapping, audio validation, pipeline integration],
-    [deterministic and local-server tests],
-    [`relay`],
-    [lifecycle, ordering, request bodies, headers, batch helpers],
-    [transport unit tests],
-    [`jsonx`],
-    [parser compliance, number parsing, object mapping],
-    [parser/unit tests],
-    [`openai`],
-    [chat, embeddings, audio speech, retry helpers],
-    [schema/unit tests],
-  ),
-  caption: [Repository verification matrix],
-)<tbl:verification-matrix>
+#figure(
+  verification-evidence-diagram(),
+  kind: image,
+  caption: [Verification evidence topology separating deterministic implementation evidence from empirical model and performance evidence.],
+)<fig:verification-evidence>
 
 
 The instruction repositories do not have conventional unit tests because their primary artefacts are operational rules. They are validated by checking whether the rules map cleanly onto the executable contracts and whether they preserve source-grounding constraints.
@@ -142,27 +110,14 @@ The local integration test uses a controlled HTTP server that simulates concurre
 == OCR Throughput Evaluation
 
 
-The main throughput benchmark uses a fixed 72-page slide PDF. #ref(<tbl:throughput>) reports the recorded results.
+The main throughput benchmark uses a fixed 72-page slide PDF. #ref(<fig:throughput>) reports the recorded result visually; exact values are repeated in Appendix #ref(<app:benchmarks-testcases>).
 
 
-#apa-figure(
-  table(
-    columns: (1.8in, 1fr, 1fr, 1fr, 1fr),
-    align: apa-table-align,
-    table.header([Configuration], [Runtime], [Throughput], [Page results], [Exit status]),
-    [Sequential baseline (`K=1`)],
-    [316.66 s],
-    [0.23 pages/s],
-    [72/72 ok],
-    [0],
-    [Bounded concurrency (`K=32`)],
-    [19.93 s],
-    [3.61 pages/s],
-    [72/72 ok],
-    [0],
-  ),
-  caption: [OCR throughput benchmark],
-)<tbl:throughput>
+#figure(
+  throughput-speedup-diagram(),
+  kind: image,
+  caption: [OCR throughput benchmark showing runtime reduction and throughput increase under bounded concurrency.],
+)<fig:throughput>
 
 
 The speedup is:
@@ -184,52 +139,14 @@ The result is consistent with the design. OCR requests are network-bound, so bou
 
 The 68-page scientific OCR benchmark uses locked human gold labels. The benchmark includes pages from 34 source PDFs and covers equations, tables, diagrams, and multi-column layouts. All evaluated models completed 68/68 pages.
 
-#ref(<tbl:scientific-ocr-benchmark-accuracy>) and #ref(<tbl:scientific-ocr-benchmark-cost>) report the benchmark results. Short model names are used in the tables for layout; they correspond to `PaddlePaddle/PaddleOCR-VL-0.9B`, `allenai/olmOCR-2-7B-1025`, and `deepseek-ai/DeepSeek-OCR`.
+#ref(<fig:ocr-model-tradeoff>) summarises the model-selection trade-off. Exact CER, WER, reading-order, math, and cost values are reported in Appendix #ref(<app:benchmarks-testcases>). Short model names correspond to `PaddlePaddle/PaddleOCR-VL-0.9B`, `allenai/olmOCR-2-7B-1025`, and `deepseek-ai/DeepSeek-OCR`.
 
 
-#apa-figure(
-  table(
-    columns: (1.45in, 1fr, 1fr, 1.25in, 1fr),
-    align: apa-table-align,
-    table.header([Model], [CER], [WER], [ReadingOrderF1], [MathF1]),
-    [PaddleOCR-VL],
-    [0.4634],
-    [0.4732],
-    [0.3751],
-    [0.7248],
-    [olmOCR 2],
-    [0.4682],
-    [0.4893],
-    [0.3252],
-    [0.6743],
-    [DeepSeek-OCR],
-    [0.5862],
-    [0.6512],
-    [0.1452],
-    [0.4684],
-  ),
-  caption: [Scientific OCR benchmark — accuracy],
-)<tbl:scientific-ocr-benchmark-accuracy>
-
-
-
-#apa-figure(
-  table(
-    columns: (1.45in, 1.5in, 1.5in),
-    align: apa-table-align,
-    table.header([Model], [Total cost (USD)], [Cost/page (USD)]),
-    [PaddleOCR-VL],
-    [0.0420],
-    [0.0006180],
-    [olmOCR 2],
-    [0.0214],
-    [0.0003142],
-    [DeepSeek-OCR],
-    [0.0041],
-    [0.0000597],
-  ),
-  caption: [Scientific OCR benchmark — cost],
-)<tbl:scientific-ocr-benchmark-cost>
+#figure(
+  ocr-model-tradeoff-diagram(),
+  kind: image,
+  caption: [OCR model cost/quality trade-off used to justify the selected OCR model.],
+)<fig:ocr-model-tradeoff>
 
 
 The recorded interpretation is:
@@ -283,33 +200,14 @@ The three model-calling tools share reliability mechanisms:
 - abortive shutdown on fatal errors; and
 - stable exit codes.
 
-#ref(<tbl:failure-semantics>) summarises failure semantics.
+#ref(<fig:failure-semantics>) summarises failure semantics.
 
 
-#apa-figure(
-  table(
-    columns: (0.9in, 1.05in, 2.25in, 2.1in),
-    align: apa-table-align,
-    table.header([Tool], [Recoverable unit], [Permanent unit failure], [Fatal failure]),
-    [`pdfocr`],
-    [page],
-    [emit error JSONL page record, exit `2` if any page failed],
-    [exit `3`, stdout may be incomplete],
-    [`cvstore`],
-    [chunk],
-    [commit successful rows, exit `2` if any chunk failed],
-    [rollback transaction where possible, exit `3`],
-    [`chunktts`],
-    [chunk],
-    [do not publish final audio, exit `2`],
-    [exit `3`],
-    [`cvquery`],
-    [whole query],
-    [not applicable as partial query output is not meaningful],
-    [exit `3`],
-  ),
-  caption: [Failure semantics by tool],
-)<tbl:failure-semantics>
+#figure(
+  failure-semantics-diagram(),
+  kind: image,
+  caption: [Failure semantics as branching publication behaviour across recoverable, permanent, and fatal failures.],
+)<fig:failure-semantics>
 
 
 These semantics are tailored to artefact type. Partial OCR can still be useful and auditable. Partial final speech audio is not published because it would appear complete while silently omitting content.
