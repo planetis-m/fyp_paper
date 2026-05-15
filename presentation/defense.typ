@@ -225,27 +225,27 @@
   #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
     #card("Agent orchestration, deterministic tools", [
       The agent owns study intent; tools own processing contracts, retries, schemas, and publication.
-    ], fill: soft, height: 1.62cm)
+    ], fill: soft, height: 1.76cm)
     #v(card-stack-gap)
     #card("Standalone command-line stages", [
       OCR, retrieval, and speech can be run, inspected, cached, redirected, or tested independently.
-    ], fill: warm, height: 1.62cm)
+    ], fill: warm, height: 1.76cm)
     #v(card-stack-gap)
     #card("Shared infrastructure", [
       Nim tools share `relay`, `jsonx`, and `openai` for HTTP execution, JSON handling, and provider schemas.
-    ], fill: panel, height: 1.62cm)
+    ], fill: panel, height: 1.76cm)
   ][
     #card("Ordered output over maximum raw speed", [
       Concurrent requests may complete out of order, but published pages and chunks preserve source order.
-    ], fill: warm, height: 1.62cm)
+    ], fill: warm, height: 1.76cm)
     #v(card-stack-gap)
     #card("Artefact-specific failure semantics", [
       Partial OCR can be auditable; partial final audio is withheld because it may appear complete while omitting content.
-    ], fill: soft, height: 1.62cm)
+    ], fill: soft, height: 1.76cm)
     #v(card-stack-gap)
     #card("Evaluation consequence", [
       Behaviour can be checked through process channels, schemas, exit codes, stored artefacts, and ordered outputs.
-    ], fill: panel, height: 1.62cm)
+    ], fill: panel, height: 1.76cm)
   ]
 ]
 
@@ -268,15 +268,15 @@
   ][
     #subhead[Recorded workflows]
     #grid(columns: (1fr, 1fr), gutter: 0.22cm)[
-      #card("Essay practice", [Association Analysis slides -> exam prompts and sample answers], fill: warm, height: 1.34cm)
+      #card("Essay practice", [Association Analysis slides -> exam prompts and sample answers], fill: warm, height: 1.78cm)
     ][
-      #card("RAG revision", [Textbook section -> stored chunks -> targeted Naive Bayes search], height: 1.34cm)
+      #card("RAG revision", [Textbook section -> stored chunks -> targeted Naive Bayes search], height: 1.78cm)
     ]
     #v(0.2cm)
     #grid(columns: (1fr, 1fr), gutter: 0.22cm)[
-      #card("Flashcards", [Anomaly Detection slides -> active-recall cards], height: 1.34cm)
+      #card("Flashcards", [Anomaly Detection slides -> active-recall cards], height: 1.78cm)
     ][
-      #card("Notes to audio", [Clustering notes -> speech-ready text -> final audio], fill: warm, height: 1.34cm)
+      #card("Notes to audio", [Clustering notes -> speech-ready text -> final audio], fill: warm, height: 1.78cm)
     ]
   ]
 ]
@@ -379,26 +379,20 @@
   #v(0.04cm)
   #grid(columns: (1fr, 1fr), gutter: 0.36cm)[
     #card("Essay practice", [
-      Association Analysis slides produced four exam-style prompts with sample answers covering Apriori, support, confidence, lift, and interestingness.
-    ], fill: warm, height: 1.72cm)
-    #v(card-stack-gap)
+      Strong mode fit: source material became exam-style reasoning, but OCR imperfections mean exact provenance still needs preservation.
+    ], fill: warm, height: 2.15cm)
+    #v(0.28cm)
     #card("RAG exam revision", [
-      Textbook pages 358-402 were OCR-processed and stored as 26 semantic chunks; search retrieved Naive Bayes zero-probability handling.
-    ], fill: panel, height: 1.72cm)
+      Best evidence for usefulness: the answer matched course-specific material, but retrieval evidence should be shown beside synthesis.
+    ], fill: panel, height: 2.15cm)
   ][
     #card("Flashcards", [
-      Anomaly Detection slides produced 25 active-recall cards covering definitions, settings, methods, limitations, and applications.
-    ], fill: panel, height: 1.72cm)
-    #v(card-stack-gap)
+      Good active-recall transformation: concise and examinable, but future validation should check coverage, duplication, and formula clarity.
+    ], fill: panel, height: 2.15cm)
+    #v(0.28cm)
     #card("Study notes to audio", [
-      Clustering notes became study notes, speech-ready text, and a final `.opus` file from 24 ordered speech chunks.
-    ], fill: warm, height: 1.72cm)
-  ]
-  #v(0.26cm)
-  #surface[
-    #eyebrow[Critical observations]
-    #v(0.12cm)
-    #text(size: 7pt)[RAG should preserve retrieved chunks alongside synthesis; formula and diagram uncertainty should be flagged; flashcards and notes need coverage, duplication, and ambiguity checks.]
+      Strong modality shift: visual notes became listenable revision, but audio necessarily compresses diagrams and worked visual examples.
+    ], fill: warm, height: 2.15cm)
   ]
 ]
 

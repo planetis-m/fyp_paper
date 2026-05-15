@@ -1,8 +1,10 @@
 # Speaker Notes
 
-Target length: 14:15-14:30 spoken time, leaving a small buffer inside a strict 15-minute defence.
+Target length: 14:15-14:30 spoken time.
 
-Use these as delivery prompts, not a script. The presentation should form one continuous argument: problem, architecture, evidence, limits, contribution.
+Use these as presenter notes.
+They are written as short spoken sentences,
+with line breaks for pacing and recovery.
 
 ---
 
@@ -10,9 +12,31 @@ Use these as delivery prompts, not a script. The presentation should form one co
 
 Target: 20 seconds.
 
-This project presents an agent-based study assistant for academic revision. The core idea is to help students move from fragmented course material into grounded study artefacts: searchable text, explanations, practice questions, flashcards, and audio.
+Core message:
+This project is about coordinating AI tools around a real study workflow.
 
-Transition: I will start with the study problem the system is designed around.
+VISUAL ANCHOR:
+Large title.
+Subtitle with OCR, RAG, and TTS.
+Candidate and advisor blocks.
+
+This project presents an agent-based study assistant for academic revision.
+
+The system helps students move from fragmented course material
+to useful revision artefacts.
+
+Those artefacts include searchable text,
+explanations,
+practice questions,
+flashcards,
+and audio.
+
+The key point is that the **agent** coordinates the workflow.
+
+The individual tools handle the specialised processing.
+
+Transition:
+I will start with the study problem that motivates the system.
 
 ---
 
@@ -20,11 +44,44 @@ Transition: I will start with the study problem the system is designed around.
 
 Target: 50 seconds.
 
-Students rarely revise from one clean source. They work across lecture PDFs, scanned pages, textbook extracts, notes, and copied fragments. The important issue is not only file format or document length. Study requires repeated transformation of the same material: into readable notes, searchable passages, active-recall prompts, essay practice, and sometimes audio.
+Core message:
+Students do not just need summaries.
+They need repeated transformations of their own material.
 
-The project starts from that practical workflow. AI study support is useful only if it remains grounded in the student's actual material and if the processing steps are visible enough to inspect.
+VISUAL ANCHOR:
+Top headline.
+Five-step flow.
+Core thesis card.
 
-Transition: That leads to three specific barriers the system has to solve.
+Students rarely revise from one clean source.
+
+They usually work across lecture PDFs,
+scanned pages,
+textbook extracts,
+notes,
+and copied fragments.
+
+The problem is not only that these sources are messy.
+
+The deeper problem is that study requires the same material
+to be reused in different forms.
+
+A student may need notes today,
+flashcards tomorrow,
+and an audio version later.
+
+The flow on the slide shows that movement.
+
+Raw material becomes prepared text.
+Prepared text becomes searchable.
+Searchable material becomes study artefacts.
+Some artefacts become audio.
+
+The core thesis is that AI study support must stay **grounded**
+in the student's own material.
+
+Transition:
+That practical context creates three barriers for the system to solve.
 
 ---
 
@@ -32,15 +89,41 @@ Transition: That leads to three specific barriers the system has to solve.
 
 Target: 55 seconds.
 
-The first barrier is input readiness. Scanned or PDF-based material may be visually readable but not usable by a language-based assistant until OCR produces text.
+Core message:
+The design problem has three connected barriers.
 
-The second barrier is grounded access. Long or fragmented course material cannot be treated as one uncontrolled prompt. The student needs to retrieve relevant passages from their own prepared sources.
+VISUAL ANCHOR:
+Three cards across the top.
+Design challenge at the bottom.
 
-The third barrier is output form. Study is not one output type. A student may need transcription, explanation, flashcards, quizzes, essay prompts, or spoken revision.
+The first barrier is input readiness.
 
-The design challenge is to move from raw course material to reusable study artefacts without losing source grounding.
+Scanned pages and PDFs may be readable to a student,
+but they are not directly usable by a language-based assistant.
 
-Transition: The aim and scope are deliberately shaped around that challenge.
+They need OCR before they can participate in later workflows.
+
+The second barrier is grounded access.
+
+Long or fragmented course material should not be treated
+as one uncontrolled prompt.
+
+The student needs to ask,
+what does my material say about this topic?
+
+The third barrier is output form.
+
+Study is not one output type.
+
+Sometimes the student needs an explanation.
+Sometimes they need active recall.
+Sometimes they need essay practice or audio.
+
+The design challenge is to move from raw course material
+to source-grounded study artefacts.
+
+Transition:
+The project aim and scope are built around that challenge.
 
 ---
 
@@ -48,13 +131,43 @@ Transition: The aim and scope are deliberately shaped around that challenge.
 
 Target: 55 seconds.
 
-The aim is to design and evaluate an agent-based study assistant that coordinates OCR, retrieval-augmented assistance, and text-to-speech for realistic revision workflows.
+Core message:
+The project makes a focused engineering claim,
+not a broad educational-impact claim.
 
-The objectives combine student-facing behaviour with engineering controls: support multiple study modes, preserve source grounding, keep OCR, RAG, and TTS usable as standalone tools, and evaluate reliability, throughput, model suitability, and workflow feasibility.
+VISUAL ANCHOR:
+Aim and objectives on the left.
+Claim boundary on the right.
 
-The scope is important. This is a system-design and engineering thesis. It does not claim measured grade improvement, and it does not replace student judgement or instructor feedback. Those are future educational studies.
+The aim is to design and evaluate an agent-based study assistant
+for realistic revision workflows.
 
-Transition: The requirements follow directly from the workflow barriers.
+The system coordinates OCR,
+retrieval-augmented assistance,
+generation,
+and text-to-speech.
+
+The objectives combine student-facing behaviour
+with engineering controls.
+
+The system should support multiple study modes.
+It should preserve source grounding.
+It should keep OCR, RAG, and TTS inspectable as separate tools.
+It should evaluate reliability, throughput, model suitability, and workflow feasibility.
+
+The claim boundary is important.
+
+This is a system-design and engineering thesis.
+
+It does not claim measured grade improvement.
+It does not replace student judgement.
+It does not replace instructor feedback.
+
+The claim is **narrow**,
+but it is testable.
+
+Transition:
+Within that scope, the requirements follow directly from the workflow barriers.
 
 ---
 
@@ -62,15 +175,46 @@ Transition: The requirements follow directly from the workflow barriers.
 
 Target: 55 seconds.
 
-OCR addresses input readiness, but academic documents require more than character extraction. Reading order, equations, tables, and omitted definitions matter because downstream study artefacts depend on them.
+Core message:
+Each technology is included because it solves a specific study-workflow barrier.
 
-RAG addresses grounded access by storing and retrieving the student's prepared material rather than relying only on model memory.
+VISUAL ANCHOR:
+OCR, RAG, and TTS cards.
+Bottom contract strip.
 
-TTS addresses output modality, but visual notes need rewriting before they are useful as speech.
+OCR addresses input readiness.
 
-The software requirement is that each capability leaves an artefact: ordered JSONL for OCR, marked chunks in a local vector store for retrieval, and a complete audio file for speech.
+For academic material,
+simple character extraction is not enough.
 
-Transition: The architecture separates flexible study intent from deterministic processing.
+Reading order matters.
+Equations matter.
+Tables matter.
+Missing definitions matter.
+
+RAG addresses grounded access.
+
+It lets the system retrieve from the student's prepared material
+instead of relying only on the model's general memory.
+
+TTS addresses output modality.
+
+But speech is not just reading Markdown aloud.
+
+Technical notation and visual structure need to be rewritten
+so the result makes sense when heard.
+
+The bottom strip shows the software consequence.
+
+Each path leaves an inspectable artefact:
+ordered JSONL,
+stored chunks,
+or a complete audio file.
+
+Those artefacts make the workflow **inspectable**.
+
+Transition:
+The architecture shows how those responsibilities fit together.
 
 ---
 
@@ -78,13 +222,54 @@ Transition: The architecture separates flexible study intent from deterministic 
 
 Target: 70 seconds.
 
-At the top level, the student provides a request and source material. The `study-assistant` interprets the intent and selects a study mode. The output is a study artefact or audio file.
+Core message:
+The agent owns study intent,
+while the tools own reliable execution.
 
-Below that are three specialised paths. `ocr-tool` and `pdfocr` prepare scanned or PDF material. `rag-tool` and `chunkvec` store and retrieve semantic chunks. `tts-tool` and `chunktts` prepare and assemble speech output.
+VISUAL ANCHOR:
+Top lane from input to orchestration to output.
+Bottom lanes for OCR, RAG, and TTS.
 
-The key architectural decision is separation of concerns. The agent owns study intent. The tools own execution contracts. This makes the system easier to test because many behaviours can be checked through schemas, exit codes, ordered outputs, and stored artefacts rather than through a conversational transcript alone.
+At the top level,
+the student provides a request and source material.
 
-Transition: Those boundaries are supported by specific engineering decisions.
+The request contains intent.
+
+The student may want notes,
+flashcards,
+a quiz,
+essay practice,
+or audio.
+
+The `study-assistant` interprets that intent
+and selects the appropriate mode.
+
+The output is a study artefact,
+not just an unstructured chat response.
+
+The lower lanes show the specialised paths.
+
+The OCR path prepares difficult source material as text.
+
+The RAG path stores and retrieves source-grounded chunks.
+
+The TTS path turns prepared material into final audio.
+
+The central architectural decision is separation of concerns.
+
+The agent can remain flexible
+because the tools enforce stable contracts.
+
+Those contracts include schemas,
+ordering,
+exit codes,
+retry behaviour,
+and artefact publication.
+
+That separation is the architectural **core**.
+
+Transition:
+The next slide shows the engineering decisions that make that separation work.
 
 ---
 
@@ -92,19 +277,52 @@ Transition: Those boundaries are supported by specific engineering decisions.
 
 Target: 65 seconds.
 
-There are four important decisions.
+Core message:
+The engineering design makes model-based workflows testable and inspectable.
 
-First, agent orchestration is separated from deterministic tools, so the system is not one opaque prompt.
+VISUAL ANCHOR:
+Six decision cards.
+Ordered output card.
+Failure semantics card.
 
-Second, the core processing stages are standalone command-line tools. They can be run, inspected, cached, redirected, or tested independently.
+The first decision is to separate agent orchestration
+from deterministic tools.
 
-Third, the system prefers ordered final output over maximum raw completion speed. Pages or chunks may finish out of order internally, but the published artefact follows the source order.
+That prevents the system from becoming one opaque prompt.
 
-Fourth, failure semantics depend on artefact risk. Partial OCR can be useful if page errors are explicit. Partial final audio is withheld because it could sound complete while silently omitting content.
+The second decision is to keep the processing stages
+as standalone command-line tools.
 
-The shared Nim libraries support consistency across the tools rather than duplicating request, JSON, and provider code.
+That means each stage can be run,
+inspected,
+cached,
+redirected,
+or tested independently.
 
-Transition: The evaluation then asks whether these decisions work in realistic study workflows.
+The third decision is ordered output.
+
+Remote requests may finish in any order,
+but the published pages and chunks follow the source order.
+
+The fourth decision is artefact-specific failure behaviour.
+
+Partial OCR can still be useful
+if the failed pages are explicit.
+
+Partial final audio is different.
+
+It may sound complete
+while silently omitting part of the content.
+
+The shared Nim libraries support the same execution style
+across OCR,
+retrieval,
+and speech.
+
+The design turns model calls into **contracts**.
+
+Transition:
+The evaluation checks whether those contracts support realistic study workflows.
 
 ---
 
@@ -112,13 +330,42 @@ Transition: The evaluation then asks whether these decisions work in realistic s
 
 Target: 60 seconds.
 
-The workflow evaluation is not judged by whether one generated answer sounds fluent. It asks whether the system can move through realistic revision tasks while producing inspectable artefacts.
+Core message:
+The workflow evaluation follows artefacts through realistic revision tasks.
 
-The recorded workflows cover essay practice, RAG-based exam revision, flashcards, and study-notes-to-audio. The criteria are source grounding, mode appropriateness, operational reproducibility, useful intermediate artefacts, and visible limitations.
+VISUAL ANCHOR:
+Top artefact flow.
+Evaluation criteria.
+Four workflow cards.
 
-This matters because a study assistant can appear successful while hiding provenance problems. The evaluation therefore treats traceability and artefact boundaries as part of the evidence.
+The evaluation is not based on whether one generated answer sounds impressive.
 
-Transition: Before the live workflow evidence, the implementation contracts are tested separately.
+It asks whether the system can move through realistic revision tasks
+while leaving enough evidence behind.
+
+The top flow shows the chain.
+
+A PDF becomes OCR text.
+OCR text becomes a study-mode output.
+Material can be stored and retrieved.
+Selected content can become speech.
+
+The criteria are source grounding,
+mode appropriateness,
+operational reproducibility,
+inspectable intermediate artefacts,
+and visible limitations.
+
+The recorded workflows cover essay practice,
+RAG-based exam revision,
+flashcards,
+and notes-to-audio.
+
+The evidence is the **chain**,
+not just the final answer.
+
+Transition:
+Before looking at workflow results, I will show how the implementation contracts are verified.
 
 ---
 
@@ -126,11 +373,47 @@ Transition: Before the live workflow evidence, the implementation contracts are 
 
 Target: 55 seconds.
 
-The evaluation separates local correctness from provider variability. Deterministic tests cover contracts such as page selection, request identifiers, retry queues, JSON schema, chunk parsing, SQLite/vector integration, audio validation, and transport behaviour.
+Core message:
+The evaluation separates local correctness from live model variability.
 
-Live model results are treated as empirical operational evidence, not as deterministic tests. This separation is important because remote models can vary, but local software should still preserve ordering, classify failures, and publish artefacts predictably.
+VISUAL ANCHOR:
+Deterministic evidence column.
+Evaluation principle column.
 
-Transition: The first quantitative result is the OCR throughput benchmark.
+The deterministic tests focus on what the implementation controls.
+
+For OCR,
+that includes page selection,
+request identifiers,
+retry queues,
+and JSON result schemas.
+
+For retrieval,
+that includes chunk parsing,
+configuration,
+embeddings,
+and SQLite vector integration.
+
+For speech,
+that includes chunk splitting,
+retry handling,
+audio validation,
+and final file publication.
+
+The shared libraries are also tested
+for transport,
+JSON parsing,
+and provider request construction.
+
+Live model runs are different.
+
+They are empirical operational evidence,
+not deterministic unit tests.
+
+That distinction keeps the evaluation **credible**.
+
+Transition:
+The first quantitative result is the OCR throughput benchmark.
 
 ---
 
@@ -138,13 +421,51 @@ Transition: The first quantitative result is the OCR throughput benchmark.
 
 Target: 70 seconds.
 
-The throughput benchmark used a fixed 72-page slide PDF. The sequential baseline with `K=1` took 316.66 seconds and completed 72 out of 72 pages. With bounded concurrency at `K=32`, the same workload completed in 19.93 seconds, again with 72 out of 72 pages successful.
+Core message:
+Bounded concurrency made the recorded OCR workflow practical without breaking output order.
 
-That is a 15.89 times speedup and a 93.71 percent relative time reduction. The improvement comes from overlapping network-bound OCR requests while preserving ordered output.
+VISUAL ANCHOR:
+15.89x metric.
+93.71% metric.
+Runtime bars.
+Caveat line.
 
-This is not a universal speed guarantee. It depends on provider latency, rate limits, document complexity, and network conditions. It supports the narrower claim that bounded concurrency made this recorded OCR workflow practical.
+The throughput benchmark used the same 72-page slide PDF
+in two configurations.
 
-Transition: Throughput is only one part of OCR suitability; model choice also matters.
+The sequential baseline used `K=1`.
+
+It took 316.66 seconds
+and completed all 72 pages.
+
+The concurrent run used `K=32`.
+
+It took 19.93 seconds
+and also completed all 72 pages.
+
+That is a 15.89 times speedup.
+
+It is also a 93.71 percent reduction in runtime.
+
+The improvement comes from overlapping network-bound OCR requests.
+
+It does not come from skipping pages.
+It does not come from relaxing output order.
+
+The caveat matters.
+
+This is an operational measurement,
+not a universal speed guarantee.
+
+It depends on provider latency,
+rate limits,
+network conditions,
+and document complexity.
+
+The result supports the system's **practicality**.
+
+Transition:
+Throughput is only one part of OCR suitability, so the next result looks at model choice.
 
 ---
 
@@ -152,13 +473,54 @@ Transition: Throughput is only one part of OCR suitability; model choice also ma
 
 Target: 70 seconds.
 
-The OCR benchmark used 68 pages from 34 academic PDFs with human gold labels. The pages include equations, tables, diagrams, and multi-column layouts, so this is a difficult academic-document setting.
+Core message:
+The OCR model choice is a workflow tradeoff,
+not a simple winner-takes-all result.
 
-The result is a tradeoff, not a single absolute winner. PaddleOCR-VL gives the strongest strict accuracy aggregate in this run. DeepSeek-OCR is the cheapest. `olmOCR 2` is selected because it gives the strongest recall-oriented fit for the study workflow while costing less than the strict-accuracy winner.
+VISUAL ANCHOR:
+Accuracy table.
+Cost table.
+Selection tradeoff card.
 
-That matters because in study material, omissions are especially harmful. A missing theorem, definition, equation, or table row can damage downstream notes, quizzes, and explanations.
+The OCR benchmark uses 68 pages
+from 34 academic PDFs.
 
-Transition: The recorded workflows show how these technical choices appear at the user-facing level.
+The pages have human gold labels.
+
+They include equations,
+tables,
+diagrams,
+and multi-column layouts.
+
+That is the kind of material
+that makes study-document OCR difficult.
+
+The table shows a tradeoff.
+
+PaddleOCR-VL has the strongest strict accuracy aggregate
+in this run.
+
+DeepSeek-OCR is the cheapest.
+
+`olmOCR 2` is selected because it gives the strongest recall-oriented fit
+for the study workflow
+while costing less than the strict-accuracy winner.
+
+Recall matters in this context.
+
+A missing theorem,
+definition,
+equation,
+or table row
+can damage downstream notes,
+quizzes,
+and explanations.
+
+The selection is about **suitability**,
+not only a single metric.
+
+Transition:
+The workflow results show how these technical choices appear at the student-facing level.
 
 ---
 
@@ -166,19 +528,62 @@ Transition: The recorded workflows show how these technical choices appear at th
 
 Target: 80 seconds.
 
-The recorded workflows demonstrate several useful transformations.
+Core message:
+The workflow results are strongest
+when interpreted critically,
+not described as demos.
 
-In essay practice, Association Analysis slides produced four exam-style prompts with sample answers covering Apriori, support, confidence, lift, and interestingness.
+VISUAL ANCHOR:
+Four result cards.
 
-In RAG exam revision, textbook pages 358 to 402 were OCR-processed and stored as 26 semantic chunks. A targeted search retrieved the Naive Bayes zero-probability issue and smoothing methods from the stored source material.
+This slide is not a demo checklist.
 
-In flashcard mode, Anomaly Detection slides produced 25 active-recall cards covering definitions, settings, methods, limitations, and applications.
+It is the judgement from the workflow evaluation.
 
-In the notes-to-audio workflow, clustering material became study notes, then speech-ready text, then a final audio artefact from 24 ordered speech chunks.
+Essay practice showed strong mode fit.
 
-The critical interpretation is balanced: the workflows are useful and mode-appropriate, but traceability should be stronger. Future runs should preserve retrieved chunks alongside generated synthesis, flag formula and diagram uncertainty, and record run manifests linking source files to final artefacts.
+The system moved lecture material
+into exam-style reasoning,
+which is exactly the purpose of that mode.
 
-Transition: Those observations define the limitations rather than weakening the contribution.
+The challenge is provenance.
+
+If OCR introduces small errors,
+the exact source record still needs to be retained.
+
+RAG exam revision is the strongest usefulness signal.
+
+The answer aligned with course-specific material,
+not just a generic model response.
+
+But a defence-level evaluation should show
+retrieved evidence beside the final synthesis.
+
+Flashcards worked well as active recall.
+
+The output was concise and examinable.
+
+The weakness is validation:
+coverage,
+duplicates,
+and formula clarity need checking.
+
+The audio workflow showed a strong modality shift.
+
+The notes became listenable revision,
+but audio inevitably compresses visual material.
+
+That matters for diagrams,
+tables,
+and worked examples.
+
+The overall finding is **balanced**.
+
+The workflows are practically useful,
+but the next version needs stronger audit trails.
+
+Transition:
+Those observations define the limits of the claim.
 
 ---
 
@@ -186,13 +591,57 @@ Transition: Those observations define the limitations rather than weakening the 
 
 Target: 75 seconds.
 
-The system is practically useful because it coordinates OCR, retrieval, generation, and speech around actual revision tasks. The architecture makes errors easier to locate because each stage has a separate responsibility and artefact.
+Core message:
+The project is practically useful inside clear limits.
 
-The limitations are also clear. There is no controlled learning-outcome study. RAG evaluation focuses on infrastructure and recorded workflow usefulness, not labelled retrieval accuracy. TTS evaluation verifies artefact correctness, not subjective listening quality. OCR benchmarks are dataset-specific, and throughput measurements are recorded runs rather than statistical guarantees.
+VISUAL ANCHOR:
+Interpretation column.
+Threats and limitations column.
 
-There is also provider variability: remote model quality, pricing, latency, and availability can change. These limitations define the claim boundary. The project demonstrates practical, inspectable system behaviour; it does not claim universal model performance or proven educational impact.
+The interpretation is that modularity helps.
 
-Transition: Within that boundary, the contributions are still substantial.
+When OCR,
+retrieval,
+generation,
+and speech are separated,
+errors are easier to locate.
+
+Artefact boundaries create practical checkpoints:
+page records,
+stored chunks,
+database entries,
+and audio files.
+
+The throughput benchmark supports bounded concurrency
+for network-bound OCR.
+
+The workflow evaluation supports practical feasibility
+for several revision tasks.
+
+The limitations are equally important.
+
+There is no controlled learning-outcome study.
+
+There is no labelled retrieval benchmark yet.
+
+TTS naturalness is not evaluated subjectively.
+
+The OCR benchmark is dataset-specific.
+
+The throughput results are recorded runs,
+not statistical guarantees.
+
+The system also depends on remote providers,
+so model behaviour,
+pricing,
+latency,
+and availability can change.
+
+These are **boundaries**,
+not excuses.
+
+Transition:
+Within those boundaries, the contributions are clear.
 
 ---
 
@@ -200,15 +649,44 @@ Transition: Within that boundary, the contributions are still substantial.
 
 Target: 55 seconds.
 
-The conceptual contribution is framing study assistance as a source-grounded workflow, not just summarisation.
+Core message:
+The contribution is the cohesive system design,
+not one isolated tool.
 
-The architectural contribution is the separation between agent orchestration, tool definitions, core Nim executables, and shared libraries.
+VISUAL ANCHOR:
+Four contribution cards.
 
-The technical contribution is a modular OCR, retrieval, and speech tool ecosystem with ordering, retries, schemas, exit contracts, and reusable infrastructure.
+The conceptual contribution is the study-workflow framing.
 
-The evaluation contribution is the combination of deterministic contract tests, OCR throughput evidence, OCR model comparison, and recorded workflow analysis.
+The project treats study assistance
+as a source-grounded movement from raw material
+to revision artefacts.
 
-Transition: The future work follows directly from the evaluation gaps.
+The architectural contribution is the separation
+between agent orchestration,
+tool definitions,
+core Nim executables,
+and shared libraries.
+
+The technical contribution is the implemented tool ecosystem:
+OCR,
+semantic retrieval,
+and speech generation
+with ordering,
+retries,
+schemas,
+and exit contracts.
+
+The evaluation contribution is the combination of contract tests,
+throughput evidence,
+OCR model comparison,
+and workflow critique.
+
+The contribution is **integration**,
+with explicit boundaries.
+
+Transition:
+The future work follows directly from the gaps exposed by the evaluation.
 
 ---
 
@@ -216,13 +694,45 @@ Transition: The future work follows directly from the evaluation gaps.
 
 Target: 55 seconds.
 
-The most immediate future work is stronger auditability: run manifests should connect source PDFs, OCR cache entries, retrieved chunks, generated artefacts, TTS input, and final audio.
+Core message:
+The next step is stronger evidence and auditability,
+not just more features.
 
-The RAG subsystem needs labelled retrieval evaluation and recorded retrieved evidence alongside final answers. OCR evaluation should use broader corpora and repeated measurements. Generated flashcards and notes should be checked for coverage, duplication, formula ambiguity, and diagram uncertainty.
+VISUAL ANCHOR:
+Near-term engineering column.
+Broader validation column.
 
-Longer term, provider and model policies should account for cost, latency, privacy, and local backends. Educational validation with students would be needed to measure usefulness and learning outcomes.
+The most immediate future work is run manifests.
 
-Transition: I will close by returning to the central claim.
+Each run should connect the source PDF,
+OCR cache entries,
+retrieved chunks,
+generated text,
+TTS input,
+and final audio.
+
+That would make workflow evaluation much stronger.
+
+The RAG subsystem also needs labelled retrieval queries
+and stored retrieved evidence.
+
+OCR evaluation should use broader corpora
+and repeated measurements.
+
+Generated outputs should be checked for coverage,
+duplication,
+formula ambiguity,
+and diagram uncertainty.
+
+The broader validation work includes provider-selection policies,
+local or private backends,
+human usefulness evaluation,
+and learning-outcome studies.
+
+The priority is **auditability**.
+
+Transition:
+I will close by returning to the central claim.
 
 ---
 
@@ -230,13 +740,44 @@ Transition: I will close by returning to the central claim.
 
 Target: 55 seconds.
 
-The project addresses the three barriers from the beginning. OCR improves input readiness. RAG supports source-grounded access. Study modes and TTS support different revision forms.
+Core message:
+Practical AI study support needs constraints,
+not just generation.
 
-The main conclusion is that these capabilities become more academically credible when they are coordinated through a modular architecture with explicit contracts. The agent handles study intent, while the tools enforce ordered output, bounded concurrency, retry behaviour, schema control, and artefact publication.
+VISUAL ANCHOR:
+Main conclusion block.
+Three metric cards.
 
-`study-assistant` shows that AI study support can be practical and inspectable when flexible generation is constrained by source grounding and clear processing boundaries.
+The project returns to the three barriers from the beginning.
 
-Transition: Thank the committee and invite questions.
+OCR improves input readiness.
+
+RAG supports source-grounded access.
+
+Study modes and TTS support different revision forms.
+
+The main result is not simply that these tools exist together.
+
+The result is that flexible generation is constrained
+by source grounding,
+modular tools,
+ordered outputs,
+and explicit artefact contracts.
+
+The metrics on the right are concrete examples:
+72 OCR pages,
+26 RAG chunks,
+and 24 speech chunks.
+
+They show that the system produces inspectable workflow artefacts.
+
+The final claim is that `study-assistant` makes AI study support
+practical,
+modular,
+and **inspectable**.
+
+Transition:
+I will stop here and take questions.
 
 ---
 
@@ -244,4 +785,9 @@ Transition: Thank the committee and invite questions.
 
 Target: final hold.
 
-Thank you. I am happy to take questions.
+VISUAL ANCHOR:
+Large Questions title.
+
+Thank you.
+
+I am happy to take questions.
