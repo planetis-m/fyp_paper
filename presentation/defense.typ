@@ -79,23 +79,22 @@
 
 // 2
 #slide("Problem Context")[
-  #v(0.10cm)
-  #text(size: 10.6pt, weight: "bold", fill: accent)[Study material is fragmented across formats and revision tasks]
-  #v(0.30cm)
-  #flow(("PDF / notes", "OCR", "RAG store", "Study modes", "Audio"))
+  #v(0.08cm)
+  #big-statement[Study is repeated transformation of fragmented course material.]
+  #v(0.28cm)
+  #flow(("PDFs / scans", "Prepared text", "Searchable sources", "Study artefacts", "Audio revision"))
   #v(0.34cm)
-  #grid(columns: (1.06fr, 0.94fr), gutter: 0.5cm)[
-    #spacious-list(size: 7.5pt)[
-      - Converts difficult source material into usable text
-      - Stores prepared content for semantic search
-      - Generates study artefacts: notes, flashcards, quizzes, essays
-      - Produces listenable `.opus` revision audio
-      - Keeps OCR, retrieval, generation, and speech as distinct responsibilities
+  #grid(columns: (1.04fr, 0.96fr), gutter: wide-col-gutter)[
+    #spacious-list(size: 7.45pt)[
+      - Students revise from lecture slides, scans, textbook extracts, notes, and copied fragments
+      - The same source must become notes, explanations, flashcards, quizzes, essay practice, or audio
+      - General chat alone hides provenance and makes long material hard to control
+      - Useful AI study support must remain source-grounded, modular, and inspectable
     ]
   ][
     #card("Core thesis", [
-      AI study support is most useful when it is source-grounded, modular, and inspectable rather than a single unstructured prompt.
-    ], fill: soft, height: 2.15cm)
+      AI assistance is most useful when it coordinates the study workflow around the student's own material, rather than treating generation as a single unstructured prompt.
+    ], fill: soft, height: 2.45cm)
   ]
 ]
 
@@ -103,48 +102,50 @@
 
 // 3
 #slide("Problem Statement")[
-  #v(0.14cm)
+  #v(0.08cm)
   #grid(columns: (1fr, 1fr, 1fr), gutter: 0.28cm)[
-    #card("Input readiness", [
-      Scanned slides, textbook pages, and PDFs are often visually readable but not directly searchable or usable by language tools.
-    ], fill: warm, height: 2.45cm)
+    #card("1. Input readiness", [
+      Scanned slides and PDFs may be readable to a student but unusable by language tools until OCR produces text.
+    ], fill: warm, height: 2.35cm)
   ][
-    #card("Grounded access", [
-      Long or fragmented notes exceed convenient prompt use and need retrieval from the student's own sources.
-    ], height: 2.45cm)
+    #card("2. Grounded access", [
+      Long or fragmented notes require retrieval from prepared sources instead of uncontrolled prompting.
+    ], height: 2.35cm)
   ][
-    #card("Output form", [
-      Effective revision needs several forms: explanations, active recall, essay practice, and audio.
-    ], fill: warm, height: 2.45cm)
+    #card("3. Output form", [
+      Revision requires different artefacts: explanation, active recall, essay practice, and listening.
+    ], fill: warm, height: 2.35cm)
   ]
-  #v(0.5cm)
+  #v(0.44cm)
   #align(center)[
     #text(size: 12pt, weight: "bold", fill: accent)[Design challenge]
     #v(0.12cm)
-    Build a study assistant that moves from raw course material to reliable, reusable study artefacts without losing source grounding.
+    #block(width: 11.2cm)[
+      Build a study assistant that moves from raw course material to source-grounded, reusable study artefacts.
+    ]
   ]
 ]
 
 #pagebreak()
 
 // 4
-#slide("Objectives")[
+#slide("Aim, Objectives, and Scope")[
   #v(content-nudge)
-  #grid(columns: (1fr, 1fr), gutter: wide-col-gutter)[
-    #subhead[Functional objectives]
+  #grid(columns: (1.06fr, 0.94fr), gutter: wide-col-gutter)[
+    #subhead[Aim and objectives]
     #spacious-list[
-      - Support transcription, notes, lecture explanation, ELI5, flashcards, mind maps, quizzes, and essays
-      - Use OCR when source material is PDF-based or scanned
-      - Store and retrieve semantic chunks from prepared material
-      - Convert selected material into natural spoken audio
+      - Coordinate OCR, retrieval, generation, and speech around realistic revision workflows
+      - Preserve source grounding across transformations
+      - Expose OCR, RAG, and TTS as standalone, inspectable tools
+      - Evaluate reliability, throughput, model suitability, and workflow feasibility
     ]
   ][
-    #subhead[Engineering objectives]
+    #subhead[Claim boundary]
     #spacious-list[
-      - Preserve deterministic ordering despite asynchronous model calls
-      - Bound concurrency and retry transient failures
-      - Keep stdout artefacts separate from diagnostics
-      - Make OCR, RAG, and TTS usable both inside and outside the agent
+      - System-design and engineering thesis
+      - No claim of measured grade improvement
+      - No replacement for instructor feedback or student judgement
+      - Remote model quality, latency, cost, and privacy remain practical constraints
     ]
   ]
 ]
@@ -152,106 +153,154 @@
 #pagebreak()
 
 // 5
-#slide("Research Questions and Scope")[
-  #v(content-nudge)
-  #grid(columns: (1.15fr, 0.85fr), gutter: wide-col-gutter)[
-    #subhead[Research questions]
-    #spacious-list[
-      - How can an agent coordinate OCR, retrieval, generation, and speech without hiding the processing steps?
-      - Which software contracts are needed to make model-based study workflows auditable?
-      - What operational evidence shows that the system is practical for realistic revision material?
-    ]
+#slide("Study Workflow Requirements")[
+  #v(0.12cm)
+  #grid(columns: (1fr, 1fr, 1fr), gutter: card-grid-gutter)[
+    #card("OCR", [
+      Converts visual material into text. For study, quality includes order, equations, tables, and omissions.
+    ], fill: warm, height: 2.25cm)
   ][
-    #card("Scope", [
-      The project evaluates system design, reliability, throughput, and recorded study workflows.
-    ], fill: soft)
-    #v(related-stack-gap)
-    #card("Boundary", [
-      It does not claim measured grade improvement or replace student judgement over generated artefacts.
-    ], fill: warm)
+    #card("RAG", [
+      Stores and retrieves the student's prepared material so answers remain tied to course-specific sources.
+    ], height: 2.25cm)
+  ][
+    #card("TTS", [
+      Turns prepared text into speech, after rewriting visual notation into a natural listening form.
+    ], fill: warm, height: 2.25cm)
+  ]
+  #v(0.34cm)
+  #surface[
+    #grid(columns: (1fr, 1fr, 1fr), gutter: 0.22cm)[
+      #lane("pdfocr", [ordered JSONL page records], fill: white)
+    ][
+      #lane("chunkvec", [marked chunks in SQLite vector store], fill: white)
+    ][
+      #lane("chunktts", [complete ordered `.opus` artefact], fill: white)
+    ]
+    #v(0.16cm)
+    #text(size: 6.9pt, fill: muted)[Each capability leaves an inspectable artefact rather than disappearing into a chat transcript.]
   ]
 ]
 
 #pagebreak()
 
-#section-slide("Foundation", "Background, requirements, and the study-workflow framing")
+// 6
+#slide("Architecture: Flexible Agent, Deterministic Tools")[
+  #surface[
+    #grid(columns: (0.92fr, auto, 1.12fr, auto, 0.92fr), gutter: 0.16cm, align: horizon)[
+      #lane("input", [Student request + material], fill: warm)
+    ][#text(size: 9pt, fill: accent)[->]][
+      #lane("orchestration", [study-assistant selects one mode], fill: soft)
+    ][#text(size: 9pt, fill: accent)[->]][
+      #lane("output", [Study artefact or audio], fill: warm)
+    ]
+    #v(0.25cm)
+    #line(length: 100%, stroke: 0.32pt + line-color)
+    #v(0.22cm)
+    #grid(columns: (1fr, 1fr, 1fr), gutter: 0.24cm)[
+      #lane("input readiness", [ocr-tool -> pdfocr -> ordered JSONL], fill: white)
+    ][
+      #lane("grounded access", [rag-tool -> chunkvec -> SQLite vectors], fill: white)
+    ][
+      #lane("output modality", [tts-tool -> chunktts -> final audio], fill: white)
+    ]
+  ]
+  #v(0.24cm)
+  #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
+    #card("Agent role", [
+      Interpret study intent and select a mode such as transcription, notes, flashcards, quiz, essay, or audio.
+    ], fill: soft, height: 1.45cm)
+  ][
+    #card("Tool role", [
+      Enforce schemas, ordering, retries, exit codes, and artefact publication.
+    ], fill: warm, height: 1.45cm)
+  ]
+]
 
 #pagebreak()
 
-#slide("Background and Related Work")[
-  #v(0.12cm)
-  #grid(columns: (1fr, 1fr, 1fr), gutter: card-grid-gutter)[
-    #card("OCR", [
-      Converts visual document pages into machine-readable text. Evaluation must consider not only CER/WER but also reading order, tables, equations, and recall.
-    ], fill: warm, height: 2.55cm)
+// 7
+#slide("Engineering Decisions")[
+  #v(0.04cm)
+  #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
+    #card("Agent orchestration, deterministic tools", [
+      The agent owns study intent; tools own processing contracts, retries, schemas, and publication.
+    ], fill: soft, height: 1.62cm)
+    #v(card-stack-gap)
+    #card("Standalone command-line stages", [
+      OCR, retrieval, and speech can be run, inspected, cached, redirected, or tested independently.
+    ], fill: warm, height: 1.62cm)
+    #v(card-stack-gap)
+    #card("Shared infrastructure", [
+      Nim tools share `relay`, `jsonx`, and `openai` for HTTP execution, JSON handling, and provider schemas.
+    ], fill: panel, height: 1.62cm)
   ][
-    #card("RAG", [
-      Combines language generation with retrieved passages from an external corpus, allowing answers and artefacts to remain tied to source material.
-    ], height: 2.55cm)
-  ][
-    #card("TTS", [
-      Turns prepared text into audio, but requires speech-oriented rewriting so markdown, formulae, and technical notation remain understandable.
-    ], fill: warm, height: 2.55cm)
+    #card("Ordered output over maximum raw speed", [
+      Concurrent requests may complete out of order, but published pages and chunks preserve source order.
+    ], fill: warm, height: 1.62cm)
+    #v(card-stack-gap)
+    #card("Artefact-specific failure semantics", [
+      Partial OCR can be auditable; partial final audio is withheld because it may appear complete while omitting content.
+    ], fill: soft, height: 1.62cm)
+    #v(card-stack-gap)
+    #card("Evaluation consequence", [
+      Behaviour can be checked through process channels, schemas, exit codes, stored artefacts, and ordered outputs.
+    ], fill: panel, height: 1.62cm)
   ]
-  #v(0.36cm)
-  #card("Positioning", [
-    Existing AI study tools often focus on summarisation. This project treats study assistance as a coordinated lifecycle: prepare, retrieve, transform, practise, and listen.
-  ])
 ]
 
 #pagebreak()
 
 // 8
-#slide("Requirements and Specification")[
-  #v(content-nudge)
-  #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
-    #subhead[User-facing requirements]
+#slide("Workflow Evaluation Method")[
+  #v(0.08cm)
+  #flow(("PDF", "OCR text", "Study mode output", "RAG search", "Speech artefact"))
+  #v(0.34cm)
+  #grid(columns: (0.98fr, 1.02fr), gutter: wide-col-gutter)[
+    #subhead[Evaluation criteria]
     #spacious-list[
-      - Work from PDFs, text, Markdown, stored document IDs, or raw source text
-      - Produce concise, mode-specific study artefacts
-      - Avoid unsupported external content during transformations
-      - Make intermediate artefacts auditable
+      - Source grounding against prepared material
+      - Appropriateness to the selected study mode
+      - Inspectable intermediate artefacts
+      - Operational reproducibility of the run
+      - Visible limitations rather than hidden failures
     ]
   ][
-    #subhead[Tool contracts]
-    #table(
-      columns: (1fr, 1.2fr),
-      table.header([*Tool*], [*Contract*]),
-      [`pdfocr`], [Ordered JSONL page results],
-      [`chunkvec`], [Marked chunks -> SQLite vector store],
-      [`chunktts`], [Ordered chunks -> complete `.opus` file],
-    )
+    #subhead[Recorded workflows]
+    #grid(columns: (1fr, 1fr), gutter: 0.22cm)[
+      #card("Essay practice", [Association Analysis slides -> exam prompts and sample answers], fill: warm, height: 1.34cm)
+    ][
+      #card("RAG revision", [Textbook section -> stored chunks -> targeted Naive Bayes search], height: 1.34cm)
+    ]
+    #v(0.2cm)
+    #grid(columns: (1fr, 1fr), gutter: 0.22cm)[
+      #card("Flashcards", [Anomaly Detection slides -> active-recall cards], height: 1.34cm)
+    ][
+      #card("Notes to audio", [Clustering notes -> speech-ready text -> final audio], fill: warm, height: 1.34cm)
+    ]
   ]
 ]
 
 #pagebreak()
 
-#section-slide("Method and System Design", "Evaluation method, architecture, and auditable artefact contracts")
-
-#pagebreak()
-
 // 9
-#slide("Methodology")[
+#slide("Testing Strategy and Evaluation Credibility")[
   #v(content-nudge)
-  #grid(columns: (1fr, 1fr), gutter: wide-col-gutter)[
-    #subhead[Common model-calling pattern]
+  #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
+    #subhead[Deterministic evidence]
     #spacious-list[
-      1. Parse and normalise CLI/configuration
-      2. Convert input into ordered work items
-      3. Assign deterministic request IDs
-      4. Submit bounded batches through `relay`
-      5. Classify success, retryable failure, or terminal failure
-      6. Finalise in source order or database transaction
+      - `pdfocr`: page selection, request IDs, retry queue, JSON result schema
+      - `chunkvec`: chunk parser, embeddings configuration, SQLite/vector integration
+      - `chunktts`: chunk splitting, retry pressure, audio validation, finalisation
+      - `relay`, `jsonx`, `openai`: transport, parsing, and provider-schema helpers
     ]
   ][
-    #subhead[Correctness invariants]
+    #subhead[Evaluation principle]
     #spacious-list[
-      - `inFlightCount <= K`
-      - request ID encodes sequence and attempt
-      - retry queues are ordered by due time
-      - stdout remains machine-readable
-      - API schemas are built through typed helpers
-      - configuration values are normalised into safe ranges
+      - Separate local implementation correctness from live provider variability
+      - Use live model runs as empirical operational evidence
+      - Verify that local tools still preserve ordering, failure semantics, and artefact boundaries
+      - Treat limitations as part of the evidence, not as an afterthought
     ]
   ]
 ]
@@ -259,199 +308,13 @@
 #pagebreak()
 
 // 10
-#slide("System Architecture")[
-  #surface[
-    #grid(columns: (0.92fr, auto, 1.12fr, auto, 0.92fr), gutter: 0.16cm, align: horizon)[
-      #lane("input", [Student request + material], fill: warm)
-    ][#text(size: 9pt, fill: accent)[→]][
-      #lane("orchestration", [study-assistant selects the mode], fill: soft)
-    ][#text(size: 9pt, fill: accent)[→]][
-      #lane("output", [Study artefact or audio], fill: warm)
-    ]
-    #v(0.26cm)
-    #line(length: 100%, stroke: 0.32pt + line-color)
-    #v(0.22cm)
-    #grid(columns: (1fr, 1fr, 1fr), gutter: 0.24cm)[
-      #lane("OCR path", [ocr-tool → pdfocr → ordered JSONL], fill: white)
-    ][
-      #lane("RAG path", [rag-tool → chunkvec → SQLite vectors], fill: white)
-    ][
-      #lane("TTS path", [tts-tool → chunktts → final .opus], fill: white)
-    ]
-    #v(0.2cm)
-    #text(size: 6.9pt, fill: muted)[Shared libraries provide bounded HTTP execution, typed JSON handling, and provider request schemas.]
-  ]
-  #v(0.2cm)
-  #text(size: 7pt, fill: muted)[The visual split is deliberate: the agent owns study intent; the tools own deterministic processing contracts.]
-]
-
-#pagebreak()
-
-// 11
-#slide("Design Decisions")[
-  #v(0.06cm)
-  #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
-    #card("1. Agent orchestration, deterministic tools", [
-      The agent handles study intent. Core tools handle stable execution contracts, retries, schemas, and artefact publication.
-    ], fill: soft, height: 1.9cm)
-    #v(card-stack-gap)
-    #card("2. Standalone command-line tools", [
-      Each processing stage can be inspected, tested, redirected, cached, or reused without the full assistant.
-    ], fill: warm, height: 1.9cm)
-  ][
-    #card("3. Ordered output over raw speed", [
-      Results may complete out of order, but OCR pages and audio chunks are published in source order.
-    ], fill: warm, height: 1.9cm)
-    #v(card-stack-gap)
-    #card("4. Explicit failure semantics", [
-      Partial OCR is auditable; partial final audio is withheld because it would look complete while omitting content.
-    ], fill: soft, height: 1.9cm)
-  ]
-]
-
-#pagebreak()
-
-// 12
-#slide("Implementation Highlights")[
-  #v(0.08cm)
-  #grid(columns: (1fr, 1fr, 1fr), gutter: 0.24cm)[
-    #card("pdfocr", [
-      PDFium rendering, WebP encoding, multimodal OCR requests, page-level JSONL, retry/error classification.
-    ], fill: warm, height: 2.28cm)
-  ][
-    #card("chunkvec", [
-      Strict `<chunk ...>` parser, embeddings pipeline, SQLite storage, metadata filters, vector search.
-    ], height: 2.28cm)
-  ][
-    #card("chunktts", [
-      `<bk>` chunk splitting, speech API requests, WAV decoding, audio validation, final Opus assembly.
-    ], fill: warm, height: 2.28cm)
-  ]
-  #v(0.3cm)
-  #grid(columns: (1fr, 1fr, 1fr), gutter: 0.24cm)[
-    #card("relay", [Worker thread over libcurl multi; bounded concurrent request execution.], height: 1.9cm)
-  ][
-    #card("jsonx", [Centralised typed JSON parsing and streaming writers.], fill: soft, height: 1.9cm)
-  ][
-    #card("openai", [Transport-transparent request schemas for chat, embeddings, and speech.], height: 1.9cm)
-  ]
-]
-
-#pagebreak()
-
-// 13
-#slide("User Workflow")[
-  #eyebrow[A realistic revision path]
-  #v(0.16cm)
-  #flow(("Lecture PDF", "OCR extract", "Clean text", "Generate notes", "Prepare speech", "Audio file"))
-  #v(flow-gap)
-  #grid(columns: (1.05fr, 0.95fr), gutter: two-col-gutter)[
-    #note-box([
-      #text(weight: "bold", fill: accent-dark)[Supported modes]
-      #v(0.16cm)
-      #grid(columns: (1fr, 1fr), gutter: 0.18cm)[
-        #set par(leading: 0.86em)
-        #set list(spacing: 0.28em)
-        #text(size: 6.45pt)[
-          - transcribe: preserve source text
-          - lecture: formal explanation
-          - eli5: simpler explanation
-          - flashcard: active recall
-        ]
-      ][
-        #set par(leading: 0.86em)
-        #set list(spacing: 0.28em)
-        #text(size: 6.45pt)[
-          - mindmap: concept hierarchy
-          - quiz: practice questions
-          - essay: exam prompts
-          - study-notes: revision notes
-        ]
-      ]
-    ], height: 2.55cm)
-  ][
-    #note-box([
-      #text(weight: "bold", fill: accent-dark)[Demo scenario]
-      #v(0.16cm)
-      #spacious-list(size: 7pt)[
-        - Use OCR on lecture slides
-        - Generate study notes
-        - Rewrite notation and headings for speech
-        - Synthesize 24 ordered chunks
-        - Publish one `.opus` revision artefact
-      ]
-    ], fill: warm, height: 2.55cm)
-  ]
-]
-
-#pagebreak()
-
-// 14
-#slide("Recorded Workflow Protocol")[
-  #v(0.08cm)
-  #grid(columns: (0.95fr, 1.05fr), gutter: two-col-gutter)[
-    #eyebrow[Demonstration protocol]
-    #v(0.16cm)
-    #surface[
-      #spacious-list[
-        1. Select a lecture PDF
-        2. Run OCR or use cached extraction
-        3. Ask for a specific mode, e.g. flashcards
-        4. Show output grounded in extracted content
-        5. Store a textbook section in RAG
-        6. Search for a targeted concept
-        7. Convert generated notes into audio
-      ]
-    ]
-  ][
-    #card("Interpretation focus", [
-      The evidence is not one generated answer. Each step creates an inspectable artefact, and later stages reuse the student's own material.
-    ], fill: soft)
-    #v(related-stack-gap)
-    #card("Recorded evidence", [
-      Workflows were recorded for essay practice, RAG exam revision, flashcards, and study-notes-to-audio.
-    ], fill: warm)
-  ]
-]
-
-#pagebreak()
-
-#section-slide("Evaluation", "Contract tests, operational benchmarks, and recorded study workflows")
-
-#pagebreak()
-
-#slide("Testing Strategy")[
-  #v(content-nudge)
-  #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
-    #subhead[Verified software contracts]
-    #spacious-list[
-      - `pdfocr`: page selection, request IDs, retry queue, JSON schema
-      - `chunkvec`: chunk parser, config, embeddings, SQLite/vector integration
-      - `chunktts`: splitting, retries, audio wrapper, local-server pipeline test
-      - `relay`: lifecycle, ordering, request bodies, headers
-      - `jsonx` and `openai`: parser and schema tests
-    ]
-  ][
-    #subhead[Why this matters]
-    #spacious-list[
-      - Separates implementation correctness from provider/model variability
-      - Tests deterministic invariants locally
-      - Treats live model benchmarks as empirical operational evidence
-      - Makes failure modes visible through stable exit codes and artefacts
-    ]
-  ]
-]
-
-#pagebreak()
-
-// 17
 #slide("Evaluation: OCR Throughput")[
   #grid(columns: (0.92fr, 1.08fr), gutter: wide-col-gutter)[
     #eyebrow[72-page slide PDF benchmark]
     #v(0.12cm)
-    #big-statement[Bounded concurrency turns OCR from a waiting problem into an ordered batch process.]
+    #big-statement[Bounded concurrency made recorded OCR throughput practical while preserving ordered output.]
     #v(0.22cm)
-    #metric("15.89x", "speedup", note: "bounded concurrency vs sequential", fill: soft)
+    #metric("15.89x", "speedup", note: "K=32 vs sequential K=1", fill: soft)
     #v(0.18cm)
     #metric("93.71%", "relative time reduction", note: "296.73 seconds saved", fill: warm)
   ][
@@ -468,20 +331,20 @@
         [K=1], [316.66 s], [72/72 ok],
         [K=32], [19.93 s], [72/72 ok],
       )
-      #v(0.16cm)
-      #text(size: 6.8pt, fill: muted)[All pages succeeded in both runs; the improvement comes from overlapping network-bound OCR requests.]
+      #v(0.14cm)
+      #text(size: 6.55pt, fill: muted)[Operational measurement; depends on provider latency, rate limits, network conditions, and document complexity.]
     ]
   ]
 ]
 
 #pagebreak()
 
-// 18
+// 11
 #slide("Evaluation: OCR Model Benchmark")[
-  #grid(columns: (1.18fr, 0.82fr), gutter: two-col-gutter)[
+  #grid(columns: (1.15fr, 0.85fr), gutter: two-col-gutter)[
     #surface[
-      #eyebrow[Accuracy-oriented comparison]
-      #v(0.16cm)
+      #eyebrow[68 academic pages from 34 PDFs]
+      #v(0.15cm)
       #table(
         columns: (1.25fr, .72fr, .72fr, .9fr, .72fr),
         table.header([*Model*], [*CER*], [*WER*], [*Order F1*], [*Math F1*]),
@@ -490,8 +353,6 @@
         [DeepSeek-OCR], [0.5862], [0.6512], [0.1452], [0.4684],
       )
       #v(0.22cm)
-      #eyebrow[Cost comparison]
-      #v(0.16cm)
       #table(
         columns: (1.3fr, .9fr, .9fr),
         table.header([*Model*], [*Total cost*], [*Cost/page*]),
@@ -501,67 +362,74 @@
       )
     ]
   ][
-    #card("Dataset", [
-      68 pages from 34 academic PDFs with locked human gold labels; includes equations, tables, diagrams, and multi-column layouts.
+    #card("Benchmark character", [
+      Human gold labels; equations, tables, diagrams, and multi-column academic layouts.
     ], fill: soft)
     #v(card-stack-gap)
-    #card("Interpretation", [
-      PaddleOCR-VL wins strict accuracy. olmOCR 2 is selected for recall-oriented study workflows. DeepSeek-OCR is strongest on cost.
+    #card("Selection tradeoff", [
+      PaddleOCR-VL leads strict accuracy. DeepSeek-OCR is cheapest. olmOCR 2 is selected for recall-oriented suitability at lower cost than the strict-accuracy winner.
     ], fill: warm)
   ]
 ]
 
 #pagebreak()
 
-// 19
+// 12
 #slide("Workflow Evaluation Results")[
-  #v(0.06cm)
-  #grid(columns: (1fr, 1fr), gutter: 0.38cm)[
+  #v(0.04cm)
+  #grid(columns: (1fr, 1fr), gutter: 0.36cm)[
     #card("Essay practice", [
-      Association Analysis slides produced 4 exam-style essay questions with sample answers covering Apriori, support, confidence, lift, and interestingness.
-    ], fill: warm, height: 1.95cm)
-    #v(content-nudge)
+      Association Analysis slides produced four exam-style prompts with sample answers covering Apriori, support, confidence, lift, and interestingness.
+    ], fill: warm, height: 1.72cm)
+    #v(card-stack-gap)
     #card("RAG exam revision", [
-      Textbook pages 358-402 were OCR-processed and stored as 26 semantic chunks; search retrieved zero-probability handling for Naive Bayes.
-    ], fill: panel, height: 1.95cm)
+      Textbook pages 358-402 were OCR-processed and stored as 26 semantic chunks; search retrieved Naive Bayes zero-probability handling.
+    ], fill: panel, height: 1.72cm)
   ][
     #card("Flashcards", [
-      Anomaly Detection slides produced 25 front/back flashcards covering definitions, settings, measures, limitations, and applications.
-    ], fill: panel, height: 1.95cm)
-    #v(content-nudge)
+      Anomaly Detection slides produced 25 active-recall cards covering definitions, settings, methods, limitations, and applications.
+    ], fill: panel, height: 1.72cm)
+    #v(card-stack-gap)
     #card("Study notes to audio", [
-      Clustering notes became a 7.3 KB Markdown artefact, a 7.2 KB TTS input, and a 2.1 MB `.opus` file from 24 speech chunks.
-    ], fill: warm, height: 1.95cm)
+      Clustering notes became study notes, speech-ready text, and a final `.opus` file from 24 ordered speech chunks.
+    ], fill: warm, height: 1.72cm)
+  ]
+  #v(0.26cm)
+  #surface[
+    #eyebrow[Critical observations]
+    #v(0.12cm)
+    #text(size: 7pt)[RAG should preserve retrieved chunks alongside synthesis; formula and diagram uncertainty should be flagged; flashcards and notes need coverage, duplication, and ambiguity checks.]
   ]
 ]
 
 #pagebreak()
 
-// 20
-#slide("Discussion and Limitations")[
+// 13
+#slide("Critical Interpretation and Threats to Validity")[
   #v(content-nudge)
   #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
     #subhead[Interpretation]
     #spacious-list[
       - Modularity makes AI study workflows easier to inspect and test
-      - Artefact boundaries are a practical reliability mechanism
-      - Bounded concurrency is valuable for network-bound OCR
-      - Retrieval quality depends on disciplined chunking and metadata
+      - Artefact boundaries create practical reliability checkpoints
+      - Bounded concurrency improves network-bound OCR in the recorded benchmark
+      - Retrieval quality depends on disciplined chunking, metadata, and evidence capture
     ]
   ][
-    #subhead[Limitations]
+    #subhead[Threats and limitations]
     #spacious-list[
-      - No controlled study of learning outcomes or retention
-      - OCR and generation quality still depend on external models
-      - RAG evaluation focuses on retrieval infrastructure, not answer grading
-      - Recorded workflows demonstrate feasibility rather than broad deployment
+      - No controlled learning-outcome or retention study
+      - RAG evaluation does not yet use labelled query sets
+      - TTS evaluation verifies artefact correctness, not subjective naturalness
+      - OCR and throughput results are dataset- and provider-dependent
+      - Model behaviour, pricing, latency, and availability can drift
     ]
   ]
 ]
 
 #pagebreak()
 
-// 21
+// 14
 #slide("Contributions")[
   #v(0.06cm)
   #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
@@ -570,58 +438,58 @@
     ], fill: soft, height: 1.7cm)
     #v(card-stack-gap)
     #card("Architectural", [
-      Separates agent orchestration, tool definitions, core Nim executables, and shared libraries.
+      Separates agent orchestration, tool definitions, Nim executables, and shared libraries.
     ], fill: warm, height: 1.7cm)
   ][
     #card("Technical", [
-      Implements OCR, semantic retrieval, and speech pipelines with deterministic ordering, retries, schemas, and exit contracts.
+      Implements OCR, semantic retrieval, and speech pipelines with ordering, retries, schemas, and exit contracts.
     ], fill: warm, height: 1.7cm)
     #v(card-stack-gap)
     #card("Evaluation", [
-      Provides contract tests, throughput evidence, scientific OCR model comparison, and recorded student workflow artefacts.
+      Combines contract tests, throughput evidence, OCR model comparison, and recorded workflow critique.
     ], fill: soft, height: 1.7cm)
   ]
 ]
 
 #pagebreak()
 
-// 22
+// 15
 #slide("Future Work")[
   #v(content-nudge)
   #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
-    #subhead[Engineering extensions]
+    #subhead[Near-term engineering]
     #spacious-list[
-      - Deterministic mocked transport tests across all model-calling tools
-      - Broader OCR benchmark corpora and repeated measurements
-      - Richer retrieval evaluation with labelled queries
-      - Provider/model selection policies per cost, latency, and privacy
+      - Run manifests linking source PDFs, OCR cache entries, retrieved chunks, generated text, TTS input, and final audio
+      - Labelled retrieval evaluation and stored retrieved evidence
+      - Broader OCR corpora and repeated measurements
+      - Validation passes for formulae, diagrams, duplicate cards, and coverage gaps
     ]
   ][
-    #subhead[Educational extensions]
+    #subhead[Broader validation]
     #spacious-list[
-      - Human evaluation of study artefact usefulness
+      - Provider/model selection policies for cost, latency, quality, and privacy
+      - Local or private backends for sensitive course material
+      - Human evaluation of artefact usefulness
       - Learning-outcome studies for retention and exam preparation
-      - Local/private model backends for sensitive course material
-      - Additional modes for accessibility and instructor-authored rubrics
     ]
   ]
 ]
 
 #pagebreak()
 
-// 23
+// 16
 #slide("Conclusion")[
-  #grid(columns: (1.05fr, 0.95fr), gutter: wide-col-gutter)[
+  #grid(columns: (1.03fr, 0.97fr), gutter: wide-col-gutter)[
     #text(size: 11pt, weight: "bold", fill: accent)[Main conclusion]
     #v(0.18cm)
-    #big-statement[`study-assistant` demonstrates that OCR, RAG, and TTS can be integrated into a practical, inspectable study workflow when the system is built around source grounding and explicit processing contracts.]
+    #big-statement[`study-assistant` shows that AI study support can be practical and academically inspectable when flexible generation is constrained by source grounding, modular tools, and explicit artefact contracts.]
 
-    #v(0.28cm)
+    #v(0.26cm)
     #spacious-list[
-      - The architecture is modular and reusable
-      - The implementation is testable through artefact contracts
-      - Bounded concurrency gives a measured OCR throughput gain
-      - Recorded workflows show useful student-facing transformations
+      - OCR improves input readiness
+      - RAG supports source-grounded access
+      - Study modes and TTS support different revision forms
+      - The architecture makes processing visible and testable
     ]
   ][
     #metric("72/72", "OCR pages succeeded", note: "throughput benchmark", fill: warm)
@@ -634,7 +502,7 @@
 
 #pagebreak()
 
-// 24
+// 17
 #block[
   #v(1.02cm)
   #line(length: 1.45cm, stroke: 0.65pt + accent)
