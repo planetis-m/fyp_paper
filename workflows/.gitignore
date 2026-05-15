@@ -1,0 +1,16 @@
+# Binaries and artefacts
+*.opus
+*.so
+*.pyc
+*.pyo
+*.csv
+*.jsonl
+
+# OCR cache (reproducible, not needed in repo)
+.ocr-tool-cache/
+
+# Python virtual environment
+.venv/
+
+# Logs
+*-stderr.log

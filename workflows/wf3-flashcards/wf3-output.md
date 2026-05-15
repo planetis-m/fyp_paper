@@ -1,0 +1,27 @@
+Let me start by loading the study-assistant skill and the OCR tool to process the lecture slides.Now let me read the commands reference for the flashcard mode and the OCR cache reference:Cache miss. Running OCR now:OCR complete. Now let me generate the flashcards.| Front (Term/Question) | Back (Definition/Answer) |
+|---|---|
+| What is an anomaly (outlier)? | An object that is different from most other objects in the dataset. |
+| What are the three main causes of anomalies? | (1) Data from a different class/mechanism, (2) Natural variation (e.g., tails of a Gaussian), (3) Measurement/collection errors. |
+| Point anomaly | An individual data instance that is anomalous with respect to the rest of the data. |
+| Contextual anomaly | An instance that is anomalous only within a specific context (e.g., 28 °C is normal in summer but anomalous in winter). Requires a notion of context. |
+| Collective anomaly | A collection of related data instances that is anomalous together, even though each individual instance is not anomalous by itself. Requires a relationship among instances (sequential, spatial, or graph data). |
+| Why can FP be costly in fraud detection? | A false positive means flagging a legitimate transaction as fraud, inconveniencing honest customers and eroding trust. |
+| Why can FN be costly in fraud detection? | A false negative means missing actual fraud, leading to direct financial loss. |
+| Supervised anomaly detection | Labels are available for both normal data and anomalies; treated like classification with high class imbalance. |
+| Semi-supervised anomaly detection | Labels are available only for normal data; the model learns what normal looks like and flags deviations. |
+| Unsupervised anomaly detection | No labels are assumed; relies on the assumption that anomalies are very rare compared to normal data. |
+| Label vs. Score output in anomaly detection | **Label:** each instance is tagged *normal* or *anomaly*. **Score:** each instance gets a numeric anomaly score allowing ranking; requires an additional threshold. |
+| Three variants of the anomaly detection problem | (1) Find all points with anomaly score > threshold $t$. (2) Find top-$n$ points with largest anomaly scores. (3) Compute the anomaly score of a new test point $x$ w.r.t. a mostly-normal dataset $D$. |
+| General steps in unsupervised anomaly detection | (1) Build a profile of "normal" behavior (summary statistics or distribution model). (2) Use the normal profile to flag observations that differ significantly. |
+| Statistical outlier detection (general approach) | Fit a parametric model to the data distribution, then apply a statistical test based on the model parameters, the test instance, and a confidence limit. |
+| Z-score for univariate outlier detection | $z_i = \frac{x_i - \bar{X}}{S}$. An outlier is flagged when $|z_i|$ exceeds a chosen threshold. |
+| Mahalanobis distance | A multivariate generalization of how many standard deviations a point is from the mean of a distribution, accounting for correlations between variables. An outlier is flagged when this distance exceeds a threshold. |
+| Grubbs' test | Tests for a single outlier in normally distributed univariate data. Test statistic: $G = \frac{\max\|X - \bar{X}\|}{s}$. An anomaly is defined by how many standard deviations the most extreme point is from the mean. |
+| Proximity-based outlier detection | An outlier's score is its distance to its $k$-th nearest neighbor. Sensitive to the choice of $k$; small $k$ may miss clustered outliers, large $k$ may flag small clusters as outliers. |
+| Density-based outlier detection (basic) | Outlier score = inverse of density around an object. Density can be the reciprocal of the average distance to $k$ nearest neighbors or the count of objects within a fixed radius $d$. Performs poorly with variable-density data. |
+| LOF (Local Outlier Factor) | Relative density score: $\text{relative density}(x, k) = \frac{\text{avg density of } k \text{ neighbors}}{\text{density of } x}$. A point is an outlier when it lies in a less dense area than its neighbors. LOF ≈ 1 means the point is in a region of similar density to its neighbors. |
+| Cluster-based outlier detection (two approaches) | (1) Assess the degree to which an object belongs to any cluster (e.g., distance to cluster centroid). (2) Discard small clusters that are far from other clusters. |
+| Relative distance in cluster-based detection | $\frac{\text{distance}(x, \text{centroid}_C)}{\text{median distance of all points in } C \text{ to centroid}_C}$. Handles variable-density clusters by normalizing each point's distance to its cluster's median distance. |
+| Key issue with cluster-based outlier detection | Outliers may distort the initial cluster formation, so the resulting clusters may already be influenced by the anomalies they are meant to detect. |
+| Real-world issues in anomaly detection | Data is often streaming (not static), and anomalies can be bursty (e.g., network intrusions occurring in bursts rather than singly). |
+| Applications of anomaly detection | Network intrusion detection, credit card/insurance fraud detection, healthcare diagnostics, industrial damage detection, image processing/video surveillance, novel topic detection in text mining. |25 flashcards covering all key topics from Lecture 07: anomaly types, detection approaches (statistical, proximity-based, density-based, cluster-based), LOF, Grubbs' test, Mahalanobis distance, real-world applications and challenges.

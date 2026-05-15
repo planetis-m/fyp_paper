@@ -1,0 +1,35 @@
+Density-Based Clustering and Cluster Validation. Study Notes.<bk>
+
+DBSCAN is a density-based clustering algorithm. It groups points based on local density rather than distance to a centroid. It requires two parameters: Eps, which defines the neighbourhood radius, and MinPts, the minimum number of neighbours needed within that radius.<bk>
+
+Every point is labelled as one of three types. A core point has at least MinPts neighbours within Eps and lies in the interior of a cluster. A border point has fewer than MinPts neighbours but falls within the Eps neighbourhood of a core point. A noise point is neither a core point nor a border point and is treated as an outlier.<bk>
+
+The DBSCAN algorithm runs in three steps. First, find the Eps neighbours of every point and identify all core points, those with at least MinPts neighbours. Second, form connected components of core points on the shared-neighbourhood graph, ignoring all non-core points temporarily. Third, assign each non-core point to a nearby cluster if it is within Eps distance, otherwise mark it as noise.<bk>
+
+DBSCAN has notable strengths. It is resistant to noise because outliers are explicitly identified rather than forced into clusters. It can also discover clusters of arbitrary shape and size, not just spherical groups.<bk>
+
+However DBSCAN also has limitations. It struggles when clusters have varying densities because a single Eps value cannot suit both dense and sparse regions simultaneously. Performance also degrades in high-dimensional data where distance-based neighbourhoods become less meaningful.<bk>
+
+Now let us turn to cluster validation. Because clustering is unsupervised there is no direct label-based metric like classification accuracy. Validation is needed to avoid finding patterns in random noise, to compare different clustering algorithms, to compare two sets of clusters, and to estimate the correct number of clusters.<bk>
+
+There are several aspects of cluster validation. Clustering tendency asks whether the data contains any non-random structure at all. External validation compares cluster labels against known class labels. Internal validation evaluates fit using only the data itself. Relative comparison decides which of two clusterings is better, often using an external or internal index for this purpose. Finally, determining the number of clusters involves using an index across multiple values and looking for an optimum.<bk>
+
+Validity indices come in three types. An external index measures how well cluster labels match externally supplied class labels. Entropy and purity are the main examples. An internal index measures clustering quality using only the data, with no external labels. Sum of Squared Error, or SSE, is the most common internal measure. A relative index compares two clusterings and often repurposes an external or internal index such as SSE or entropy for this role.<bk>
+
+One approach to measuring validity uses correlation between two matrices. The proximity matrix contains pairwise distances between all points. The incidence matrix is binary, where an entry is 1 if two points are in the same cluster and 0 otherwise. The correlation between these matrices is computed. A high negative correlation when using distances indicates that points in the same cluster are close to each other. However this approach is not effective for some density-based or contiguity-based clusters.<bk>
+
+Another validation technique uses the similarity matrix for visual inspection. Ordering the rows and columns by cluster label produces a heatmap. Well-separated clusters appear as dark, high-similarity blocks along the diagonal. Poorly separated or random data shows no clear block structure. This visual method can quickly reveal whether an algorithm has found meaningful structure or is fitting noise.<bk>
+
+Now let us look at internal measures of cohesion and separation. Cohesion measures how closely related the objects within a single cluster are. The within-cluster sum of squares, or WSS, is defined as the sum over all clusters of the squared distances between each point and its cluster centroid. Minimising WSS produces tighter clusters.<bk>
+
+Separation measures how distinct a cluster is from other clusters. The between-cluster sum of squares, or BSS, is defined as the sum over all clusters of the cluster size times the squared distance between the cluster centroid and the overall mean. A good clustering minimises WSS and maximises BSS. The total sum of squares equals WSS plus BSS.<bk>
+
+Cohesion and separation can also be defined using a proximity graph where nodes are data points and edge weights represent proximity. Cohesion is the sum of the weights of all edges within a cluster. Separation is the sum of the weights of edges connecting nodes inside the cluster to nodes outside it.<bk>
+
+Finally, let us examine the external measures of entropy and purity. For each cluster j, first compute the class distribution: the probability that a member of cluster j belongs to class i equals the number of points of class i in cluster j divided by the total number of points in cluster j.<bk>
+
+The entropy of cluster j is calculated using the standard formula: negative sum over all classes of the probability times log base 2 of that probability. The overall entropy is the sum of each cluster's entropy weighted by the cluster's size relative to the total number of points. Lower entropy means each cluster contains predominantly one class.<bk>
+
+Purity of cluster j is simply the maximum class probability within that cluster, meaning the proportion of the most frequent class. The overall purity is the weighted sum of individual cluster purities. Higher purity indicates better alignment between clusters and class labels. Purity ranges from 0 to 1, where 1 means every cluster is perfectly pure.<bk>
+
+As an example, in the LA Document Data Set clustered with K-means into 6 clusters and 6 document classes, the overall entropy was 1.1450 and the overall purity was 0.7203. This shows moderate alignment between the discovered clusters and the true document categories.

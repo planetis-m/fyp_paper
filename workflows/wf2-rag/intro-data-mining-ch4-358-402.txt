@@ -1,0 +1,213 @@
+<chunk page=358 label="Nearest Neighbor Classifiers">
+The classification framework involves a two-step process: (1) An inductive step for constructing a classification model from data, and (2) A deductive step for applying the model to test examples.
+
+Eager Learners are classifiers (such as decision trees and rule-based classifiers) designed to learn a model that maps input attributes to the class label as soon as the training data becomes available.
+
+Lazy Learners are techniques that delay the process of modeling the training data until it is needed to classify the test instances. A Rote Classifier is an example of a lazy learner that memorizes the entire training data and performs classification only if the attributes of a test instance match one of the training examples exactly. A drawback is that some test instances may not be classified because they do not match any training example.
+
+<chunk page=358 label="Nearest Neighbors">
+To make lazy learning more flexible, the system can find all training examples that are relatively similar to the test instances. These are known as nearest neighbors. Each example is represented as a data point in a d-dimensional space, where d is the number of attributes. Given a test instance, the classifier computes its proximity to the training instances using proximity measures. The justification is summarized by the saying: "If it walks like a duck, quacks like a duck, and looks like a duck, then it's probably a duck."
+
+<chunk page=359 label="Nearest Neighbors Classification">
+Neighbors of a given test instance z refer to the k training examples that are closest to z. The instance is classified based on the class labels of its neighbors using majority voting. In cases where neighbors have more than one label, the test instance is assigned to the majority class of its nearest neighbors. In the case of a tie, one class may be randomly chosen.
+
+1-nearest neighbor: the 1-nearest neighbor of the instance is a negative example, so the instance is assigned to the negative class. 3-nearest neighbors: the neighborhood contains two positive examples and one negative example, so the instance is assigned to the positive class by majority voting.
+
+The choice of k is critical. If k is too small, the nearest neighbor classifier may be susceptible to overfitting due to noise (e.g., mislabeled examples in the training set). If k is too large, the nearest neighbor classifier may misclassify the test instance because its list of nearest neighbors includes training examples that are located far away from its neighborhood.
+
+<chunk page=361 label="KNN Algorithm">
+Algorithm 4.2 — The k-nearest neighbor classifier:
+1. Let k be the number of nearest neighbors and D be the set of training examples.
+2. For each test instance z=(x', y'): compute the distance between z and every example (x, y) in D; select Dz, the set of k closest training examples to z; then classify using majority voting.
+
+Majority Voting: y' = argmax_v sum over (xi, yi) in Dz of I(v=yi), where v is a class label, yi is the class label for one of the nearest neighbors, and I() is an indicator function that returns 1 if its argument is true and 0 otherwise.
+
+In majority voting, every neighbor has the same impact on the classification. One way to reduce the impact of k is to weight the influence of each nearest neighbor xi according to its distance: wi = 1/d(x', xi)^2. Training examples far from z have weaker impact.
+
+Distance-Weighted Voting: y' = argmax_v sum over (xi, yi) in Dz of wi * I(v=yi)
+
+<chunk page=362 label="KNN Characteristics">
+Characteristics of Nearest Neighbor Classifiers:
+
+Nearest neighbor classification is part of instance-based learning, which does not build a global model but uses training examples to make predictions for a test instance. Such classifiers are often said to be "model free." They require a proximity measure to determine similarity or distance between instances and a classification function that returns the predicted class.
+
+Although lazy learners do not require model building, classifying a test instance can be expensive because proximity values must be computed individually between the test and training examples. In contrast, eager learners spend resources on model building but classify test instances extremely fast once the model is built.
+
+Nearest neighbor classifiers make predictions based on local information (equivalent to building a local model for each test instance). By contrast, decision tree and rule-based classifiers attempt to find a global model. Because classification decisions are made locally, nearest neighbor classifiers (with small values of k) are quite susceptible to noise.
+
+Nearest neighbor classifiers can produce decision boundaries of arbitrary shape, providing more flexible model representation compared to decision tree and rule-based classifiers that are often constrained to rectilinear decision boundaries. The decision boundaries have high variability because they depend on the composition of training examples in the local neighborhood. Increasing the number of nearest neighbors may reduce such variability.
+
+<chunk page=363 label="KNN Characteristics">
+Nearest neighbor classifiers have difficulty handling missing values in both the training and test sets since proximity computations normally require the presence of all attributes.
+
+Nearest neighbor classifiers can handle the presence of interacting attributes (attributes that have more predictive power taken in combination than by themselves) by using appropriate proximity measures that can incorporate the effects of multiple attributes together.
+
+The presence of irrelevant attributes can distort commonly used proximity measures, especially when the number of irrelevant attributes is large. If there are a large number of redundant attributes that are highly correlated with each other, the proximity measure can be overly biased toward such attributes. Hence, irrelevant and redundant attributes can adversely affect the performance of nearest neighbor classifiers.
+
+Nearest neighbor classifiers can produce wrong predictions unless the appropriate proximity measure and data preprocessing steps are taken. For example, classifying people based on height (meters) and weight (pounds) — if the scale of attributes is not considered, the proximity measure may be dominated by differences in weights.
+
+<chunk page=364 label="Naive Bayes Classifier">
+Many classification problems involve uncertainty due to: (1) unreliable observed attributes and class labels from imperfect measurement, (2) attributes that may not fully represent the target class (e.g., predicting heart disease from diet and exercise alone misses latent factors like heredity), (3) models learned over finite training sets that may not capture true relationships (overfitting), and (4) inherent random nature of real-world systems such as weather forecasting.
+
+In the presence of uncertainty, there is a need to provide a measure of confidence associated with every prediction. Probability theory offers a systematic way for quantifying and manipulating uncertainty. Classification models that use probability theory to represent the relationship between attributes and class labels are known as probabilistic classification models. The naïve Bayes classifier is one of the simplest and most widely-used probabilistic classification models.
+
+<chunk page=365 label="Probability Theory Basics">
+A variable X can take any discrete value from the set {x1, ..., xk}. The relative frequency with which we observe the event X=xi is ni/N, where N denotes the total number of occurrences (N = sum of ni from i=1 to k). These relative frequencies characterize uncertainty about what value X may take for an unseen observation.
+
+The probability of an event e, e.g., P(X=xi), measures how likely it is for the event to occur. A probability is always a number between 0 and 1, and the sum of probability values of all possible events is equal to 1. Variables that have probabilities associated with each possible outcome are known as random variables.
+
+For two random variables X and Y that each take k discrete values: the joint probability of observing X=xi and Y=yj together is P(X=xi, Y=yj) = nij/N. Joint probabilities are symmetric: P(X=x, Y=y) = P(Y=y, X=x).
+
+Marginalization: by summing out joint probabilities with respect to a random variable Y, we obtain the probability of the remaining variable X: sum over j of P(X=xi, Y=yj) = P(X=xi). The probability P(X=xi) obtained by marginalizing out Y is called the marginal probability of X.
+
+<chunk page=367 label="Bayes Theorem">
+Bayes theorem presents the statistical principle for combining evidence from multiple sources with prior beliefs to arrive at predictions.
+
+Let P(Y|X) denote the conditional probability of observing Y whenever X takes a particular value. Conditional probabilities are related to joint probability: P(Y|X) = P(X,Y) / P(X), which implies P(X,Y) = P(Y|X) * P(X) = P(X|Y) * P(Y).
+
+Bayes theorem: P(Y|X) = P(X|Y) * P(Y) / P(X)
+
+The denominator P(X) can be represented as: P(X) = sum over i of P(X|yi) * P(yi). This gives: P(Y|X) = P(X|Y) * P(Y) / sum over i of P(X|yi) * P(yi).
+
+Example: Alex attends 40% of invited parties. If Alex goes, 80% chance Martha comes. If Alex doesn't go, 30% chance Martha comes. Given Martha is coming, P(A=1|M=1) = P(M=1|A=1)*P(A=1) / [P(M=1|A=0)*P(A=0) + P(M=1|A=1)*P(A=1)] = 0.8*0.4 / (0.3*0.6 + 0.8*0.4) = 0.32/0.50 = 0.64. Since P(A=1|M=1) > 0.5, it is more likely Alex will join.
+
+<chunk page=369 label="Bayes Theorem for Classification">
+For classification, we compute the probability of a class label y given attribute values x: P(y|x), known as the posterior probability. Using Bayes theorem: P(y|x) = P(x|y) * P(y) / P(x).
+
+P(x|y) is the class-conditional probability (likelihood) — it measures the likelihood of observing x from the distribution of instances belonging to y. Models that compute class-conditional probabilities are called generative classification models because they attempt to capture the process from which data instances were generated.
+
+P(y) is the prior probability — it captures prior beliefs about the distribution of class labels independent of observed attribute values. Can be obtained via expert knowledge or inferred from the historical distribution of class labels.
+
+P(x) is the probability of evidence — it does not depend on the class label and acts as a normalization constant: P(x) = sum over i of P(x|yi) * P(yi).
+
+Parameter learning: P(y) is estimated from the fraction of training instances belonging to each class. P(x|y) can be estimated by considering the fraction of training instances of a given class for every possible combination of attribute values.
+
+<chunk page=371 label="Naive Bayes Assumption">
+Estimating P(x|y) for every combination of attribute values is computationally prohibitive: if every attribute takes k discrete values with d attributes, there are k^d combinations.
+
+The naïve Bayes assumption factors the class-conditional probability as a product: P(x|y) = product from i=1 to d of P(xi|y). This assumes that attribute values xi are conditionally independent of each other given the class label y.
+
+Conditional independence: X1 is conditionally independent of X2 given Y if P(X1|X2, Y) = P(X1|Y). This means conditioned on Y, the distribution of X1 is not influenced by the outcomes of X2. Example: arm length and reading skills appear correlated, but this relationship is explained by age. Fixing age makes the relationship disappear — they are conditionally independent given age.
+
+The joint conditional probability factors as: P(X1, X2|Y) = P(X1|Y) * P(X2|Y). This greatly simplifies parameter estimation: the number of parameters is reduced from k^d to d*k.
+
+The naïve Bayes classifier computes: P(y|x) proportional to P(y) * product from i=1 to d of P(xi|y). Since P(x) is a normalizing constant, it is sufficient to choose the class that maximizes P(y) * product of P(xi|y).
+
+Naïve Bayes can handle missing values — if only p out of d attributes are observed, we compute P(y) * product from i=1 to p of P(xi|y) using those p attributes. With no attributes observed, the prior P(y) serves as the estimate.
+
+<chunk page=374 label="Conditional Probability Estimation">
+Estimating Conditional Probabilities for Categorical Attributes: P(Xi=c|y) = nc/n, where n is the number of training instances belonging to class y, and nc is the number of those with Xi=c. Example: P(Home Owner=Yes|Defaulted=No) = 3/7 since 3 of 7 non-defaulted borrowers own homes. The sum of conditional probabilities over all possible outcomes equals 1.
+
+Estimating Conditional Probabilities for Continuous Attributes — two approaches:
+1. Discretize each continuous attribute and replace continuous values with discrete intervals. The estimation error depends on the discretization strategy and number of intervals.
+2. Assume a probability distribution (e.g., Gaussian). For each class yj, the class-conditional probability for attribute Xi is: P(Xi=xi|Y=yj) = (1/sqrt(2*pi*sigma_ij^2)) * exp[-(xi-mu_ij)^2 / (2*sigma_ij^2)], where mu_ij is estimated from the sample mean and sigma_ij^2 from the sample variance of training instances belonging to yj.
+
+<chunk page=378 label="Naive Bayes Example">
+Example — Loan Default Prediction: Given a test instance x = (Home Owner=No, Marital Status=Married, Annual Income=$120K), compute prior probabilities P(Yes)=0.3 and P(No)=0.7. Then compute class-conditional probabilities:
+
+P(x|No) = P(Home Owner=No|No) * P(Status=Married|No) * P(Income=120|No) = 4/7 * 4/7 * 0.0072 = 0.0024
+P(x|Yes) = P(Home Owner=No|Yes) * P(Status=Married|Yes) * P(Income=120|Yes) = 1 * 0 * P(Income|Yes) = 0
+
+Posterior: P(No|x) proportional to 0.7 * 0.0024 = 0.00168; P(Yes|x) proportional to 0.3 * 0 = 0. Since P(No|x) > P(Yes|x), classify as No.
+
+Key observation: the class-conditional probability for class Yes became 0 because no training instance belonging to class Yes has Marital Status=Married. This illustrates the zero conditional probability problem.
+
+<chunk page=379 label="Zero Conditional Probability">
+Handling Zero Conditional Probabilities: If the conditional probability for any attribute is zero, the entire class-conditional probability becomes zero. This happens when the number of training instances is small and the number of possible attribute values is large.
+
+Two alternate estimates to avoid vanishing probabilities:
+Laplace estimate: P(Xi=c|y) = (nc + 1) / (n + v), where v is the total number of values Xi can take.
+m-estimate: P(Xi=c|y) = (nc + m*p) / (n + m), where p is a prior estimate of P(Xi|y) and m is a hyper-parameter indicating confidence in p.
+
+Both provide non-zero values even when nc=0, making them more robust than raw fractions.
+
+<chunk page=380 label="Naive Bayes Characteristics">
+Characteristics of Naïve Bayes Classifiers:
+1. Naïve Bayes classifiers quantify uncertainty by providing posterior probability estimates. They are generative models that treat the target class as the causative factor for generating data instances, providing predictive and descriptive insights.
+2. Using the naïve Bayes assumption, they compute class-conditional probabilities even in high-dimensional settings, provided attributes are conditionally independent. This makes them simple and effective, commonly used in text classification.
+3. Robust to isolated noise points because such points are averaged out during training and do not significantly impact conditional probability estimates.
+4. Can handle missing values in both training (by ignoring missing values during estimation) and test instances (by using only non-missing attributes for posterior computation).
+5. Robust to irrelevant attributes: if Xi is irrelevant, P(Xi|Y) becomes approximately uniform for every class, contributing negligibly to posterior estimates.
+6. Correlated attributes degrade performance because the conditional independence assumption no longer holds. The classifier can produce incorrect results when attributes are not conditionally independent, making it not well-suited for redundant or interacting attributes.
+
+<chunk page=383 label="Bayesian Networks">
+Bayesian Networks provide a flexible framework for modeling probabilistic relationships between attributes and class labels. They capture more generic forms of conditional independence using directed acyclic graphs (DAGs). Each node corresponds to a random variable and directed edges represent probabilistic relationships with a particular directionality.
+
+Bayesian networks belong to probabilistic graphical models. Directed graphical models (Bayesian Networks / Belief Networks) use directed edges where each edge represents a direction of influence. Undirected graphical models (Markov Random Fields) use undirected edges.
+
+In a DAG, if there is a directed edge from X to Y, then X is the parent of Y and Y is the child of X. If there is a directed path from X to Z, then X is an ancestor of Z and Z is a descendant of X. A node can have multiple parents.
+
+<chunk page=386 label="Bayesian Network Conditional Independence">
+An important property of Bayesian networks is representing varying forms of conditional independence.
+
+d-separation determines if any two sets of nodes A and B are conditionally independent given another set of nodes C. The Markov blanket of a node Y denotes the minimal set of nodes X that makes Y independent of all other nodes when conditioned on X.
+
+Local Markov Property: A node in a Bayesian network is conditionally independent of its non-descendants, if its parents are known. Example: in a network, A is conditionally independent of both B and D given C, because C is the parent of A and nodes B and D are non-descendants of A.
+
+The naïve Bayes classifier is a special type of Bayesian network where the target class Y is at the root of a tree and every attribute Xi is connected to the root by a directed edge. In naïve Bayes, every edge points from the class to the observed attributes, suggesting the class label generates the attributes. In general Bayesian networks, the target class can appear anywhere in the graph.
+
+<chunk page=388 label="Bayesian Network Joint Probability">
+The joint probability of d nodes X1 to Xd can be factorized using the chain rule: P(X) = product from i=1 to d of P(Xi|X1,...,Xi-1).
+
+Using the local Markov property, P(Xi|X1,...,Xi-1) = P(Xi|pa(Xi)), where pa(Xi) denotes the parents of Xi. The joint probability simplifies to: P(X) = product from i=1 to d of P(Xi|pa(Xi)).
+
+Each node has a probability table: (1) for nodes with parents, the table contains conditional probabilities P(Xi|pa(Xi)) for every combination of values; (2) for root nodes (no parents), the table contains only the prior probability P(Xi).
+
+Example — Heart Disease Network: Risk factors Exercise and Diet are root nodes with prior probabilities. Heart Disease depends on both, Heartburn depends on Diet, Blood Pressure depends on Heart Disease, and Chest Pain depends on both Heart Disease and Heartburn. Each node has a probability table with the relevant conditional probabilities.
+
+<chunk page=390 label="Bayesian Network Variables">
+Bayesian networks involve two types of variables: Observed variables (clamped to specific values, represented by shaded nodes) and Unobserved variables (values not known, need to be inferred, represented by empty nodes).
+
+In classification: observed variables correspond to attributes X, the target class is an unobserved variable Y that needs to be inferred, and hidden/confounding variables H are unobserved variables that affect probabilities of attributes and class labels but are never directly observed. Hidden variables enhance the expressive power of Bayesian networks.
+
+<chunk page=391 label="Bayesian Network Inference">
+Given probability tables, inference computes probabilities of different sets of random variables. For classification, the key problem is computing P(Y=y|x):
+
+P(Y=y|x) = P(y,x) / P(x) = P(y,x) / sum over y' of P(y',x)
+
+P(y,x) is computed by marginalizing out hidden variables H: P(y,x) = sum over H of P(y,x,H), where the joint probability P(y,x,H) uses the factorization P(X) = product of P(Xi|pa(Xi)).
+
+Example network with 4 hidden variables: P(y,x) = sum over h1,h2,h3,h4 of [P(h1)*P(h2)*P(x2)*P(h4)*P(x1|h1,h2)*P(h3|x2,h2)*P(y|x1,h3)*P(x3|h3,h4)]. If every variable takes k values, the basic approach has complexity O(k^4) — exponential in the number of hidden variables.
+
+<chunk page=393 label="Variable Elimination">
+Variable elimination reduces computational complexity by exploiting the factorized structure. Push each summation as far inside as possible so factors not depending on the summing variable are placed outside.
+
+The method rearranges summations so that eliminating hi produces an intermediate factor fi that depends only on neighboring nodes. Each step involves O(k^2) computations, giving overall complexity O(k^2) instead of O(k^4).
+
+The principle exploits the distributive nature of multiplication over addition: a*(b+c+d) = a*b + a*c + a*d. The left side has 1 multiplication; the right side has 3. Variable elimination pushes constant terms outside the summation.
+
+Finding the optimal elimination order for a generic Bayesian network is NP-Hard. However, efficient techniques exist for special structures like tree-like graphs.
+
+<chunk page=395 label="Sum-Product Algorithm">
+The sum-product algorithm builds on message passing for computing marginal and conditional probabilities on tree-based graphs. In a tree, every node has exactly one parent and there is only one directed edge between any two nodes.
+
+A message mij(xj) is passed from node Xi to node Xj, representing the influence of eliminating nodes on the marginal probabilities of neighbors. Define potential functions: for the root node, psi(Xi) = P(Xi); for other nodes, psi(Xi) = 1. Edge potential: psi(Xi, Xj) = P(Xj|Xi).
+
+Message computation: mij(xj) = sum over xi of [psi(xi) * psi(xi, xj) * product over k in N(i)\{j} of mki(xi)], where N(i) represents the set of neighbors of Xi. The message is recursively computed.
+
+The marginal probability of node Xi: P(xi) = psi(xi) * product over j in N(i) of mji(xi).
+
+<chunk page=398 label="Sum-Product Algorithm">
+Properties of the sum-product algorithm: Messages can be reused for computing different marginal probabilities. The basic operations resemble a message passing protocol: a node sends a message only after receiving incoming messages from all neighbors.
+
+Execution flow: (1) Initialize from leaf nodes, (2) Transmit messages until the root is reached, (3) Run a second pass from root back to leaves. This computes messages for every edge in both directions using O(2|E|) operations, where |E| is the number of edges.
+
+For classification, modify potentials for observed variables: if Xi is fixed to x'i, then psi(Xi) = 1 if Xi=x'i, else 0. And psi(Xi, Xj) = P(Xi|x'i) if Xi=x'i, else 0. Run the sum-product algorithm with these modified values to compute P(y, X=x').
+
+<chunk page=400 label="Factor Graphs">
+The sum-product algorithm is guaranteed to optimally converge on trees because any two nodes have a unique message path and every node has a single parent. Both properties are violated in non-tree graphs.
+
+Factor graphs handle graphs where nodes can have multiple parents (poly-trees). A factor graph has two types of nodes: variable nodes (circles) and factor nodes (squares). Factor nodes represent conditional independence relationships; every probability table becomes a factor node. Edges are undirected and connect a variable node to a factor node if the variable is involved in that probability table.
+
+The factor graph of a poly-tree always forms a tree-like structure with a unique path between any two nodes. A modified sum-product algorithm transmits messages between variable and factor nodes, guaranteed to converge to optimal values.
+
+<chunk page=401 label="Bayesian Network Learning">
+Learning Model Parameters: If the network topology is known and there are no unobserved variables, probability tables are computed by counting the fraction of training instances for every value of Xi and every combination of parent values. If there are unobserved variables, advanced techniques like the Expectation-Maximization algorithm are needed.
+
+Learning the network structure is much more challenging than learning probability tables. Scoring approaches that attempt to find a graph structure maximizing training likelihood are often computationally infeasible for large graphs. A common approach is to use the subjective knowledge of domain experts.
+
+<chunk page=402 label="Bayesian Network Characteristics">
+Characteristics of Bayesian Networks:
+1. Bayesian networks provide a powerful approach for representing probabilistic relationships using graphical models. They capture complex dependencies among variables, encode prior beliefs, and model latent (unobserved) factors as hidden variables. They provide both predictive and descriptive insights.
+2. Bayesian networks can handle correlated or redundant attributes, unlike naïve Bayes, because they do not use the conditional independence assumption but express richer forms of conditional independence.
+3. Similar to naïve Bayes, Bayesian networks are robust to noise in training data and can handle missing values during training and testing. If a test instance contains a missing attribute Xi, the network treats Xi as an unobserved node during inference.

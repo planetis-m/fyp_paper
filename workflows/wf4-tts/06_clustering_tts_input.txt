@@ -1,0 +1,47 @@
+Density-Based Clustering and Cluster Validation. Study notes for revision.
+<bk>
+DBSCAN, Density-Based Spatial Clustering. DBSCAN groups points by local density rather than by distance to centroids or by merging clusters hierarchically. Two parameters control the algorithm. Eps, written epsilon, is the radius that defines the neighbourhood around a point. MinPts is the minimum number of points that must fall within the Eps radius for a point to qualify as dense.
+<bk>
+Every data point is labelled as exactly one of three types. A core point has at least MinPts neighbours within distance Eps. Core points sit in the interior of a cluster. A border point has fewer than MinPts neighbours within Eps, but falls within the Eps neighbourhood of at least one core point. A noise point is neither a core point nor reachable from any core point. Noise points are excluded from all clusters.
+<bk>
+The DBSCAN algorithm proceeds in three steps. First, find the Eps neighbours of every point and identify all core points, those with at least MinPts neighbours. Second, build a neighbour graph over the core points alone and find the connected components. Each component becomes one cluster. Third, for each non-core point, assign it to a cluster if it lies within Eps of a core point in that cluster. Otherwise label it as noise.
+<bk>
+DBSCAN strengths. It is naturally resistant to noise because outliers become noise points. It discovers clusters of arbitrary shape and size, not just convex blobs.
+<bk>
+DBSCAN limitations. It struggles when clusters have varying densities because a single Eps MinPts pair cannot adapt to both sparse and dense regions. It also performs poorly on high-dimensional data where distance concentrations make neighbourhoods less meaningful.
+<bk>
+Cluster Validation. Cluster validation asks whether the clusters we found are meaningful or just artefacts of the algorithm. Unlike supervised classification, where we have accuracy, precision, and recall, clustering has no ground truth by default, making evaluation harder.
+<bk>
+Why validate clusters? To avoid finding patterns in random noise. To compare different clustering algorithms. To compare two sets of clusters or two individual clusters. To estimate the correct number of clusters.
+<bk>
+Aspects of validation. Clustering tendency asks whether the data contains non-random structure at all. External validation compares cluster labels to known class labels. Internal validation assesses fit using only the data itself. Relative validation compares two clusterings to decide which is better. And determining K means finding the correct number of clusters.
+<bk>
+Types of validity indices. An external index measures agreement between cluster labels and externally supplied class labels. Entropy is an example. An internal index measures the goodness of a clustering structure without external information. SSE is an example. A relative index compares two different clusterings. SSE or entropy can be reused for this purpose.
+<bk>
+Validation via correlation. Construct two matrices over all pairs of data points. The proximity matrix contains the pairwise distances or similarities. The incidence matrix has a 1 if two points belong to the same cluster and 0 otherwise.
+<bk>
+Compute the correlation between these two matrices. A high negative correlation for distance, or high positive correlation for similarity, means that points in the same cluster tend to be close together, which is a good sign. This approach works well for compact centroid-based clusters but is not reliable for density-based or contiguity-based clusters, where points in the same cluster may be far apart in absolute distance.
+<bk>
+Similarity matrix heatmap inspection. Order the similarity matrix rows and columns by cluster label and inspect visually. Well-separated clusters produce sharp dense blocks of high similarity along the diagonal. Random data produces a diffuse heatmap with no clear block structure. This visual check works for any clustering algorithm but is qualitative.
+<bk>
+Internal measures, SSE, cohesion, and separation. SSE measures the total squared distance of every point to its cluster centroid. It is a pure internal measure, no external labels needed. Lower SSE means tighter clusters. SSE can compare two clusterings on the same data or help estimate the number of clusters by looking for an elbow in the SSE versus K curve.
+<bk>
+The within-cluster sum of squares, WSS, is defined as the sum over all clusters of the sum over all points in each cluster of the squared distance between each point and its cluster mean.
+<bk>
+Cohesion measures how closely related objects within a cluster are. It is the within-cluster sum of squares. Separation measures how distinct a cluster is from other clusters. It is the between-cluster sum of squares, BSS.
+<bk>
+BSS is defined as the sum over all clusters of the cluster size times the squared distance between the cluster mean and the global mean. A good clustering has high cohesion and high separation. As cohesion decreases, WSS goes down, and separation tends to increase, BSS goes up.
+<bk>
+Graph-based cohesion and separation. Instead of squared error, use a proximity graph. Cohesion equals the sum of edge weights within a cluster. Separation equals the sum of edge weights between nodes in the cluster and nodes outside it.
+<bk>
+External measures, entropy and purity. When true class labels are available, we can measure how well clusters align with known classes.
+<bk>
+Entropy. For each cluster j, compute the class distribution. p sub i j equals m sub i j divided by m sub j, where m sub i j is the number of points of class i in cluster j and m sub j is the total size of cluster j. The entropy of cluster j is minus the sum over i of p sub i j times log base 2 of p sub i j.
+<bk>
+The overall entropy is the size-weighted average. It equals the sum over all clusters of the fraction m sub j over m times the entropy of cluster j. Lower entropy means the cluster is dominated by a single class, which is desirable. Entropy is zero when a cluster contains points from only one class.
+<bk>
+Purity. The purity of cluster j is the maximum over all classes of p sub i j. The overall purity is the size-weighted average of the individual cluster purities. Higher purity means the cluster is dominated by a single class. Purity equals 1 when every cluster contains points from only one class.
+<bk>
+Relationship between entropy and purity. They measure the same thing from opposite directions. Entropy penalises mixed clusters, lower is better. Purity rewards homogeneous ones, higher is better. Both require external class labels.
+<bk>
+Key takeaways. DBSCAN identifies clusters by local density, handles noise naturally, and finds arbitrary shapes, but fails with varying densities and high dimensions. Cluster validation is essential because algorithms will always produce clusters, even on random data. Internal measures like SSE, cohesion, separation, and correlation evaluate structure from the data alone. External measures like entropy and purity evaluate alignment with known class labels. Visual tools like ordered similarity matrices give a quick qualitative check on cluster quality.
