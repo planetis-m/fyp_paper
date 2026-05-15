@@ -70,9 +70,9 @@
   columns: (1.25in, 2in, 1.35in, 1.1in),
   align: (x, y) => if y == 0 { center } else if x <= 1 { left } else { center },
   table.header([Role], [Name], [Signature], [Date]),
-  [Project Advisor], [Ioannis Katakis], [#move(dy: 0.6em, line(length: 1in))], [#move(dy: 0.6em, line(length: 0.75in))],
-  [Examiner], [Athena Stassopoulou], [#move(dy: 0.6em, line(length: 1in))], [#move(dy: 0.6em, line(length: 0.75in))],
-  [Examiner], [Vaso Stylianou], [#move(dy: 0.6em, line(length: 1in))], [#move(dy: 0.6em, line(length: 0.75in))],
+  [Project Advisor], [Ioannis Katakis], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
+  [Examiner], [Athena Stassopoulou], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
+  [Examiner], [Vaso Stylianou], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
 )
 
 #v(1fr)
