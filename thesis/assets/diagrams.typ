@@ -588,33 +588,34 @@
 #let ocr-model-tradeoff-diagram() = canvas({
   draw.line((1.0, .6), (13.8, .6), mark: (end: ">"), stroke: .55pt + colors.line)
   draw.line((1.0, .6), (1.0, 4.6), mark: (end: ">"), stroke: .55pt + colors.line)
-  small-label((13.0, .25), [cost/page USD ->], width: 1.65)
-  small-label((.75, 4.35), [quality ->], width: 1.0)
+  small-label((12.85, .25), [cost/page USD], width: 1.45)
+  small-label((.55, 4.25), [quality], width: .75)
 
   for y in (1.35, 2.1, 2.85, 3.6) {
     draw.line((1.0, y), (13.8, y), stroke: .25pt + colors.grid)
   }
 
-  draw.circle((2.25, 2.15), radius: .16, fill: colors.warn-fill, stroke: .8pt + colors.warn-line, name: "deepseek")
-  draw.content((2.55, 1.75), (5.1, 2.35), align(left + horizon)[
+  // Points are precomputed from appendix cost/page and aggregate OCR quality values.
+  draw.circle((2.18, 1.28), radius: .16, fill: colors.warn-fill, stroke: .8pt + colors.warn-line, name: "deepseek")
+  draw.content((2.55, 1.0), (5.1, 1.6), align(left + horizon)[
     #set text(size: 7.2pt)
     DeepSeek-OCR\
     lowest cost
   ], fill: white)
-  draw.circle((7.15, 3.55), radius: .18, fill: colors.agent-fill, stroke: .8pt + colors.agent-line, name: "olm")
-  draw.content((7.45, 3.18), (10.15, 3.86), align(left + horizon)[
+  draw.circle((7.19, 3.84), radius: .18, fill: colors.agent-fill, stroke: .8pt + colors.agent-line, name: "olm")
+  draw.content((7.42, 3.06), (10.12, 3.64), align(left + horizon)[
     #set text(size: 7.2pt)
     olmOCR 2\
     recall choice
   ], fill: white)
-  draw.circle((13.0, 3.75), radius: .18, fill: colors.store-fill, stroke: .8pt + colors.store-line, name: "paddle")
-  draw.content((9.85, 4.02), (12.85, 4.58), align(left + horizon)[
+  draw.circle((13.17, 4.31), radius: .18, fill: colors.store-fill, stroke: .8pt + colors.store-line, name: "paddle")
+  draw.content((9.95, 4.28), (12.95, 4.84), align(left + horizon)[
     #set text(size: 7.2pt)
     PaddleOCR-VL\
     accuracy winner
   ], fill: white)
   path-arrow("olm", "paddle", dashed: true)
-  small-label((10.2, 3.42), [higher cost, small accuracy gain], width: 1.95)
+  small-label((10.45, 3.62), [higher cost, small quality gain], width: 2.0)
 })
 
 #let failure-semantics-diagram() = canvas({
