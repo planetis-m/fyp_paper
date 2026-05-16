@@ -1,7 +1,7 @@
 #import "lib.typ": abstract-page, appendix, appendix-outline, versatile-apa as apa-style
 
 #set document(
-  title: [An Agent-Based Study Assistant with OCR, Retrieval, and Speech],
+  title: [Mnemon: An Agent-Based Study Assistant with OCR, Retrieval, and Speech],
   author: "Antonis Geralis",
   keywords: ("study assistant", "OCR", "retrieval-augmented generation", "text-to-speech"),
 )
@@ -11,7 +11,7 @@
   running-head: [AGENT-BASED STUDY ASSISTANT],
 )
 
-#let thesis-title = [An Agent-Based Study Assistant with OCR, Retrieval, and Speech]
+#let thesis-title = [Mnemon: An Agent-Based Study Assistant with OCR, Retrieval, and Speech]
 #let author-name = [Antonis Geralis]
 #let degree = [Bachelor of Science in Computer Science]
 #let department = [Department of Computer Science]

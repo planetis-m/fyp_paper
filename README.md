@@ -2,9 +2,11 @@
 
 Typst-based build for the thesis and defense presentation of:
 
-**An Agent-Based Study Assistant System with OCR, Retrieval-Augmented Generation, and Text-to-Speech Tools**
+**Mnemon** — An Agent-Based Study Assistant System with OCR, Retrieval-Augmented Generation, and Text-to-Speech Tools
 
 Antonis Geralis — University of Nicosia, May 2026
+
+Project codename: **Mnemon** (Μνήμων — mindful, remembering).
 
 ## Repository layout
 

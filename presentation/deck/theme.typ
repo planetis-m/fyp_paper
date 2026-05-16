@@ -1,6 +1,6 @@
 // Shared metadata, color, typography, and spacing tokens for the defense deck.
 
-#let title-text = "An Agent-Based Study Assistant with OCR, Retrieval, and Speech"
+#let title-text = "Mnemon: An Agent-Based Study Assistant with OCR, Retrieval, and Speech"
 #let author = "Antonis Geralis"
 #let advisor = "Ioannis Katakis"
 #let degree = "Bachelor of Science in Computer Science"

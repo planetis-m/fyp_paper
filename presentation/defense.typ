@@ -40,7 +40,7 @@
   #v(0.54cm)
   #block(width: 12.4cm)[
     #text(size: 22.3pt, weight: "bold", fill: ink)[
-      An Agent-Based Study Assistant
+      Mnemon: An Agent-Based Study Assistant
     ]
     #v(0.20cm)
     #text(size: 12.3pt, weight: "semibold", fill: accent-dark)[
