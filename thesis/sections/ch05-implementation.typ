@@ -421,15 +421,7 @@ The lifecycle has two shutdown modes:
 - `close`: finish queued/in-flight work and join the worker;
 - `abort`: cancel queued/in-flight work, return cancellation results, and join promptly.
 
-The transport error classifier maps curl errors into timeout, DNS, TLS, cancellation, protocol, network, and internal categories. This abstraction is what lets the core tools implement consistent retry policies.
-
-#ref(<fig:relay-worker-state>) documents the concurrency boundary implemented in `relay.nim`. The worker alternates between dispatching queued requests, driving libcurl progress, processing completion messages, and waiting for new work or shutdown.
-
-#figure(
-  relay-concurrency-diagram(),
-  kind: image,
-  caption: [Relay concurrency boundary between tool-owned scheduler state and worker-owned libcurl multiplexing.],
-)<fig:relay-worker-state>
+The transport error classifier maps curl errors into timeout, DNS, TLS, cancellation, protocol, network, and internal categories. This abstraction is what lets the core tools implement consistent retry policies. The implementation preserves the concurrency boundary shown in #ref(<fig:relay-interaction>): the caller owns scheduling, ordering, retries, and publication state, while `relay` owns libcurl multiplexing and completion delivery.
 
 
 === `jsonx`: JSON Library
