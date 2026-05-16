@@ -158,9 +158,7 @@
     breakable: true,
   )
 
-  show raw: set text(
-    size: font-size * 0.86,
-  )
+  show raw.where(block: false): set text(size: 0.95em)
 
   show raw.where(block: true): set text(size: font-size * 0.85)
   show raw.where(block: true): set par(leading: 1.1em)
