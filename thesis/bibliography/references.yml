@@ -21,14 +21,14 @@ ref-4:
     title: "arXiv"
 ref-5:
   type: article
-  title: "Text recognition in the wild"
+  title: "Text recognition in the wild: A survey"
   author:
     - "Chen, X."
     - "Jin, L."
     - "Zhu, Y."
     - "Luo, C."
     - "Wang, T."
-  date: 2021
+  date: 2022
   page-range: "1-35"
   serial-number:
     doi: "10.1145/3440756"
@@ -102,14 +102,6 @@ ref-13:
   parent:
     type: periodical
     title: "arXiv"
-ref-19:
-  type: web
-  title: "allenai/olmOCR-2-7B-1025"
-  author: "DeepInfra"
-  date: 2026-05-03
-  url:
-    value: "https://deepinfra.com/allenai/olmOCR-2-7B-1025"
-    date: 2026-05-03
 ref-23:
   type: web
   title: "OCR_benchmarks_academic"
@@ -118,25 +110,9 @@ ref-23:
   url:
     value: "https://github.com/planetis-m/OCR_benchmarks_academic"
     date: 2026-03-01
-ref-25:
-  type: web
-  title: "OCR_benchmarks_academic"
-  author: "Geralis, A."
-  date: 2026-03-01
-  url:
-    value: "https://github.com/planetis-m/OCR_benchmarks_academic"
-    date: 2026-03-01
-ref-26:
-  type: web
-  title: "google/gemma-4-31B-it"
-  author: "DeepInfra"
-  date: 2026-05-03
-  url:
-    value: "https://deepinfra.com/google/gemma-4-31B-it"
-    date: 2026-05-03
 ref-37:
   type: article
-  title: "Retrieval-augmented generation for knowledge-intensive NLP tasks"
+  title: "Retrieval-Augmented Generation for knowledge-intensive NLP tasks"
   author:
     - "Lewis, P."
     - "Perez, E."
