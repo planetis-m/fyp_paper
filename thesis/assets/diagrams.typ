@@ -264,8 +264,8 @@
   box-node((6.1, .75), [chunkvec], subtitle: [vector DB], name: "chunkvec", kind: "core", width: 2.15, scale: compact-node-scale)
   box-node((9.6, .75), [chunktts], subtitle: [.opus], name: "chunktts", kind: "core", width: 2.15, scale: compact-node-scale)
   box-node((1.75, -1.0), [relay], subtitle: [HTTP], name: "relay", kind: "store", width: 1.8, scale: compact-node-scale)
-  box-node((4.65, -1.0), [jsonx], subtitle: [JSON], name: "jsonx", kind: "store", width: 1.8, scale: compact-node-scale)
-  box-node((7.55, -1.0), [openai], subtitle: [schemas], name: "openai", kind: "store", width: 1.8, scale: compact-node-scale)
+  box-node((4.65, -1.0), [openai], subtitle: [schemas], name: "openai", kind: "store", width: 1.8, scale: compact-node-scale)
+  box-node((7.55, -1.0), [jsonx], subtitle: [JSON], name: "jsonx", kind: "store", width: 1.8, scale: compact-node-scale)
   box-node((10.75, -1.0), [SQLite + files], subtitle: [artefacts], name: "local", kind: "store", width: 2.2, scale: compact-node-scale)
   box-node((14.0, .75), [Model APIs], subtitle: [OCR, embed, speech], name: "api", kind: "external", width: 2.1, scale: compact-node-scale)
 
@@ -281,6 +281,7 @@
   path-arrow("chunkvec.south-west", "relay.north-east")
   path-arrow("chunktts.south-west", "relay.north-east")
   path-arrow("relay.east", "openai.west")
+  path-arrow("openai.east", "jsonx.west")
   path-arrow("openai.east", "api.west", stroke: colors.external-line)
   path-arrow("chunkvec.south-east", "local.north-west")
   path-arrow("chunktts.south", "local.north")
@@ -316,18 +317,18 @@
 
 #let core-execution-pattern-diagram() = canvas({
   box-node((.8, 2.2), [Input normalization], subtitle: [pages, chunks, query], name: "norm", kind: "core", width: 2.2)
-  box-node((3.35, 2.2), [Ordered work list], subtitle: [seqId = 0..N-1], name: "work", kind: "store", width: 2.15)
+  box-node((3.35, 3.8), [Ordered work list], subtitle: [seqId = 0..N-1], name: "work", kind: "store", width: 2.15)
   box-node((5.9, 2.2), [Bounded active window], subtitle: [inFlight <= K], name: "window", kind: "core", width: 2.25)
-  box-node((8.45, 2.2), [Request id codec], subtitle: [seqId | attempt], name: "codec", kind: "evidence", width: 2.1)
+  box-node((8.45, 3.8), [Request id codec], subtitle: [seqId | attempt], name: "codec", kind: "evidence", width: 2.1)
   box-node((11.0, 2.2), [relay batch], subtitle: [remote calls], name: "relay", kind: "core", width: 2.1)
   box-node((13.55, 2.2), [Completion classifier], subtitle: [ok / retry / final error], name: "classify", kind: "core", width: 2.35)
   box-node((11.0, .75), [Retry heap], subtitle: [dueAt + jitter], name: "retry", kind: "retry", width: 2.0)
   box-node((5.4, .75), [Ordered terminal action], subtitle: [emit, insert, or publish], name: "terminal", kind: "ok", width: 2.55)
 
-  path-arrow("norm.east", "work.west")
-  path-arrow("work.east", "window.west")
-  path-arrow("window.east", "codec.west")
-  path-arrow("codec.east", "relay.west")
+  path-arrow("norm.north", "work.south")
+  path-arrow("work.south", "window.north")
+  path-arrow("window.north", "codec.south")
+  path-arrow("codec.south", "relay.north")
   path-arrow("relay.east", "classify.west")
   path-arrow("classify.south-west", "retry.north-east", stroke: colors.retry-line)
   path-arrow("retry.north-west", "window.south-east", stroke: colors.retry-line)
@@ -388,7 +389,7 @@
   box-node((5.2, 1.6), [chunks table], subtitle: [text/meta/vector], name: "table", kind: "store", width: 3.05, height: 1.05, scale: compact-node-scale)
   box-node((2.1, .05), [B-tree], subtitle: [filters], name: "btree", kind: "core", width: 2.55, scale: compact-node-scale)
   box-node((5.2, .05), [Vector scan], subtitle: [distance], name: "vector", kind: "core", width: 2.55, scale: compact-node-scale)
-  box-node((8.3, .05), [Results], subtitle: [ranked chunks], name: "results", kind: "ok", width: 2.55, scale: compact-node-scale)
+  box-node((8.3, 1.6), [Results], subtitle: [ranked chunks], name: "results", kind: "ok", width: 2.55, scale: compact-node-scale)
   box-node((1.05, 1.6), [Query], subtitle: [semantic], name: "query", kind: "agent", width: 2.1, scale: compact-node-scale)
 
   path-arrow("chunks.east", "parser.west")
@@ -399,8 +400,8 @@
   path-arrow("query.south", "btree.north")
   path-arrow("table.south-west", "btree.north-east")
   path-arrow("table.south", "vector.north")
-  path-arrow("btree.east", "results.west")
-  path-arrow("vector.east", "results.west")
+  path-arrow("btree.north", "results.south")
+  path-arrow("vector.north", "results.south")
 })
 
 #let cvstore-ingest-sequence-diagram() = canvas({
