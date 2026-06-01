@@ -33,15 +33,14 @@
   ]
 }
 
-#let signature-field(path) = {
+#let signature-field() = {
   grid(
     columns: (1.85in, 2.5in),
     gutter: 0.15in,
     align: (left, bottom),
     move(dy: 0.72in)[Signature:],
     box(width: 2.5in)[
-      #align(center + bottom)[#image(path, height: 0.98in)]
-      #v(-0.165in)
+      #v(0.815in)
       #line(length: 100%, stroke: 0.45pt)
     ],
   )
@@ -91,7 +90,7 @@ Submission of this form together with the thesis is mandatory.
 
 #set par(justify: false)
 
-#signature-field("assets/signature.png")
+#signature-field()
 
 #v(0.2in)
 
