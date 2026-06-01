@@ -72,7 +72,7 @@
   table.header([Role], [Name], [Signature], [Date]),
   [Project Advisor], [Ioannis Katakis], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
   [Examiner], [Athena Stassopoulou], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
-  [Examiner], [Vaso Stylianou], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
+  [Examiner], [Demetris Trihinas], [#move(dy: 1.0em, line(length: 1in))], [#move(dy: 1.0em, line(length: 0.75in))],
 )
 
 #v(1fr)
