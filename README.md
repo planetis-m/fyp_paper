@@ -25,7 +25,7 @@ presentation/
   defense.typ           Defense slide deck source
   defense.pdf           Compiled slides
   deck/                 Slide theme and reusable layout components
-  speaker-notes.md      Per-slide delivery notes (~20 min target)
+  speaker-notes.md      Per-slide live-delivery notes (~15.75 min target)
 
 workflows/              Recorded study-workflow artefacts
   wf1-transcribe/       OCR transcription output

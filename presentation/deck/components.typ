@@ -4,7 +4,7 @@
 
 #let slide-title(body) = block(below: slide-title-gap)[
   #grid(columns: (1fr,), align: horizon)[
-    #text(size: slide-title-size, weight: "bold", fill: ink)[#body]
+    #text(size: slide-title-size, weight: slide-title-weight, fill: ink)[#body]
   ]
   #v(0.08cm)
   #line(length: 100%, stroke: title-rule-stroke + line-color)
@@ -16,17 +16,6 @@
   #body
 ]
 
-#let section-slide(title, subtitle) = [
-  #v(section-top-space)
-  #block(width: 78%)[
-    #line(length: 1.45cm, stroke: 0.65pt + accent)
-    #v(0.32cm)
-    #text(size: section-title-size, weight: "bold", fill: ink)[#title]
-    #v(0.22cm)
-    #text(size: 9.2pt, fill: muted)[#subtitle]
-  ]
-]
-
 #let card(title, body, fill: white, height: auto) = block(
   width: 100%,
   height: height,
@@ -36,15 +25,15 @@
   stroke: card-stroke + line-color,
 )[
   #text(size: card-title-size, weight: "bold", fill: ink)[#title]
-  #v(0.12cm)
-  #set par(leading: 0.75em, spacing: body-spacing)
-  #set list(spacing: 0.3em)
+  #v(0.18cm)
+  #set par(leading: body-leading, spacing: body-spacing)
+  #set list(spacing: list-spacing, tight: false)
   #text(size: card-body-size, fill: ink)[#body]
 ]
 
-#let metric(value, label, note: none, fill: soft) = block(
+#let metric(value, label, note: none, fill: soft, inset: metric-inset) = block(
   width: 100%,
-  inset: metric-inset,
+  inset: inset,
   radius: radius,
   fill: fill,
   stroke: card-stroke + line-color,
@@ -65,55 +54,12 @@
   #v(0.16cm)
 ]
 
-#let note-box(body, fill: soft-2, height: auto) = block(
-  width: 100%,
-  height: height,
-  inset: note-inset,
-  radius: radius,
-  fill: fill,
-  stroke: card-stroke + line-color,
-)[#text(size: 7.2pt, fill: ink)[#body]]
-
-#let lane(label, body, fill: white) = block(
-  width: 100%,
-  inset: lane-inset,
-  radius: radius,
-  fill: fill,
-  stroke: card-stroke + line-color,
-)[
-  #text(size: 6.3pt, weight: "bold", fill: muted)[#upper(label)]
-  #v(0.06cm)
-  #text(size: 7.3pt, weight: "semibold", fill: ink)[#body]
-]
-
-#let flow(items) = {
-  let cols = ()
-  let cells = ()
-  for i in range(items.len()) {
-    cols.push(1fr)
-    cells.push(box(
-      width: 100%,
-      inset: (x: 5.5pt, y: 6.5pt),
-      radius: radius,
-      fill: if calc.rem(i, 2) == 0 { panel } else { soft },
-      stroke: card-stroke + line-color,
-    )[#align(center)[#text(size: 6.75pt, weight: "semibold")[#items.at(i)]]])
-    if i < items.len() - 1 {
-      cols.push(auto)
-      cells.push(text(size: 8.2pt, fill: accent)[→])
-    }
-  }
-  block(width: 100%)[
-    #grid(columns: cols, gutter: 4pt, align: horizon, ..cells)
-  ]
-}
-
-#let bar(label, value, max, color: accent) = [
+#let bar(label, value, maximum, color: accent) = [
   #grid(columns: (2.95cm, 1fr, 1.2cm), gutter: 5pt, align: horizon)[
     #text(size: 6.7pt, fill: ink)[#label]
   ][
     #box(width: 100%, height: 0.24cm, fill: bar-track, radius: 2pt)[
-      #box(width: (value / max) * 100%, height: 0.24cm, fill: color, radius: 2pt)
+      #box(width: (value / maximum) * 100%, height: 0.24cm, fill: color, radius: 2pt)
     ]
   ][
     #align(right)[#text(size: 6.7pt, weight: "bold", fill: ink)[#value]]
@@ -121,9 +67,9 @@
 ]
 
 #let spacious-list(body, size: 7.6pt) = [
-  #set par(leading: 0.68em, spacing: 0em)
-  #set list(spacing: 0.5em)
-  #set enum(spacing: 0.5em)
+  #set par(leading: 0.88em, spacing: 0em)
+  #set list(spacing: list-spacing, tight: false)
+  #set enum(spacing: list-spacing, tight: false)
   #text(size: size)[#body]
 ]
 
@@ -136,5 +82,5 @@
 )[#body]
 
 #let big-statement(body) = block(width: 100%)[
-  #text(size: 11.4pt, weight: "bold", fill: ink)[#body]
+  #text(size: statement-size, weight: statement-weight, fill: ink)[#body]
 ]
