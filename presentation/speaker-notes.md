@@ -390,25 +390,13 @@ the successful pages are still kept.
 
 Partial audio is different.
 
-It may sound complete
-while silently omitting content.
-
-So incomplete final audio is withheld.
-
-These decisions turn model calls
-into testable **contracts**.
-
-They also create concrete test points:
-
-schemas,
-exit codes,
-stored outputs,
-and ordering.
+Incomplete audio
+is not published.
 
 TRANSITION
 
-The evaluation checks
-how that works in practice.
+Next, let's look at
+how the workflows were evaluated.
 
 ---
 
@@ -434,12 +422,11 @@ The evaluation begins with a PDF.
 Intermediate outputs are saved
 as the workflow progresses.
 
-The evaluation is not based
-on whether one response sounds impressive.
+A final answer
+is not enough.
 
-That matters because a polished final answer
-can hide problems
-earlier in the workflow.
+We also inspect
+the intermediate outputs.
 
 The criteria are practical:
 
@@ -451,7 +438,8 @@ Can the intermediate outputs be inspected?
 
 Can the run be reproduced?
 
-Are limitations visible?
+Are failures
+clearly reported?
 
 The four recorded workflows cover
 essay practice,
@@ -462,10 +450,8 @@ and notes-to-audio.
 TRANSITION
 
 Before the results,
-we need to separate
-what the code controls
-from what can change
-when remote models are called.
+separate local tests
+from recorded model runs.
 
 ---
 
@@ -489,29 +475,19 @@ VISUAL RECOVERY
 
 DELIVERY
 
-Local tests cover
-what the implementation controls.
+Local tests check the parts
+we control:
 
-For OCR,
-retrieval,
-and speech,
-they check the tool behaviour.
+the tools
+and their shared libraries.
 
-The shared libraries
-are tested too.
+Recorded runs show
+how the full workflow behaves
+when it calls remote models.
 
-Live model runs provide
-evidence from real use.
-
-They are not deterministic unit tests.
-
-The tools must still preserve
-ordering,
-clear failures,
-and clear boundaries.
-
-Limitations remain part of the evidence,
-not an afterthought.
+Together,
+they give us evidence
+from both sides.
 
 TRANSITION
 
@@ -537,9 +513,6 @@ VISUAL RECOVERY
 
 DELIVERY
 
-This benchmark used
-one 72-page slide deck.
-
 One request at a time
 took just over five minutes.
 
@@ -557,16 +530,6 @@ Every page is still included.
 
 The final output remains
 in page order.
-
-One caveat is important.
-
-This is a recorded measurement,
-not a universal guarantee.
-
-Provider latency,
-rate limits,
-network conditions,
-and document complexity still matter.
 
 TRANSITION
 
@@ -621,11 +584,11 @@ can affect later notes,
 questions,
 and audio.
 
-`olmOCR 2` had the strongest
-recall-oriented result.
+`olmOCR 2` was less likely
+to miss important content.
 
 It also cost less
-than PaddleOCR-VL.
+than the most accurate model.
 
 TRANSITION
 
@@ -647,16 +610,14 @@ VISUAL RECOVERY
 
 - Four cards in a two-by-two grid
 - Top-left: essay practice
-- Bottom-left: RAG revision
+- Bottom-left: retrieval
 - Top-right: flashcards
 - Bottom-right: notes to audio
 
 DELIVERY
 
-Essay practice showed
-strong mode fit.
-
-Lecture material became exam-style reasoning.
+Essay practice produced
+useful exam-style questions.
 
 But OCR errors make it important
 to trace each answer
@@ -683,21 +644,17 @@ figures,
 tables,
 or equations.
 
-RAG revision provides
+Retrieval provides
 the strongest evidence
 of practical value.
 
 The answer matched course-specific material,
 not just a generic model response.
 
-The next step is to show
-the retrieved passages
-beside the final answer.
-
 TRANSITION
 
-Those strengths and weaknesses
-set the limits of the claim.
+That brings us
+to the limitations.
 
 ---
 
@@ -717,12 +674,11 @@ VISUAL RECOVERY
 
 DELIVERY
 
-The interpretation is that modularity
-makes failures easier to locate.
+Separate tools make failures
+easier to locate.
 
-Concurrent requests reduced
-OCR runtime
-in the recorded benchmark.
+Concurrent requests
+made OCR faster.
 
 The recorded workflows
 completed their intended tasks.
@@ -738,10 +694,6 @@ There is no controlled study
 of learning outcomes
 or retention.
 
-Retrieval has not yet been tested
-with fixed questions
-and expected passages.
-
 The TTS output file is checked,
 but not whether
 the audio sounds natural.
@@ -749,9 +701,6 @@ the audio sounds natural.
 OCR results depend
 on the documents
 and provider.
-
-The throughput numbers are recorded runs,
-not statistical guarantees.
 
 Remote models,
 pricing,
@@ -780,15 +729,11 @@ VISUAL RECOVERY
 
 DELIVERY
 
-There are four contributions,
-but the key point is **integration**:
-
-the combined system,
-not one isolated tool.
-
 Conceptually,
 it organises course material
-into grounded revision formats.
+into revision formats
+that remain grounded
+in the source.
 
 Architecturally,
 it separates the agent
@@ -802,10 +747,11 @@ retries,
 clear failures,
 and saved intermediate artifacts.
 
-The evaluation tests the tools,
-measures OCR performance,
-compares OCR models,
-and evaluates recorded workflows.
+Finally,
+the project provides evidence
+from tests,
+benchmarks,
+and recorded workflows.
 
 TRANSITION
 
@@ -892,35 +838,20 @@ VISUAL RECOVERY
 
 DELIVERY
 
-The three original barriers
-now have concrete answers.
+The project shows
+a different way
+to build an AI study assistant.
 
-OCR converts scanned material
-into usable text.
+Give an agent
+a set of open tools.
 
-Retrieval connects answers
-to
-the student's material.
+Keep those tools separate.
 
-Study modes
-and speech
-support different ways
-to revise.
+Make them easy to inspect,
+change,
+and run on their own.
 
-The key contribution
-is the system
-around those tools.
-
-Separate tools.
-
-Ordered outputs.
-
-Visible intermediate results.
-
-Clear failures.
-
-That makes the workflow
-practical and testable.
+That is the main contribution.
 
 TRANSITION
 

@@ -257,7 +257,7 @@
     ], fill: soft, height: 2.28cm)
     #v(0.38cm)
     #card("Handle partial outputs", [
-      OCR keeps successful pages when some requests fail. Partial final audio is withheld because it may sound complete while omitting content.
+      OCR keeps successful pages when some requests fail. Incomplete audio is not published.
     ], fill: warm, height: 2.28cm)
   ]
 ]
@@ -368,7 +368,7 @@
     ], fill: soft)
     #v(card-stack-gap)
     #card("Selection tradeoff", [
-      olmOCR 2 had the strongest recall-oriented result and cost less than PaddleOCR-VL.
+      olmOCR 2 was less likely to miss important content and cost less than the most accurate model.
     ], fill: warm)
   ]
 ]
@@ -383,7 +383,7 @@
       Produced useful exam-style questions, but OCR errors make source tracing important.
     ], fill: warm, height: 2.34cm)
     #v(0.38cm)
-    #card("RAG exam revision", [
+    #card("Retrieval", [
       Strongest result: the answer matched the course material, but the retrieved passages should be shown beside it.
     ], fill: panel, height: 2.34cm)
   ][
@@ -413,7 +413,6 @@
     #subhead[Threats and limitations]
     #spacious-list[
       - No controlled study of learning outcomes or retention
-      - Retrieval has not yet been tested with fixed questions and expected passages
       - TTS evaluation checks the output file, not whether the audio sounds natural
       - OCR results depend on the documents and provider
       - Model behaviour, pricing, latency, and availability can drift
@@ -428,7 +427,7 @@
   #v(0.06cm)
   #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
     #card("Conceptual", [
-      Organises course material into grounded revision formats.
+      Organises course material into revision formats that remain grounded in the source.
     ], fill: soft, height: 2.24cm)
     #v(card-stack-gap)
     #card("Architectural", [
@@ -440,7 +439,7 @@
     ], fill: warm, height: 2.24cm)
     #v(card-stack-gap)
     #card("Evaluation", [
-      Tests the tools, measures OCR performance, compares OCR models, and evaluates recorded workflows.
+      Provides evidence from tests, benchmarks, and recorded workflows.
     ], fill: soft, height: 2.24cm)
   ]
 ]
@@ -476,7 +475,7 @@
   #grid(columns: (1.03fr, 0.97fr), gutter: wide-col-gutter)[
     #text(size: 11pt, weight: "bold", fill: accent)[Main conclusion]
     #v(0.18cm)
-    #big-statement[study-assistant turns course material into practical revision formats through separate, testable tools.]
+    #big-statement[study-assistant gives an agent open tools that can be inspected, changed, and run independently.]
 
   ][
     #metric("15.89x", "OCR speedup", note: "recorded OCR benchmark", fill: warm, inset: metric-snug-inset)
