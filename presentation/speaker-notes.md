@@ -1,11 +1,12 @@
 # Speaker Notes
 
-Target length: approximately 15:45 spoken time.
+Target length: approximately 11:00 spoken time.
 
 Live-delivery notes.
 Short beats.
-Use the visual anchors to recover quickly after looking up.
+Use silent `>>` markers to recover quickly after looking up.
 Speak only the `DELIVERY` and `TRANSITION` lines.
+Do not speak the `>>` markers.
 
 ---
 
@@ -19,13 +20,9 @@ This is a study-workflow system.
 
 Not a single chatbot prompt.
 
-VISUAL RECOVERY
-
-- Large title: `Mnemon`
-- Subtitle: OCR, Retrieval, Speech
-- Bottom blocks: candidate and degree program
-
 DELIVERY
+
+>> INTRO
 
 Mnemon is an agent-based study assistant.
 
@@ -54,13 +51,9 @@ CORE MESSAGE
 Revision is repeated transformation
 of fragmented material.
 
-VISUAL RECOVERY
-
-- Large statement at the top
-- Three-part summary strip
-- `Core thesis` card on the right
-
 DELIVERY
+
+>> SOURCES
 
 Students rarely begin with one clean source.
 
@@ -70,6 +63,8 @@ textbook pages,
 and personal notes.
 
 The process moves through several stages.
+
+>> TRANSFORMATIONS
 
 First,
 the material becomes usable text.
@@ -83,6 +78,8 @@ And some of those outputs
 can become audio.
 
 The same source keeps changing **form**.
+
+>> PROBLEM
 
 A plain LLM chat
 is difficult to manage
@@ -110,11 +107,9 @@ CORE MESSAGE
 
 The problem is a chain of three barriers.
 
-VISUAL RECOVERY
-
-- Three numbered cards across the top
-
 DELIVERY
+
+>> OCR
 
 The first barrier is
 input readiness.
@@ -126,6 +121,8 @@ into text.
 
 That text can then be searched
 and reused.
+
+>> RETRIEVAL
 
 Course material should not be sent
 as one large prompt.
@@ -141,6 +138,8 @@ The student should be able to ask:
 
 what does my material say
 about this topic?
+
+>> OUTPUTS
 
 The third is
 output form.
@@ -167,12 +166,9 @@ CORE MESSAGE
 
 This is a focused engineering thesis.
 
-VISUAL RECOVERY
-
-- Left column: aim and objectives
-- Right column: scope and limits
-
 DELIVERY
+
+>> TOOLS
 
 The focus is the engineering.
 
@@ -182,6 +178,8 @@ and TTS remain separate tools.
 
 Each can be run
 independently.
+
+>> EVALUATION
 
 The evaluation checks
 tool reliability.
@@ -193,6 +191,8 @@ It compares OCR models.
 And it reviews whether
 the recorded workflows
 complete their intended tasks.
+
+>> LIMITS
 
 This project does not claim
 measured grade improvement.
@@ -222,13 +222,9 @@ CORE MESSAGE
 Each tool solves one barrier
 and leaves evidence behind.
 
-VISUAL RECOVERY
-
-- Top row: OCR, RAG, TTS
-- Saved output under each tool
-- Small line at the bottom: outputs remain inspectable
-
 DELIVERY
+
+>> OCR
 
 OCR extracts text
 from scanned documents.
@@ -246,6 +242,8 @@ Missing content matters too.
 OCR errors can affect
 everything that comes after.
 
+>> RETRIEVAL
+
 RAG retrieves from the student's
 prepared course material.
 
@@ -255,6 +253,8 @@ to course-specific sources.
 It avoids relying only
 on the model's general knowledge.
 
+>> AUDIO
+
 TTS changes the **modality**
 from text to audio.
 
@@ -263,6 +263,8 @@ reading Markdown aloud.
 
 Some content needs rewriting
 before it works as audio.
+
+>> ARTIFACTS
 
 Each tool leaves behind
 an intermediate artifact.
@@ -278,9 +280,9 @@ each stage **visible**.
 
 TRANSITION
 
-The architecture separates
-flexible decisions
-from reliable processing.
+Next, the architecture shows
+where the agent stops
+and the tools begin.
 
 ---
 
@@ -294,14 +296,9 @@ The agent decides what to do.
 
 The tools guarantee how it is done.
 
-VISUAL RECOVERY
-
-- Top statement: agent and tool roles
-- Left block: `study-assistant`
-- Right block: tool responsibilities
-- Bottom strip: processing tools
-
 DELIVERY
+
+>> AGENT
 
 The student provides source material
 and a study request.
@@ -315,6 +312,8 @@ Quiz.
 Essay practice.
 Audio.
 
+>> TOOLS
+
 The tools handle
 the processing.
 
@@ -327,6 +326,8 @@ the student's material.
 TTS prepares text
 for listening
 and creates the audio file.
+
+>> RESPONSIBILITIES
 
 This creates a clear
 division of labour.
@@ -355,12 +356,9 @@ CORE MESSAGE
 Model-driven workflows become testable
 when their boundaries are explicit.
 
-VISUAL RECOVERY
-
-- Four cards in two columns
-- Right cards: source order and complete outputs
-
 DELIVERY
+
+>> COMMAND-LINE TOOLS
 
 To make that separation practical,
 the processing tools remain
@@ -374,13 +372,19 @@ and tested independently.
 That keeps the system
 from becoming one opaque prompt.
 
+>> SHARED LIBRARIES
+
 Shared libraries handle
 HTTP requests and JSON
 consistently.
 
+>> ORDER
+
 Concurrency can reorder completion.
 
 Published output must still follow source order.
+
+>> PARTIAL OUTPUTS
 
 Failures are handled differently
 for each output.
@@ -409,13 +413,9 @@ CORE MESSAGE
 Evaluate the evidence chain,
 not just the final response.
 
-VISUAL RECOVERY
-
-- Top statement: evaluate the saved evidence
-- Left column: evaluation criteria
-- Right column: four recorded workflows
-
 DELIVERY
+
+>> SAVED OUTPUTS
 
 The evaluation begins with a PDF.
 
@@ -427,6 +427,8 @@ is not enough.
 
 We also inspect
 the intermediate outputs.
+
+>> QUESTIONS
 
 The criteria are practical:
 
@@ -441,6 +443,8 @@ Can the run be reproduced?
 Are failures
 clearly reported?
 
+>> WORKFLOWS
+
 The four recorded workflows cover
 essay practice,
 RAG revision,
@@ -449,9 +453,8 @@ and notes-to-audio.
 
 TRANSITION
 
-Before the results,
-separate local tests
-from recorded model runs.
+The evaluation
+has two parts.
 
 ---
 
@@ -468,18 +471,17 @@ Recorded runs show
 what happens
 when remote models are called.
 
-VISUAL RECOVERY
-
-- Left column: what the code controls
-- Right column: what remote models affect
-
 DELIVERY
+
+>> LOCAL TESTS
 
 Local tests check the parts
 we control:
 
 the tools
 and their shared libraries.
+
+>> RECORDED RUNS
 
 Recorded runs show
 how the full workflow behaves
@@ -505,13 +507,9 @@ CORE MESSAGE
 Bounded concurrency made OCR practical
 without sacrificing ordered output.
 
-VISUAL RECOVERY
-
-- Left metrics: `15.89x` and `72/72`
-- Right bars: sequential versus concurrent
-- Small caveat line at the bottom
-
 DELIVERY
+
+>> RUNTIME
 
 One request at a time
 took just over five minutes.
@@ -525,6 +523,8 @@ the full document.
 
 That made it
 about sixteen times faster.
+
+>> PAGE ORDER
 
 Every page is still included.
 
@@ -551,13 +551,9 @@ The most accurate model
 is not automatically
 the best choice.
 
-VISUAL RECOVERY
-
-- Large accuracy table on the left
-- Smaller cost table beneath it
-- Right cards: benchmark character and selection tradeoff
-
 DELIVERY
+
+>> BENCHMARK
 
 The benchmark covers
 nearly 70 academic pages
@@ -573,6 +569,8 @@ tables,
 diagrams,
 and multi-column layouts.
 
+>> WHY RECALL MATTERS
+
 For study material,
 recall matters.
 
@@ -583,6 +581,8 @@ or table row
 can affect later notes,
 questions,
 and audio.
+
+>> MODEL CHOICE
 
 `olmOCR 2` was less likely
 to miss important content.
@@ -606,15 +606,9 @@ CORE MESSAGE
 The workflows are useful,
 but the critique matters as much as the output.
 
-VISUAL RECOVERY
-
-- Four cards in a two-by-two grid
-- Top-left: essay practice
-- Bottom-left: retrieval
-- Top-right: flashcards
-- Bottom-right: notes to audio
-
 DELIVERY
+
+>> ESSAY PRACTICE
 
 Essay practice produced
 useful exam-style questions.
@@ -622,6 +616,8 @@ useful exam-style questions.
 But OCR errors make it important
 to trace each answer
 back to the source.
+
+>> FLASHCARDS
 
 For flashcards,
 the cards were concise
@@ -635,6 +631,8 @@ coverage gaps,
 duplicates,
 and unclear formulae.
 
+>> AUDIO
+
 For audio,
 visual notes became
 listenable revision material.
@@ -643,6 +641,8 @@ But audio cannot fully represent
 figures,
 tables,
 or equations.
+
+>> RETRIEVAL
 
 Retrieval provides
 the strongest evidence
@@ -667,12 +667,9 @@ CORE MESSAGE
 The system is practically useful
 inside explicit limits.
 
-VISUAL RECOVERY
-
-- Left column: interpretation
-- Right column: threats and limitations
-
 DELIVERY
+
+>> RESULTS
 
 Separate tools make failures
 easier to locate.
@@ -687,6 +684,8 @@ Retrieval quality depends on
 how material is split,
 labelled,
 and retrieved.
+
+>> LIMITATIONS
 
 The limitations matter equally.
 
@@ -722,12 +721,9 @@ CORE MESSAGE
 
 The contribution is the integrated system design.
 
-VISUAL RECOVERY
-
-- Four cards in a two-by-two grid
-- Conceptual, architectural, technical, evaluation
-
 DELIVERY
+
+>> CONCEPTUAL
 
 Conceptually,
 it organises course material
@@ -735,17 +731,23 @@ into revision formats
 that remain grounded
 in the source.
 
+>> ARCHITECTURAL
+
 Architecturally,
 it separates the agent
 from OCR,
 retrieval,
 and speech tools.
 
+>> TECHNICAL
+
 Technically,
 it adds ordering,
 retries,
 clear failures,
 and saved intermediate artifacts.
+
+>> EVIDENCE
 
 Finally,
 the project provides evidence
@@ -755,8 +757,9 @@ and recorded workflows.
 
 TRANSITION
 
-The gaps in that evaluation
-point directly to future work.
+That gives us
+a foundation
+to build on
 
 ---
 
@@ -769,12 +772,9 @@ CORE MESSAGE
 The priority is a stronger audit trail
 and stronger evidence.
 
-VISUAL RECOVERY
-
-- Left column: near-term engineering
-- Right column: broader validation
-
 DELIVERY
+
+>> TRACEABILITY
 
 Each run should be traceable
 from the source PDF
@@ -782,6 +782,8 @@ to the final output.
 
 That would strengthen
 the workflow evaluation.
+
+>> RETRIEVAL AND OCR
 
 Retrieval should be tested
 with fixed questions
@@ -791,11 +793,15 @@ OCR evaluation should cover
 more documents
 and repeated measurements.
 
+>> VALIDATION
+
 Validation passes should check formulae,
 diagrams,
 duplicates,
 coverage gaps,
 and unclear content.
+
+>> PROVIDERS
 
 Broader validation should compare
 providers and models
@@ -808,6 +814,8 @@ It should also examine local
 or private model inference
 for sensitive course material.
 
+>> STUDENTS
+
 Then students should evaluate
 whether the outputs are useful.
 
@@ -817,8 +825,8 @@ and exam preparation.
 
 TRANSITION
 
-That brings us back
-to the three barriers.
+That brings us
+to the conclusion.
 
 ---
 
@@ -831,12 +839,9 @@ CORE MESSAGE
 The workflow needs constraints,
 not just generation.
 
-VISUAL RECOVERY
-
-- Left block: main conclusion
-- Right metrics: recorded workflow evidence
-
 DELIVERY
+
+>> MAIN CONTRIBUTION
 
 The project shows
 a different way
@@ -864,11 +869,6 @@ Target: final hold.
 CORE MESSAGE
 
 Hold the final frame.
-
-VISUAL RECOVERY
-
-- Large `Questions` title
-- Project title and author beneath it
 
 DELIVERY
 
