@@ -4,9 +4,9 @@ Target length: approximately 11:00 spoken time.
 
 Live-delivery notes.
 Short beats.
-Use silent `>>` markers to recover quickly after looking up.
+Use silent bracket markers to recover quickly after looking up.
 Speak only the `DELIVERY` and `TRANSITION` lines.
-Do not speak the `>>` markers.
+Do not speak the bracket markers.
 
 ---
 
@@ -22,7 +22,7 @@ Not a single chatbot prompt.
 
 DELIVERY
 
->> INTRO
+[INTRO]
 
 Mnemon is an agent-based study assistant.
 
@@ -53,7 +53,7 @@ of fragmented material.
 
 DELIVERY
 
->> SOURCES
+[SOURCES]
 
 Students rarely begin with one clean source.
 
@@ -64,7 +64,7 @@ and personal notes.
 
 The process moves through several stages.
 
->> TRANSFORMATIONS
+[TRANSFORMATIONS]
 
 First,
 the material becomes usable text.
@@ -79,7 +79,7 @@ can become audio.
 
 The same source keeps changing **form**.
 
->> PROBLEM
+[PROBLEM]
 
 A plain LLM chat
 is difficult to manage
@@ -89,7 +89,7 @@ It is also harder to trace an answer
 back to the passages that support it.
 
 The workflow must remain
-source-grounded,
+grounded,
 modular,
 and inspectable.
 
@@ -109,7 +109,7 @@ The problem is a chain of three barriers.
 
 DELIVERY
 
->> OCR
+[OCR]
 
 The first barrier is
 input readiness.
@@ -122,7 +122,7 @@ into text.
 That text can then be searched
 and reused.
 
->> RETRIEVAL
+[RETRIEVAL]
 
 Course material should not be sent
 as one large prompt.
@@ -139,7 +139,7 @@ The student should be able to ask:
 what does my material say
 about this topic?
 
->> OUTPUTS
+[OUTPUTS]
 
 The third is
 output form.
@@ -168,7 +168,7 @@ This is a focused engineering thesis.
 
 DELIVERY
 
->> TOOLS
+[TOOLS]
 
 The focus is the engineering.
 
@@ -179,7 +179,7 @@ and TTS remain separate tools.
 Each can be run
 independently.
 
->> EVALUATION
+[EVALUATION]
 
 The evaluation checks
 tool reliability.
@@ -192,7 +192,7 @@ And it reviews whether
 the recorded workflows
 complete their intended tasks.
 
->> LIMITS
+[LIMITS]
 
 This project does not claim
 measured grade improvement.
@@ -224,7 +224,7 @@ and leaves evidence behind.
 
 DELIVERY
 
->> OCR
+[OCR]
 
 OCR extracts text
 from scanned documents.
@@ -242,18 +242,18 @@ Missing content matters too.
 OCR errors can affect
 everything that comes after.
 
->> RETRIEVAL
+[RETRIEVAL]
 
-RAG retrieves from the student's
-prepared course material.
+RAG searches
+the student’s course material.
 
-That keeps later answers tied
-to course-specific sources.
+Answers come from
+those sources.
 
 It avoids relying only
 on the model's general knowledge.
 
->> AUDIO
+[AUDIO]
 
 TTS changes the **modality**
 from text to audio.
@@ -264,7 +264,7 @@ reading Markdown aloud.
 Some content needs rewriting
 before it works as audio.
 
->> ARTIFACTS
+[ARTIFACTS]
 
 Each tool leaves behind
 an intermediate artifact.
@@ -280,9 +280,9 @@ each stage **visible**.
 
 TRANSITION
 
-Next, the architecture shows
-where the agent stops
-and the tools begin.
+Next, we separate
+the agent
+from the tools.
 
 ---
 
@@ -298,7 +298,7 @@ The tools guarantee how it is done.
 
 DELIVERY
 
->> AGENT
+[AGENT]
 
 The student provides source material
 and a study request.
@@ -312,7 +312,7 @@ Quiz.
 Essay practice.
 Audio.
 
->> TOOLS
+[TOOLS]
 
 The tools handle
 the processing.
@@ -327,7 +327,7 @@ TTS prepares text
 for listening
 and creates the audio file.
 
->> RESPONSIBILITIES
+[RESPONSIBILITIES]
 
 This creates a clear
 division of labour.
@@ -342,8 +342,8 @@ and clear failures.
 
 TRANSITION
 
-That leads
-to several engineering decisions.
+That shapes
+the tool design.
 
 ---
 
@@ -353,16 +353,16 @@ Target: 65 seconds.
 
 CORE MESSAGE
 
-Model-driven workflows become testable
-when their boundaries are explicit.
+Tool boundaries make
+the workflow testable.
 
 DELIVERY
 
->> COMMAND-LINE TOOLS
+[COMMAND-LINE TOOLS]
 
 To make that separation practical,
 the processing tools remain
-standalone command-line tools.
+command-line tools.
 
 They can be run,
 inspected,
@@ -372,19 +372,19 @@ and tested independently.
 That keeps the system
 from becoming one opaque prompt.
 
->> SHARED LIBRARIES
+[SHARED LIBRARIES]
 
 Shared libraries handle
 HTTP requests and JSON
 consistently.
 
->> ORDER
+[ORDER]
 
 Concurrency can reorder completion.
 
 Published output must still follow source order.
 
->> PARTIAL OUTPUTS
+[PARTIAL OUTPUTS]
 
 Failures are handled differently
 for each output.
@@ -415,7 +415,7 @@ not just the final response.
 
 DELIVERY
 
->> SAVED OUTPUTS
+[SAVED OUTPUTS]
 
 The evaluation begins with a PDF.
 
@@ -428,22 +428,22 @@ is not enough.
 We also inspect
 the intermediate outputs.
 
->> QUESTIONS
+[QUESTIONS]
 
 The criteria are practical:
 
-Is the output source-grounded?
+Is the output grounded?
 
 Does the selected mode fit the task?
 
-Can the intermediate outputs be inspected?
+Are intermediate outputs saved?
 
 Can the run be reproduced?
 
 Are failures
 clearly reported?
 
->> WORKFLOWS
+[WORKFLOWS]
 
 The four recorded workflows cover
 essay practice,
@@ -473,7 +473,7 @@ when remote models are called.
 
 DELIVERY
 
->> LOCAL TESTS
+[LOCAL TESTS]
 
 Local tests check the parts
 we control:
@@ -481,7 +481,7 @@ we control:
 the tools
 and their shared libraries.
 
->> RECORDED RUNS
+[RECORDED RUNS]
 
 Recorded runs show
 how the full workflow behaves
@@ -509,7 +509,7 @@ without sacrificing ordered output.
 
 DELIVERY
 
->> RUNTIME
+[RUNTIME]
 
 One request at a time
 took just over five minutes.
@@ -524,7 +524,7 @@ the full document.
 That made it
 about sixteen times faster.
 
->> PAGE ORDER
+[PAGE ORDER]
 
 Every page is still included.
 
@@ -553,13 +553,13 @@ the best choice.
 
 DELIVERY
 
->> BENCHMARK
+[BENCHMARK]
 
 The benchmark covers
 nearly 70 academic pages
 from a range of PDFs.
 
-The reference transcriptions
+The benchmark pages
 were labelled by hand.
 
 These are difficult pages:
@@ -569,7 +569,7 @@ tables,
 diagrams,
 and multi-column layouts.
 
->> WHY RECALL MATTERS
+[WHY RECALL MATTERS]
 
 For study material,
 recall matters.
@@ -582,7 +582,7 @@ can affect later notes,
 questions,
 and audio.
 
->> MODEL CHOICE
+[MODEL CHOICE]
 
 `olmOCR 2` was less likely
 to miss important content.
@@ -608,16 +608,16 @@ but the critique matters as much as the output.
 
 DELIVERY
 
->> ESSAY PRACTICE
+[ESSAY PRACTICE]
 
 Essay practice produced
-useful exam-style questions.
+strong exam-style questions.
 
 But OCR errors make it important
 to trace each answer
 back to the source.
 
->> FLASHCARDS
+[FLASHCARDS]
 
 For flashcards,
 the cards were concise
@@ -631,24 +631,24 @@ coverage gaps,
 duplicates,
 and unclear formulae.
 
->> AUDIO
+[AUDIO]
 
 For audio,
 visual notes became
-listenable revision material.
+audio for revision.
 
 But audio cannot fully represent
 figures,
 tables,
 or equations.
 
->> RETRIEVAL
+[RETRIEVAL]
 
 Retrieval provides
 the strongest evidence
 of practical value.
 
-The answer matched course-specific material,
+The answer matched the course material,
 not just a generic model response.
 
 TRANSITION
@@ -669,7 +669,7 @@ inside explicit limits.
 
 DELIVERY
 
->> RESULTS
+[RESULTS]
 
 Separate tools make failures
 easier to locate.
@@ -685,7 +685,7 @@ how material is split,
 labelled,
 and retrieved.
 
->> LIMITATIONS
+[LIMITATIONS]
 
 The limitations matter equally.
 
@@ -723,7 +723,7 @@ The contribution is the integrated system design.
 
 DELIVERY
 
->> CONCEPTUAL
+[CONCEPTUAL]
 
 Conceptually,
 it organises course material
@@ -731,7 +731,7 @@ into revision formats
 that remain grounded
 in the source.
 
->> ARCHITECTURAL
+[ARCHITECTURAL]
 
 Architecturally,
 it separates the agent
@@ -739,19 +739,19 @@ from OCR,
 retrieval,
 and speech tools.
 
->> TECHNICAL
+[TECHNICAL]
 
 Technically,
 it adds ordering,
 retries,
 clear failures,
-and saved intermediate artifacts.
+and saved outputs
+at each stage.
 
->> EVIDENCE
+[EVIDENCE]
 
 Finally,
-the project provides evidence
-from tests,
+the evaluation uses tests,
 benchmarks,
 and recorded workflows.
 
@@ -774,7 +774,7 @@ and stronger evidence.
 
 DELIVERY
 
->> TRACEABILITY
+[TRACEABILITY]
 
 Each run should be traceable
 from the source PDF
@@ -783,7 +783,7 @@ to the final output.
 That would strengthen
 the workflow evaluation.
 
->> RETRIEVAL AND OCR
+[RETRIEVAL AND OCR]
 
 Retrieval should be tested
 with fixed questions
@@ -793,7 +793,7 @@ OCR evaluation should cover
 more documents
 and repeated measurements.
 
->> VALIDATION
+[VALIDATION]
 
 Validation passes should check formulae,
 diagrams,
@@ -801,7 +801,7 @@ duplicates,
 coverage gaps,
 and unclear content.
 
->> PROVIDERS
+[PROVIDERS]
 
 Broader validation should compare
 providers and models
@@ -811,10 +811,10 @@ quality,
 and privacy.
 
 It should also examine local
-or private model inference
-for sensitive course material.
+or private inference
+for sensitive content.
 
->> STUDENTS
+[STUDENTS]
 
 Then students should evaluate
 whether the outputs are useful.
@@ -841,7 +841,7 @@ not just generation.
 
 DELIVERY
 
->> MAIN CONTRIBUTION
+[MAIN CONTRIBUTION]
 
 The project shows
 a different way

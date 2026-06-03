@@ -113,7 +113,7 @@
       - Students revise from lecture slides, scans, textbook pages, and personal notes
       - The same source must become notes, explanations, flashcards, quizzes, essay practice, or audio
       - A plain LLM chat makes fragmented course material harder to manage and answers harder to trace
-      - The workflow must remain source-grounded, modular, and inspectable
+      - The workflow must remain grounded, modular, and inspectable
     ]
   ][
     #card("Core thesis", [
@@ -244,7 +244,7 @@
 // 7
 #slide("Engineering Decisions")[
   #grid(columns: (1fr, 1fr), gutter: two-col-gutter)[
-    #card("Standalone command-line tools", [
+    #card("Command-line tools", [
       OCR, retrieval, and speech can be run, inspected, cached, or tested independently.
     ], fill: warm, height: 2.28cm)
     #v(0.38cm)
@@ -272,9 +272,9 @@
   #grid(columns: (0.98fr, 1.02fr), gutter: wide-col-gutter)[
     #subhead[Evaluation criteria]
     #spacious-list[
-      - Source grounding against prepared material
+      - Grounding in prepared material
       - Fit for the requested study mode
-      - Inspectable intermediate outputs
+      - Saved intermediate outputs
       - Reproducible runs
       - Visible limitations rather than hidden failures
     ]
@@ -380,7 +380,7 @@
   #v(0.04cm)
   #grid(columns: (1fr, 1fr), gutter: 0.36cm)[
     #card("Essay practice", [
-      Produced useful exam-style questions, but OCR errors make source tracing important.
+      Produced strong exam-style questions, but OCR errors make source tracing important.
     ], fill: warm, height: 2.34cm)
     #v(0.38cm)
     #card("Retrieval", [
@@ -392,7 +392,7 @@
     ], fill: panel, height: 2.34cm)
     #v(0.38cm)
     #card("Study notes to audio", [
-      Produced listenable revision material, but audio cannot fully represent figures, tables, or equations.
+      Produced audio for revision, but audio cannot fully represent figures, tables, or equations.
     ], fill: warm, height: 2.34cm)
   ]
 ]
@@ -435,11 +435,11 @@
     ], fill: warm, height: 2.24cm)
   ][
     #card("Technical", [
-      Adds ordering, retries, clear failures, and saved intermediate artifacts.
+      Adds ordering, retries, clear failures, and saved outputs at each stage.
     ], fill: warm, height: 2.24cm)
     #v(card-stack-gap)
     #card("Evaluation", [
-      Provides evidence from tests, benchmarks, and recorded workflows.
+      Uses tests, benchmarks, and recorded workflows.
     ], fill: soft, height: 2.24cm)
   ]
 ]
@@ -461,7 +461,7 @@
     #subhead[Further evaluation]
     #spacious-list[
       - Compare providers and models for cost, latency, quality, and privacy
-      - Evaluate local or private model inference for sensitive course material
+      - Evaluate local or private inference for sensitive content
       - Ask students to evaluate whether the outputs are useful
       - Study effects on retention and exam preparation
     ]
