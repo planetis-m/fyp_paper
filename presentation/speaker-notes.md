@@ -269,11 +269,14 @@ before it works as audio.
 Each tool leaves behind
 an intermediate artifact.
 
-OCR leaves page records.
+OCR keeps page results
+in the cache.
 
-RAG leaves retrieved passages.
+RAG uses text
+prepared for retrieval.
 
-TTS leaves prepared text.
+TTS uses text
+prepared for speech.
 
 Those artifacts make
 each stage **visible**.

@@ -179,7 +179,7 @@
       #v(0.28cm)
       #eyebrow[Inspectable artifact]
       #v(0.10cm)
-      #text(size: 7pt)[OCR page records]
+      #text(size: 7pt)[OCR cache]
     ][
       #subhead[RAG]
       #text(size: 7.35pt)[
@@ -188,7 +188,7 @@
       #v(0.28cm)
       #eyebrow[Inspectable artifacts]
       #v(0.10cm)
-      #text(size: 7pt)[retrieved passages]
+      #text(size: 7pt)[RAG ingest file]
     ][
       #subhead[TTS]
       #text(size: 7.35pt)[
@@ -197,7 +197,7 @@
       #v(0.28cm)
       #eyebrow[Inspectable artifact]
       #v(0.10cm)
-      #text(size: 7pt)[text prepared for speech]
+      #text(size: 7pt)[TTS input file]
     ]
   ]
   #v(0.28cm)
